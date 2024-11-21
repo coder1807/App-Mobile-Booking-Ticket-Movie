@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
+import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
+import 'package:movie_app/main.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -13,6 +17,8 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,25 +34,32 @@ class _SignInPageState extends State<SignInPage> {
       children: [
         SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 32, vertical: 30), // Chỉ đệm hai bên
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 30),
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Căn trái cho tất cả nội dung
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: Color(0xffD4D4D4),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GetFavoritePage()),
+                      );
+                    },
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Color(0xffD4D4D4),
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 150),
                 Text(
                   'Sign In',
                   style: TextStyle(
@@ -72,7 +85,26 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 10),
                 _forgotPasswordText(),
                 const SizedBox(height: 50),
-                CustomButton(text: 'Sign In', onPressed: () {}),
+                isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : CustomButton(
+                        text: 'Sign In',
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          Future.delayed(Duration(seconds: 2), () {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MainPage()),
+                            );
+                          });
+                        },
+                      ),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,25 +157,32 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  // Căn giữa nội dung của hàng
                   children: [
                     Text(
                       "Don't you have an account?",
-                      // Căn giữa đoạn văn bản đầu tiên
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(0xff979797),
                         fontFamily: 'Poppins',
                       ),
                     ),
-                    Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignUpPage()),
+                        );
+                      },
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontFamily: 'Poppins',
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 )
               ],
@@ -156,7 +195,7 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget _forgotPasswordText() {
     return const Align(
-      alignment: Alignment.centerRight, // Căn chữ sang bên phải
+      alignment: Alignment.centerRight,
       child: Text(
         "Forgot Password?",
         style: TextStyle(
