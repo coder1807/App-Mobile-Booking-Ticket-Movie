@@ -28,11 +28,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        backgroundColor: Color(0xFF121011),
-        body: _page(),
-      ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF121011),
+      body: _page(),
     );
   }
 
@@ -55,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             builder: (context) => const SignInPage()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Skip',
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -78,7 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 30),
                 CustomInput(
                     hintText: 'Username',
-                    hintTextColor: Color(0xFFA6A6A6),
+                    hintTextColor: const Color(0xFFA6A6A6),
                     controller: usernameController,
                     pathImage: 'assets/icons/user.png'),
                 const SizedBox(height: 30),
@@ -91,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 30),
                 CustomInput(
                   hintText: 'Password',
-                  hintTextColor: Color(0xFFA6A6A6),
+                  hintTextColor: const Color(0xFFA6A6A6),
                   controller: passwordController,
                   pathImage: 'assets/icons/lock.png',
                   isPassword: true,
@@ -213,11 +211,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.facebook, color: Colors.white),
+                          icon: const Icon(Icons.facebook, color: Colors.white),
                           onPressed: () {},
                         ),
                       ),
@@ -227,11 +225,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: FaIcon(FontAwesomeIcons.google,
+                          icon: const FaIcon(FontAwesomeIcons.google,
                               color: Colors.white),
                           onPressed: () {},
                         ),
@@ -242,11 +240,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.apple, color: Colors.white),
+                          icon: const Icon(Icons.apple, color: Colors.white),
                           onPressed: () {},
                         ),
                       ),
@@ -269,10 +267,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignInPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const SignInPage()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Sign In',
                         style: TextStyle(
                           fontSize: 16,

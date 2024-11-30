@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_app/Themes/app_theme.dart';
@@ -112,7 +113,7 @@ class _InfoPageState extends State<InfoPage> {
             Navigator.pop(context);
           },
         ),
-        Spacer(),
+        const Spacer(),
         Text(
           'Personal Profile',
           style: TextStyle(
@@ -122,7 +123,7 @@ class _InfoPageState extends State<InfoPage> {
             fontFamily: 'Poppins',
           ),
         ),
-        Spacer(),
+        const Spacer(),
       ],
     );
   }
@@ -191,9 +192,7 @@ class _InfoPageState extends State<InfoPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        print("Updating Password");
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.colors.buttonColor,
                         padding: const EdgeInsets.symmetric(
@@ -219,7 +218,7 @@ class _InfoPageState extends State<InfoPage> {
   Widget _buildInputField(String label, TextEditingController controller,
       FocusNode focusNode, double width,
       {bool showIcon = true}) {
-    return Container(
+    return SizedBox(
       width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +247,7 @@ class _InfoPageState extends State<InfoPage> {
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 15),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               suffixIcon: showIcon
                   ? IconButton(
                       icon: Icon(

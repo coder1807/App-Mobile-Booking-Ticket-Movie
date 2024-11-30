@@ -4,6 +4,7 @@ import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
+import 'package:movie_app/Screens/Components/BasePage.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SignInPage(),
     );
@@ -32,8 +33,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MainPage extends StatefulWidget {
-  const MainPage();
+  const MainPage({super.key});
   @override
+  // ignore: library_private_types_in_public_api
   _MainPageState createState() => _MainPageState();
 }
 
@@ -44,10 +46,10 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _children = [
-      HomePageCl(),
-      CinemaPageCl(),
-      FoodPageCl(),
-      ProfilePageCl(),
+      const HomePageCl(),
+      const CinemaPageCl(),
+      const FoodPageCl(),
+      const ProfilePageCl(),
     ];
   }
 
@@ -72,7 +74,7 @@ class _MainPageState extends State<MainPage> {
         ),
         BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.transparent, // Làm trong suốt
+          backgroundColor: Colors.transparent,
           unselectedItemColor: AppTheme.colors.blueSky,
           selectedItemColor: AppTheme.colors.white,
           currentIndex: _currentIndex,
@@ -110,34 +112,34 @@ class _MainPageState extends State<MainPage> {
 }
 
 class HomePageCl extends StatelessWidget {
-  HomePageCl();
+  const HomePageCl({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: HomePage());
+    return const BasePage(child: HomePage());
   }
 }
 
 class CinemaPageCl extends StatelessWidget {
-  CinemaPageCl();
+  const CinemaPageCl({super.key});
   @override
   Widget build(BuildContext context) {
-    return Center(child: CinemaPage());
+    return const BasePage(child: CinemaPage());
   }
 }
 
 class FoodPageCl extends StatelessWidget {
-  FoodPageCl();
+  const FoodPageCl({super.key});
   @override
   Widget build(BuildContext context) {
-    return Center(child: FoodPage());
+    return const BasePage(child: FoodPage());
   }
 }
 
 class ProfilePageCl extends StatelessWidget {
-  ProfilePageCl();
+  const ProfilePageCl({super.key});
   @override
   Widget build(BuildContext context) {
-    return Center(child: ProfilePage());
+    return const BasePage(child: ProfilePage());
   }
 }
