@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/CinemaBooking.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovieComing.dart';
 import 'package:movie_app/Themes/app_theme.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/SeatBooking.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,27 +15,25 @@ class _HomePageState extends State<HomePage> {
   final List<Map<String, dynamic>> movies = [
     {
       'name': 'Movie 1',
-      'poster': 'assets/images/image_1.jpg',
+      'poster': 'assets/images/Poster/Playing/image_1.jpg',
       'genres': ['Action', 'Drama'],
     },
     {
       'name': 'Movie 2',
-      'poster': 'assets/images/image_2.jpg',
+      'poster': 'assets/images/Poster/Playing/image_2.jpg',
       'genres': ['Comedy', 'Romance'],
     },
     {
       'name': 'Movie 3',
-      'poster': 'assets/images/image_3.jpg',
+      'poster': 'assets/images/Poster/Playing/image_3.jpg',
       'genres': ['Horror'],
     },
     {
       'name': 'Movie 4',
-      'poster': 'assets/images/image_4.jpg',
+      'poster': 'assets/images/Poster/Playing/image_4.jpg',
       'genres': ['Sci-Fi', 'Adventure'],
     },
   ];
-
-  // Tạo một Map để lưu trạng thái bookmark cho từng bộ phim
   Map<int, bool> bookmarkedMovies = {};
 
   @override
@@ -41,9 +41,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF121011),
+      backgroundColor: AppTheme.colors.mainBackground,
       body: _page(),
     );
   }
@@ -73,11 +74,10 @@ class _HomePageState extends State<HomePage> {
       children: [
         Row(
           children: [
-            // Avatar hình tròn
             Container(
               width: 50,
               height: 50,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: AssetImage('assets/images/User/avatar.jpg'),
@@ -85,12 +85,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hey, Leomord! ',
+                  'Hey, Leonor! ',
                   style: TextStyle(
                       color: AppTheme.colors.white,
                       fontSize: 20,
@@ -106,7 +106,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        // Icon thông báo
         Icon(
           Icons.notifications,
           size: 30,
@@ -128,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 // const SizedBox(width: 10),
                 Text(
-                  'Recomendation',
+                  'Recommendation',
                   style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Poppins',
@@ -153,7 +152,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 // const SizedBox(width: 10),
                 Text(
-                  'Upcomming',
+                  'Upcoming',
                   style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Poppins',
@@ -195,6 +194,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget _MovieRecommendation() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -205,57 +205,77 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
-                    movie['poster'],
-                    width: 150,
-                    height: 200,
-                    fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DetailMoviePage(),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      movie['poster'],
+                      width: 150,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 const SizedBox(height: 20),
-                Container(
-                  width: 100,
-                  child: Text(
-                    movie['name'],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DetailMoviePage(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: 100,
+                    child: Text(
+                      movie['name'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: AppTheme.colors.white,
-                        overflow: TextOverflow.ellipsis,
-                        fontFamily: 'Poppins'),
-                    textAlign: TextAlign.center,
+                        fontFamily: 'Poppins',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   movie['genres'].join(', '),
                   style:
                       TextStyle(fontSize: 12, color: AppTheme.colors.greyColor),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SeatBooking(),
+                        builder: (context) => const CinemaBookingPage(),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink, // Màu nền của nút
+                    backgroundColor: AppTheme.colors.pink,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text(
                     "Book",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: AppTheme.colors.white),
                   ),
                 ),
               ],
@@ -266,6 +286,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget _MovieUpcoming() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -281,15 +302,25 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Stack(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(
-                        movie['poster'],
-                        width: 150,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const DetailMovieComingPage(),
+                            ),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.asset(
+                            movie['poster'],
+                            width: 150,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
                     Positioned(
                       top: 10,
                       right: 10,
@@ -319,30 +350,40 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 const SizedBox(height: 20),
-                Container(
-                  width: 100,
-                  child: Text(
-                    movie['name'],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.colors.white,
-                      fontFamily: 'Poppins',
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DetailMovieComingPage(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: 100,
+                    child: Text(
+                      movie['name'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   movie['genres'].join(', '),
                   style:
                       TextStyle(fontSize: 12, color: AppTheme.colors.greyColor),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
               ],
             ),
           );

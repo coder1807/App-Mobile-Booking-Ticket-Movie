@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 
 class CustomInput extends StatelessWidget {
@@ -25,7 +26,7 @@ class CustomInput extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(color: backgroundColor));
     return TextField(
-      style: TextStyle(color: textColor, fontSize: 20, fontFamily: 'Fredoka'),
+      style: TextStyle(color: textColor, fontSize: 20, fontFamily: 'Poppins'),
       controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
@@ -34,11 +35,12 @@ class CustomInput extends StatelessWidget {
         focusedBorder: border,
         filled: true,
         fillColor: backgroundColor,
+        // ignore: unnecessary_null_comparison
         prefixIcon: pathImage != null
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
-                  width: 20, // Đặt kích thước icon (nhỏ lại)
+                  width: 20,
                   height: 20,
                   child: Image.asset(pathImage, fit: BoxFit.contain),
                 ),

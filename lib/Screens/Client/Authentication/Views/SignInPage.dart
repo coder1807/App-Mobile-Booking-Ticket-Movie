@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
-import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/main.dart';
@@ -21,11 +20,9 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        backgroundColor: Color(0xFF121011),
-        body: _page(),
-      ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF121011),
+      body: _page(),
     );
   }
 
@@ -48,7 +45,7 @@ class _SignInPageState extends State<SignInPage> {
                             builder: (context) => const GetFavoritePage()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Skip',
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -60,7 +57,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 ),
                 const SizedBox(height: 150),
-                Text(
+                const Text(
                   'Sign In',
                   style: TextStyle(
                       fontSize: 22,
@@ -71,13 +68,13 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 30),
                 CustomInput(
                     hintText: 'Username',
-                    hintTextColor: Color(0xFFA6A6A6),
+                    hintTextColor: const Color(0xFFA6A6A6),
                     controller: usernameController,
                     pathImage: 'assets/icons/mail.png'),
                 const SizedBox(height: 30),
                 CustomInput(
                   hintText: 'Password',
-                  hintTextColor: Color(0xFFA6A6A6),
+                  hintTextColor: const Color(0xFFA6A6A6),
                   controller: passwordController,
                   pathImage: 'assets/icons/lock.png',
                   isPassword: true,
@@ -86,18 +83,19 @@ class _SignInPageState extends State<SignInPage> {
                 _forgotPasswordText(),
                 const SizedBox(height: 50),
                 isLoading
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : CustomButton(
                         text: 'Sign In',
                         onPressed: () {
                           setState(() {
                             isLoading = true;
                           });
-                          Future.delayed(Duration(seconds: 2), () {
+                          Future.delayed(const Duration(seconds: 2), () {
                             setState(() {
                               isLoading = false;
                             });
                             Navigator.push(
+                              // ignore: use_build_context_synchronously
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const MainPage()),
@@ -114,11 +112,11 @@ class _SignInPageState extends State<SignInPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.facebook, color: Colors.white),
+                          icon: const Icon(Icons.facebook, color: Colors.white),
                           onPressed: () {},
                         ),
                       ),
@@ -128,11 +126,11 @@ class _SignInPageState extends State<SignInPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: FaIcon(FontAwesomeIcons.google,
+                          icon: const FaIcon(FontAwesomeIcons.google,
                               color: Colors.white),
                           onPressed: () {},
                         ),
@@ -143,11 +141,11 @@ class _SignInPageState extends State<SignInPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.apple, color: Colors.white),
+                          icon: const Icon(Icons.apple, color: Colors.white),
                           onPressed: () {},
                         ),
                       ),
@@ -158,7 +156,7 @@ class _SignInPageState extends State<SignInPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Don't you have an account?",
                       style: TextStyle(
                         fontSize: 16,
@@ -170,10 +168,11 @@ class _SignInPageState extends State<SignInPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignUpPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const SignUpPage()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Sign Up',
                         style: TextStyle(
                           fontSize: 16,
