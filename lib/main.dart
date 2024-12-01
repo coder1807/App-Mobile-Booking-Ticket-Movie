@@ -5,13 +5,23 @@ import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/manager/UserProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

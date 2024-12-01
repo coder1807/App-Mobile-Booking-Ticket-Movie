@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_app/Api/register.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:movie_app/models/user.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -18,6 +21,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,68 +96,88 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 20),
                 _forgotPasswordText(),
                 const SizedBox(height: 50),
-                CustomButton(
-                    text: 'Sign Up',
-                    onPressed: () async {
-                      if (usernameController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Username không được để trống!')),
-                        );
-                        return;
-                      }
-                      if (passwordController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Password không được để trống!')),
-                        );
-                        return;
-                      }
-                      if (emailController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Email không được để trống!')),
-                        );
-                        return;
-                      }
-                      final emailRegex =
-                          RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+                isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : CustomButton(
+                        text: 'Sign Up',
+                        onPressed: () async {
+                          if (usernameController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Username không được để trống!')),
+                            );
+                            return;
+                          }
+                          if (passwordController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Password không được để trống!')),
+                            );
+                            return;
+                          }
+                          if (emailController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Email không được để trống!')),
+                            );
+                            return;
+                          }
+                          final emailRegex =
+                              RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
 
-                      if (!emailRegex.hasMatch(emailController.text.trim())) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Địa chỉ email không hợp lệ!')),
-                        );
-                        return;
-                      }
-                      try {
-                        final response = await register(
-                            usernameController.text.trim(),
-                            passwordController.text.trim(),
-                            emailController.text.trim());
-                        if (response["status"] == "SUCCESS") {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(response['message'] ??
-                                    'Đăng ký thành công!')),
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignInPage()),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(response['message'] ??
-                                    "Đăng ký thất bại!")),
-                          );
-                        }
-                      } catch (error) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Có lỗi xảy ra: $error')),
-                        );
-                      }
-                    }),
+                          if (!emailRegex
+                              .hasMatch(emailController.text.trim())) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Địa chỉ email không hợp lệ!')),
+                            );
+                            return;
+                          }
+                          setState(() {
+                            isLoading = true;
+                          });
+                          try {
+                            final response = await register(
+                                usernameController.text.trim(),
+                                passwordController.text.trim(),
+                                emailController.text.trim());
+                            if (response["status"] == "SUCCESS") {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      'Đăng ký thành công!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignInPage()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      "Đăng ký thất bại!"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } catch (error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Có lỗi xảy ra: $error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        }),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,28 +278,5 @@ class _SignUpPageState extends State<SignUpPage> {
             fontWeight: FontWeight.w500),
       ),
     );
-  }
-
-  Future<Map<String, dynamic>> register(
-      String username, String password, String email) async {
-    final String apiUrl = '${AppConfig.MY_URL}/register';
-
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(
-            {'username': username, 'password': password, 'email': email}),
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(utf8.decode(response.bodyBytes));
-      } else if (response.statusCode == 400) {
-        return jsonDecode(utf8.decode(response.bodyBytes));
-      } else {
-        throw Exception('Lỗi không xác định: ${response.statusCode}');
-      }
-    } catch (error) {
-      throw Exception('Lỗi khi gọi API: $error');
-    }
   }
 }

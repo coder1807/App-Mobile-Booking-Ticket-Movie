@@ -9,9 +9,11 @@ import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/config.dart';
 import 'package:movie_app/main.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_app/manager/UserProvider.dart';
 import 'dart:convert';
 
 import 'package:movie_app/models/user.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -117,29 +119,44 @@ class _SignInPageState extends State<SignInPage> {
                           });
 
                           try {
-                            User user = await login(
+                            final response = await login(
                               usernameController.text.trim(),
                               passwordController.text.trim(),
                             );
-                            if (user != null) {
-                              // Đăng nhập thành công
+                            if (response["status"] == "SUCCESS") {
+                              User user =
+                                  User.fromJson(response['data']['user']);
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .setUser(user);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                    content: Text('Đăng nhập thành công!')),
+                                  content: Text(response['message'] ??
+                                      'Đăng nhập thành công!'),
+                                  backgroundColor: Colors.green,
+                                ),
                               );
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const MainPage()),
                               );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      "Đăng nhập thất bại!"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             }
                           } catch (error) {
-                            // Xử lý lỗi
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Có lỗi xảy ra: $error')),
+                              SnackBar(
+                                content: Text('Có lỗi xảy ra: $error'),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           } finally {
-                            // Đảm bảo cập nhật lại trạng thái isLoading
                             setState(() {
                               isLoading = false;
                             });

@@ -18,17 +18,17 @@ class User {
   );
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        fullname = json['fullname'],
-        username = json['username'],
         email = json['email'],
         phone = json['phone'],
+        username = json['username'],
+        fullname = json['fullname'],
         address = json['address'];
   Map<String, dynamic> toJson() => {
         'id': id,
-        'fullname': fullname,
-        'username': username,
+        'email': email,
         'phone': phone,
+        'username': username,
+        'fullname': fullname,
         'address': address,
-        'email': email
       };
 }
