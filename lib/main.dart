@@ -6,7 +6,7 @@ import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 

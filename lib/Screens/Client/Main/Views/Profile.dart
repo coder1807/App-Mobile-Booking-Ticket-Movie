@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/FavoriteMovie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/InfoProfile.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/Notification.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/config.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -238,7 +242,36 @@ class _ProfilePageState extends State<ProfilePage> {
         side: BorderSide(color: AppTheme.colors.buttonColor, width: 1),
         borderRadius: BorderRadius.circular(10),
       ),
-      onTap: () {},
+      onTap: () async {
+        await logout();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SignInPage()),
+        );
+      },
     );
+  }
+}
+
+Future<void> logout() async {
+  final String apiUrl = '${AppConfig.MY_URL}/logout';
+
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
+      if (responseData["status"] == "SUCCESS") {
+        print(responseData["message"]);
+        // Xóa dữ liệu người dùng
+      }
+    } else {
+      throw Exception('Đăng xuất thất bại: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Lỗi khi gọi API logout: $error');
   }
 }

@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_app/Api/login.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
+import 'package:movie_app/config.dart';
 import 'package:movie_app/main.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:movie_app/models/user.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -89,20 +95,55 @@ class _SignInPageState extends State<SignInPage> {
                     ? Center(child: CircularProgressIndicator())
                     : CustomButton(
                         text: 'Sign In',
-                        onPressed: () {
+                        onPressed: () async {
+                          if (usernameController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Username không được để trống!')),
+                            );
+                            return;
+                          }
+                          if (passwordController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Password không được để trống!')),
+                            );
+                            return;
+                          }
                           setState(() {
                             isLoading = true;
                           });
-                          Future.delayed(Duration(seconds: 2), () {
+
+                          try {
+                            User user = await login(
+                              usernameController.text.trim(),
+                              passwordController.text.trim(),
+                            );
+                            if (user != null) {
+                              // Đăng nhập thành công
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Đăng nhập thành công!')),
+                              );
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainPage()),
+                              );
+                            }
+                          } catch (error) {
+                            // Xử lý lỗi
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Có lỗi xảy ra: $error')),
+                            );
+                          } finally {
+                            // Đảm bảo cập nhật lại trạng thái isLoading
                             setState(() {
                               isLoading = false;
                             });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MainPage()),
-                            );
-                          });
+                          }
                         },
                       ),
                 const SizedBox(height: 30),
