@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_app/Screens/Client/Main/Model/NotificationItem.dart';
@@ -19,14 +20,6 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-
-    // Test hàm calculateDaysDifference
-    DateTime now = DateTime.now();
-    DateTime pastDate = DateTime.parse("2024-11-09");
-
-    int difference = calculateDaysDifference(pastDate);
-    print(pastDate);
-    print("Số ngày cách nhau: $difference");
   }
 
   final List<NotificationItem> notifications = [
@@ -34,20 +27,20 @@ class _NotificationPageState extends State<NotificationPage> {
       icon: Icons.local_offer,
       iconColor: Colors.red,
       title: "50% Off Extravaganza: Grab Your Movie Tickets at Half the Price!",
-      time: DateTime.now().subtract(Duration(hours: 2)),
+      time: DateTime.now().subtract(const Duration(hours: 2)),
     ),
     NotificationItem(
       icon: Icons.movie,
       iconColor: Colors.green,
       title:
           "Successful purchase enjoy unforgettable Adventures with Super Mario movies",
-      time: DateTime.now().subtract(Duration(days: 1)),
+      time: DateTime.now().subtract(const Duration(days: 1)),
     ),
     NotificationItem(
       icon: Icons.warning,
       iconColor: Colors.orange,
       title: "Yo, Your account got spotted on a new device",
-      time: DateTime.now().subtract(Duration(days: 3)),
+      time: DateTime.now().subtract(const Duration(days: 3)),
     ),
   ];
 
@@ -88,7 +81,7 @@ class _NotificationPageState extends State<NotificationPage> {
             Navigator.pop(context);
           },
         ),
-        Spacer(),
+        const Spacer(),
         Text(
           'Notification',
           style: TextStyle(
@@ -98,7 +91,7 @@ class _NotificationPageState extends State<NotificationPage> {
             fontFamily: 'Poppins',
           ),
         ),
-        Spacer(),
+        const Spacer(),
       ],
     );
   }
@@ -124,7 +117,7 @@ class _NotificationPageState extends State<NotificationPage> {
               ),
             ],
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -144,28 +137,28 @@ class _NotificationPageState extends State<NotificationPage> {
 
   Widget _buildInfoMessage() {
     return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.red.shade50,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
-          Icon(Icons.info, color: Colors.red),
-          SizedBox(width: 12),
+          const Icon(Icons.info, color: Colors.red),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Information!",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.red,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   "Take a few minutes to read the notice carefully to update new promotions, events and important changes when using our services!",
                   style: TextStyle(color: Colors.red.shade700),
@@ -194,7 +187,14 @@ class _NotificationPageState extends State<NotificationPage> {
           ),
           TextButton(
             onPressed: () {},
-            child: Text("Mark all read"),
+            child: Text(
+              "Mark all read",
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
+                  color: AppTheme.colors.white,
+                  fontSize: 16),
+            ),
           ),
         ],
       ),
@@ -220,7 +220,12 @@ class _NotificationPageState extends State<NotificationPage> {
         style: TextStyle(
             fontWeight: FontWeight.bold, color: AppTheme.colors.white),
       ),
-      subtitle: Text(time, style: TextStyle(fontWeight: FontWeight.w700)),
+      subtitle: Text(time,
+          style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: AppTheme.colors.white,
+              fontFamily: 'Poppins',
+              fontSize: 14)),
     );
   }
 }

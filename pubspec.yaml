@@ -38,6 +38,10 @@ dependencies:
   intl: ^0.17.0
   http: ^1.2.2
   provider: ^6.1.2
+  chewie: ^1.8.5
+  video_player: ^2.9.2
+  # google_map_flutter: ^2.6.1
+  # google_map_flutter_android: ^2.8.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,6 +66,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    # Icon
+    - assets/icons/
+    # Video
+    - assets/videos/Deadpool_1.mp4
     # Movie
     - assets/icons/mail.png
     - assets/icons/lock.png
@@ -74,24 +82,21 @@ flutter:
     - assets/images/image_6.jpg
     - assets/images/image_7.jpg
     - assets/images/image_8.jpg
+    - assets/images/Movies/
+    # Payment
+    - assets/images/Payment/
+    # Casts
+    - assets/images/Casts/
     # User
-    - assets/images/User/avatar.jpg
+    - assets/images/User/
     # Poster
-    - assets/images/Poster/poster1.jpg
-    - assets/images/Poster/poster2.jpg
-    - assets/images/Poster/poster3.jpg
-    - assets/images/Poster/poster4.jpg
+    - assets/images/Poster/
+    - assets/images/Poster/Playing/
+    - assets/images/Poster/Coming/
     # Food
-    - assets/images/Foods/hotdog.jpg
-    - assets/images/Foods/nachos.jpg
-    - assets/images/Foods/frenchfries.jpg
-    - assets/images/Foods/popcorn.jpg
-    - assets/images/Foods/skittles.jpg
+    - assets/images/Foods/
     # Theater Movie
-    - assets/images/theater/cinema1.jpg
-    - assets/images/theater/cinema2.jpg
-    - assets/images/theater/cinema3.jpg
-    - assets/images/theater/cinema4.jpg
+    - assets/images/Theater/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

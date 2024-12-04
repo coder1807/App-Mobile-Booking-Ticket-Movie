@@ -22,7 +22,7 @@ class _DecoratePageState extends State<DecoratePage> {
             children: [
               const SizedBox(height: 50),
               Center(
-                child: Container(
+                child: SizedBox(
                   height: 200,
                   child: Stack(
                     children: [
@@ -33,7 +33,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_1.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -47,7 +47,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_2.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -61,7 +61,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_3.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -75,7 +75,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_4.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -88,7 +88,7 @@ class _DecoratePageState extends State<DecoratePage> {
               ),
               const SizedBox(height: 30),
               Center(
-                child: Container(
+                child: SizedBox(
                   height: 200,
                   child: Stack(
                     children: [
@@ -99,7 +99,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_5.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -113,7 +113,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_6.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -127,7 +127,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_7.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -141,7 +141,7 @@ class _DecoratePageState extends State<DecoratePage> {
                           height: 182,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
+                            image: const DecorationImage(
                               image: AssetImage('assets/images/image_8.jpg'),
                               fit: BoxFit.cover,
                             ),
@@ -153,8 +153,8 @@ class _DecoratePageState extends State<DecoratePage> {
                 ),
               ),
               const SizedBox(height: 100),
-              Center(
-                child: Container(
+              const Center(
+                child: SizedBox(
                   width: 250,
                   child: Text(
                     'Tell us about your favorite movie genres',
@@ -174,7 +174,8 @@ class _DecoratePageState extends State<DecoratePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GetFavoritePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const GetFavoritePage()),
                   );
                 },
               ),
@@ -187,7 +188,7 @@ class _DecoratePageState extends State<DecoratePage> {
                       width: 50,
                       height: 5,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE50914),
+                        color: const Color(0xFFE50914),
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),

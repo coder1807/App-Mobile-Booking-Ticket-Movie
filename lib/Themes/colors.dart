@@ -14,5 +14,9 @@ class AppColors {
   final pink = const Color(0xffB6116B);
   final greyColor = const Color(0xFFBDBDBD);
   final orangeColor = const Color(0xFFFFA500);
+  final orange = const Color(0xFFFF4500);
+  final darkBlue = const Color(0xff001F1F);
+  final greenColor = const Color(0xff008000);
+  final containerBackground = const Color(0xff262930);
   const AppColors();
 }
