@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_app/Api/login.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
+import 'package:movie_app/config.dart';
+import 'package:movie_app/main.dart';
+import 'package:http/http.dart' as http;
+import 'package:movie_app/manager/UserProvider.dart';
+import 'dart:convert';
+
+import 'package:movie_app/models/user.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -13,13 +24,13 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        backgroundColor: Color(0xFF121011),
-        body: _page(),
-      ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF121011),
+      body: _page(),
     );
   }
 
@@ -28,26 +39,33 @@ class _SignInPageState extends State<SignInPage> {
       children: [
         SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 32, vertical: 30), // Chỉ đệm hai bên
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 30),
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Căn trái cho tất cả nội dung
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: Color(0xffD4D4D4),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GetFavoritePage()),
+                      );
+                    },
+                    child: const Text(
+                      'Skip',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Color(0xffD4D4D4),
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 100),
-                Text(
+                const SizedBox(height: 150),
+                const Text(
                   'Sign In',
                   style: TextStyle(
                       fontSize: 22,
@@ -58,13 +76,13 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 30),
                 CustomInput(
                     hintText: 'Username',
-                    hintTextColor: Color(0xFFA6A6A6),
+                    hintTextColor: const Color(0xFFA6A6A6),
                     controller: usernameController,
                     pathImage: 'assets/icons/mail.png'),
                 const SizedBox(height: 30),
                 CustomInput(
                   hintText: 'Password',
-                  hintTextColor: Color(0xFFA6A6A6),
+                  hintTextColor: const Color(0xFFA6A6A6),
                   controller: passwordController,
                   pathImage: 'assets/icons/lock.png',
                   isPassword: true,
@@ -72,7 +90,76 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 10),
                 _forgotPasswordText(),
                 const SizedBox(height: 50),
-                CustomButton(text: 'Sign In', onPressed: () {}),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : CustomButton(
+                        text: 'Sign In',
+                        onPressed: () async {
+                          if (usernameController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Username không được để trống!')),
+                            );
+                            return;
+                          }
+                          if (passwordController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Password không được để trống!')),
+                            );
+                            return;
+                          }
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          try {
+                            final response = await login(
+                              usernameController.text.trim(),
+                              passwordController.text.trim(),
+                            );
+                            if (response["status"] == "SUCCESS") {
+                              User user =
+                                  User.fromJson(response['data']['user']);
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .setUser(user);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      'Đăng nhập thành công!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainPage()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      "Đăng nhập thất bại!"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } catch (error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Có lỗi xảy ra: $error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        },
+                      ),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,11 +169,11 @@ class _SignInPageState extends State<SignInPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.facebook, color: Colors.white),
+                          icon: const Icon(Icons.facebook, color: Colors.white),
                           onPressed: () {},
                         ),
                       ),
@@ -96,11 +183,11 @@ class _SignInPageState extends State<SignInPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: FaIcon(FontAwesomeIcons.google,
+                          icon: const FaIcon(FontAwesomeIcons.google,
                               color: Colors.white),
                           onPressed: () {},
                         ),
@@ -111,11 +198,11 @@ class _SignInPageState extends State<SignInPage> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                          color: Color(0xff1E1E1E),
+                          color: const Color(0xff1E1E1E),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.apple, color: Colors.white),
+                          icon: const Icon(Icons.apple, color: Colors.white),
                           onPressed: () {},
                         ),
                       ),
@@ -125,25 +212,33 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  // Căn giữa nội dung của hàng
                   children: [
-                    Text(
+                    const Text(
                       "Don't you have an account?",
-                      // Căn giữa đoạn văn bản đầu tiên
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(0xff979797),
                         fontFamily: 'Poppins',
                       ),
                     ),
-                    Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignUpPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontFamily: 'Poppins',
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 )
               ],
@@ -156,7 +251,7 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget _forgotPasswordText() {
     return const Align(
-      alignment: Alignment.centerRight, // Căn chữ sang bên phải
+      alignment: Alignment.centerRight,
       child: Text(
         "Forgot Password?",
         style: TextStyle(
