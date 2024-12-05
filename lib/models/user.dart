@@ -7,7 +7,7 @@ class User {
   final String? username;
   final String? fullname;
   final String? address;
-  final int? age;
+  final DateTime? birthday;
 
   User(
     this.id,
@@ -16,7 +16,7 @@ class User {
     this.username,
     this.fullname,
     this.address,
-    this.age,
+    this.birthday,
   );
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -25,7 +25,7 @@ class User {
         username = json['username'],
         fullname = json['fullname'],
         address = json['address'],
-        age = json['age'];
+        birthday = DateTime.parse(json['birthday']);
   Map<String, dynamic> toJson() => {
         'id': id,
         'email': email,
@@ -33,6 +33,6 @@ class User {
         'username': username,
         'fullname': fullname,
         'address': address,
-        'age': age,
+        'birthday': birthday?.toIso8601String(),
       };
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class InfoPage extends StatefulWidget {
 class _InfoPageState extends State<InfoPage> {
   late TextEditingController nameController = TextEditingController();
   late TextEditingController phoneController = TextEditingController();
-  late TextEditingController ageController = TextEditingController();
+  late TextEditingController birthdayController = TextEditingController();
   late TextEditingController emailController = TextEditingController();
   late TextEditingController addressController = TextEditingController();
   late TextEditingController currentPasswordController =
@@ -21,6 +22,7 @@ class _InfoPageState extends State<InfoPage> {
   late TextEditingController newPasswordController = TextEditingController();
   late TextEditingController confirmPasswordController =
       TextEditingController();
+  String dbDate = "";
 
   bool showPasswordFields = false;
   Map<String, bool> obscurePasswordFields = {
@@ -31,7 +33,7 @@ class _InfoPageState extends State<InfoPage> {
 
   final FocusNode nameFocusNode = FocusNode();
   final FocusNode phoneFocusNode = FocusNode();
-  final FocusNode ageFocusNode = FocusNode();
+  final FocusNode birthdayFocusNode = FocusNode();
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode addressFocusNode = FocusNode();
 
@@ -40,13 +42,13 @@ class _InfoPageState extends State<InfoPage> {
     // Dispose controllers and focus nodes
     nameController.dispose();
     phoneController.dispose();
-    ageController.dispose();
+    birthdayController.dispose();
     emailController.dispose();
     addressController.dispose();
 
     nameFocusNode.dispose();
     phoneFocusNode.dispose();
-    ageFocusNode.dispose();
+    birthdayFocusNode.dispose();
     emailFocusNode.dispose();
     addressFocusNode.dispose();
 
@@ -61,7 +63,14 @@ class _InfoPageState extends State<InfoPage> {
     phoneController = TextEditingController(text: user?.phone ?? '');
     emailController = TextEditingController(text: user?.email ?? '');
     addressController = TextEditingController(text: user?.address ?? '');
-    ageController = TextEditingController(text: (user?.age ?? '').toString());
+
+    // Định dạng birthday nếu có
+    if (user?.birthday != null) {
+      birthdayController = TextEditingController(
+        text: DateFormat('dd/MM/yyyy').format(user!.birthday!),
+      );
+      dbDate = DateFormat('yyyy-MM-dd').format(user.birthday!);
+    }
   }
 
   @override
@@ -129,9 +138,9 @@ class _InfoPageState extends State<InfoPage> {
             _buildInputField(
                 'Name', nameController, nameFocusNode, screenWidth * 1),
             _buildInputField(
-                'Phone', phoneController, phoneFocusNode, screenWidth * 0.6),
-            _buildInputField(
-                'Age', ageController, ageFocusNode, screenWidth * 0.3),
+                'Phone', phoneController, phoneFocusNode, screenWidth * 0.5),
+            _buildInputField('Birthday', birthdayController, birthdayFocusNode,
+                screenWidth * 0.5),
             _buildInputField('Address', addressController, addressFocusNode,
                 screenWidth * 1),
           ],

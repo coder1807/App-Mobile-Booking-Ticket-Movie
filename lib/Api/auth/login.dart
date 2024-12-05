@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 
 Future<Map<String, dynamic>> login(String username, String password) async {
   final String apiUrl = '${AppConfig.MY_URL}/login';
-
   try {
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -29,4 +28,5 @@ Future<void> saveLogin(
     BuildContext context, Map<String, dynamic> response) async {
   User user = User.fromJson(response['data']['user']);
   Provider.of<UserProvider>(context, listen: false).setUser(user);
+  print(user);
 }

@@ -66,6 +66,7 @@ flutter:
     - assets/icons/mail.png
     - assets/icons/lock.png
     - assets/icons/user.png
+    - assets/icons/birthday.png
     - assets/images/image_1.jpg
     - assets/images/image_2.jpg
     - assets/images/image_3.jpg
