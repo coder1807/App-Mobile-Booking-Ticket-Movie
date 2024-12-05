@@ -70,8 +70,6 @@ flutter:
     - assets/videos/Deadpool_1.mp4
     # Movie
     - assets/images/Movies/
-    # Payment
-    - assets/images/Payment/
     # Casts
     - assets/images/Casts/
     # User
