@@ -36,8 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.1.0
   intl: ^0.17.0
-  http: ^1.2.2
-  provider: ^6.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,7 +63,6 @@ flutter:
     # Movie
     - assets/icons/mail.png
     - assets/icons/lock.png
-    - assets/icons/user.png
     - assets/images/image_1.jpg
     - assets/images/image_2.jpg
     - assets/images/image_3.jpg

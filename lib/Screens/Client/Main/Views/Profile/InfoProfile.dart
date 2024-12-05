@@ -104,7 +104,6 @@ class _InfoPageState extends State<InfoPage> {
           },
         ),
         Spacer(),
-        Spacer(),
         Text(
           'Personal Profile',
           style: TextStyle(
@@ -114,7 +113,6 @@ class _InfoPageState extends State<InfoPage> {
             fontFamily: 'Poppins',
           ),
         ),
-        Spacer(),
         Spacer(),
       ],
     );
@@ -216,7 +214,6 @@ class _InfoPageState extends State<InfoPage> {
       FocusNode focusNode, double width,
       {bool showIcon = true}) {
     return Container(
-    return Container(
       width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,7 +243,6 @@ class _InfoPageState extends State<InfoPage> {
                 borderSide: BorderSide.none,
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 15),
-              contentPadding: EdgeInsets.symmetric(horizontal: 15),
               suffixIcon: showIcon
                   ? IconButton(
                       icon: Icon(
@@ -254,7 +250,7 @@ class _InfoPageState extends State<InfoPage> {
                         color: AppTheme.colors.white,
                       ),
                       onPressed: () {
-                        focusNode.requestFocus();
+                        print('Update $label');
                       },
                     )
                   : null,
