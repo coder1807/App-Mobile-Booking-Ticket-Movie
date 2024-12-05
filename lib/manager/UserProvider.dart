@@ -15,4 +15,6 @@ class UserProvider with ChangeNotifier {
     _user = null;
     notifyListeners();
   }
+
+  updateUserInfo(Map<String, Object> updatedUser) {}
 }

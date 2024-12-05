@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:movie_app/Api/register.dart';
+import 'package:movie_app/Api/auth/register.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
@@ -21,6 +21,9 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController birthdayController = TextEditingController();
+  DateTime? selectedDate;
+
   bool isLoading = false;
 
   @override
@@ -92,6 +95,49 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: passwordController,
                   pathImage: 'assets/icons/lock.png',
                   isPassword: true,
+                ),
+                const SizedBox(height: 30),
+// Input cho ngày sinh
+                GestureDetector(
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900), // Ngày đầu tiên có thể chọn
+                      lastDate: DateTime.now(), // Ngày cuối cùng là hôm nay
+                      builder: (context, child) {
+                        return Theme(
+                          data: ThemeData.dark().copyWith(
+                            colorScheme: ColorScheme.dark(
+                              primary: Color(0xff1E1E1E), // Màu chính
+                              onPrimary: Colors.white, // Màu chữ trên màu chính
+                              surface: Color(0xff1E1E1E), // Màu nền
+                              onSurface: Colors.white, // Màu chữ trên nền
+                            ),
+                            dialogBackgroundColor:
+                                Color(0xFF121011), // Màu nền hộp thoại
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+
+                    if (pickedDate != null) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                        birthdayController.text =
+                            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                      });
+                    }
+                  },
+                  child: AbsorbPointer(
+                    child: CustomInput(
+                      hintText: 'Birthday',
+                      hintTextColor: Color(0xFFA6A6A6),
+                      controller: birthdayController,
+                      pathImage: 'assets/icons/calendar.png',
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 _forgotPasswordText(),

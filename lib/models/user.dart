@@ -7,6 +7,7 @@ class User {
   final String? username;
   final String? fullname;
   final String? address;
+  final int? age;
 
   User(
     this.id,
@@ -15,6 +16,7 @@ class User {
     this.username,
     this.fullname,
     this.address,
+    this.age,
   );
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -22,7 +24,8 @@ class User {
         phone = json['phone'],
         username = json['username'],
         fullname = json['fullname'],
-        address = json['address'];
+        address = json['address'],
+        age = json['age'];
   Map<String, dynamic> toJson() => {
         'id': id,
         'email': email,
@@ -30,5 +33,6 @@ class User {
         'username': username,
         'fullname': fullname,
         'address': address,
+        'age': age,
       };
 }
