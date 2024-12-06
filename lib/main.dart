@@ -4,8 +4,6 @@ import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Profile/FavoriteMovie.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Profile/InfoProfile.dart';
 import 'package:movie_app/Screens/Components/BasePage.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
@@ -29,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: InfoPage(),
+      home: SignInPage(),
     );
   }
 }

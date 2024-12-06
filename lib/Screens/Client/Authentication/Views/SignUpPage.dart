@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:movie_app/Api/register.dart';
+import 'package:intl/intl.dart';
+import 'package:movie_app/Api/auth/register.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
@@ -21,6 +22,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController birthdayController = TextEditingController();
+  String dbDate = "";
   bool isLoading = false;
 
   @override
@@ -61,8 +64,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 150),
-                const Text(
+                const SizedBox(height: 30),
+                Text(
                   'Sign Up',
                   style: TextStyle(
                       fontSize: 22,
@@ -90,6 +93,20 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: passwordController,
                   pathImage: 'assets/icons/lock.png',
                   isPassword: true,
+                ),
+                const SizedBox(height: 30),
+                GestureDetector(
+                  onTap: () async {
+                    await _pickDate(context); // Gọi hàm xử lý DatePicker
+                  },
+                  child: AbsorbPointer(
+                    child: CustomInput(
+                      hintText: 'Birthday',
+                      hintTextColor: Color(0xFFA6A6A6),
+                      controller: birthdayController,
+                      pathImage: 'assets/icons/birthday.png',
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 _forgotPasswordText(),
@@ -133,6 +150,14 @@ class _SignUpPageState extends State<SignUpPage> {
                             );
                             return;
                           }
+                          if (birthdayController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Ngày sinh không được để trống!'),
+                              ),
+                            );
+                            return;
+                          }
                           setState(() {
                             isLoading = true;
                           });
@@ -140,7 +165,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             final response = await register(
                                 usernameController.text.trim(),
                                 passwordController.text.trim(),
-                                emailController.text.trim());
+                                emailController.text.trim(),
+                                dbDate);
                             if (response["status"] == "SUCCESS") {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -277,5 +303,41 @@ class _SignUpPageState extends State<SignUpPage> {
             fontWeight: FontWeight.w500),
       ),
     );
+  }
+
+  Future<void> _pickDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.teal, // Màu tiêu đề và nút "OK"
+              onPrimary: Colors.white, // Màu chữ trên nút "OK"
+              onSurface: Colors.black, // Màu chữ tiêu đề
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.teal, // Màu nút "CANCEL"
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      // Định dạng ngày hiển thị trong UI
+      String displayDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      // Định dạng ngày lưu trữ trong DB
+      dbDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      setState(() {
+        birthdayController.text = displayDate; // Cập nhật UI
+      });
+    }
   }
 }

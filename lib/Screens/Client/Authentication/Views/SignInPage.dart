@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:movie_app/Api/login.dart';
+import 'package:movie_app/Api/auth/login.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
-import 'package:movie_app/config.dart';
 import 'package:movie_app/main.dart';
-import 'package:http/http.dart' as http;
 import 'package:movie_app/manager/UserProvider.dart';
-import 'dart:convert';
 
 import 'package:movie_app/models/user.dart';
 import 'package:provider/provider.dart';
@@ -121,10 +118,7 @@ class _SignInPageState extends State<SignInPage> {
                               passwordController.text.trim(),
                             );
                             if (response["status"] == "SUCCESS") {
-                              User user =
-                                  User.fromJson(response['data']['user']);
-                              Provider.of<UserProvider>(context, listen: false)
-                                  .setUser(user);
+                              saveLogin(context, response);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(response['message'] ??
