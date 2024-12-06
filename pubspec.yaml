@@ -35,11 +35,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.1.0
-  intl: ^0.20.1
-  http: ^1.2.2
+  intl: ^0.17.0
+  http: ^0.13.5
   provider: ^6.1.2
   chewie: ^1.8.5
-  video_player: ^2.9.2
   # google_map_flutter: ^2.6.1
   # google_map_flutter_android: ^2.8.0
 dev_dependencies:
@@ -75,17 +74,8 @@ flutter:
     - assets/icons/lock.png
     - assets/icons/user.png
     - assets/icons/birthday.png
-    - assets/images/image_1.jpg
-    - assets/images/image_2.jpg
-    - assets/images/image_3.jpg
-    - assets/images/image_4.jpg
-    - assets/images/image_5.jpg
-    - assets/images/image_6.jpg
-    - assets/images/image_7.jpg
-    - assets/images/image_8.jpg
     - assets/images/Movies/
     # Payment
-    - assets/images/Payment/
     # Casts
     - assets/images/Casts/
     # User
