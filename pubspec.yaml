@@ -36,11 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.1.0
   intl: ^0.17.0
-  http: ^0.13.5
+  http: ^1.2.2
   provider: ^6.1.2
-  chewie: ^1.8.5
-  # google_map_flutter: ^2.6.1
-  # google_map_flutter_android: ^2.8.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

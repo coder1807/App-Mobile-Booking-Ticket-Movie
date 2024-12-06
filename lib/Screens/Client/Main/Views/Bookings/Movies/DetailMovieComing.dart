@@ -1,7 +1,5 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/Themes/app_theme.dart';
-import 'package:video_player/video_player.dart';
 
 class DetailMovieComingPage extends StatefulWidget {
   const DetailMovieComingPage({super.key});
@@ -11,34 +9,6 @@ class DetailMovieComingPage extends StatefulWidget {
 }
 
 class _DetailMovieComingPageState extends State<DetailMovieComingPage> {
-  VideoPlayerController? _videoPlayerController;
-  ChewieController? _chewieController;
-  bool _isPlaying = true;
-  bool _isWatchlisted = false;
-
-  @override
-  void dispose() {
-    _videoPlayerController?.dispose();
-    _chewieController?.dispose();
-    super.dispose();
-  }
-
-  void _initialisePlayer() {
-    _videoPlayerController = VideoPlayerController.asset(
-      "assets/videos/Deadpool_1.mp4",
-    );
-    _videoPlayerController!.initialize().then((_) {
-      setState(() {
-        _chewieController = ChewieController(
-          videoPlayerController: _videoPlayerController!,
-          autoPlay: false,
-          looping: false,
-        );
-        _isPlaying = true;
-      });
-    }).catchError((error) {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,44 +136,6 @@ class _DetailMovieComingPageState extends State<DetailMovieComingPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _isWatchlisted = !_isWatchlisted;
-                      });
-                    },
-                    icon: Icon(
-                      _isWatchlisted ? Icons.favorite : Icons.favorite_border,
-                      color: _isWatchlisted ? Colors.red : Colors.white,
-                    ),
-                    label: Text(
-                      'Watchlist',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: _isWatchlisted ? Colors.red : Colors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      side: BorderSide(
-                          color: _isWatchlisted ? Colors.red : Colors.white,
-                          width: 1),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      elevation: 0,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
               Text(
                 'Watch Trailer',
                 style: TextStyle(
@@ -211,37 +143,6 @@ class _DetailMovieComingPageState extends State<DetailMovieComingPage> {
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                     color: AppTheme.colors.white),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Center(
-                child: _chewieController != null && _isPlaying
-                    ? SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 200,
-                        child: Chewie(controller: _chewieController!),
-                      )
-                    : ElevatedButton(
-                        onPressed: _initialisePlayer,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.colors.buttonColor,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        child: Text(
-                          'Play video',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 14,
-                            color: AppTheme.colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
               ),
               const SizedBox(height: 20),
               Text(

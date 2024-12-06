@@ -1,7 +1,7 @@
-// import 'dart:convert';
+import 'dart:convert';
 
-// import 'package:movie_app/config.dart';
-// import 'package:http/http.dart' as http;
+import 'package:movie_app/config.dart';
+import 'package:http/http.dart' as http;
 
 Future<Map<String, dynamic>> register(
     String username, String password, String email, String birthday) async {
