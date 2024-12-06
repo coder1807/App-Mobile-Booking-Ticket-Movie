@@ -1,6 +1,9 @@
 // ignore: file_names
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:movie_app/Api/auth/login.dart';
+import 'package:movie_app/Api/user/update.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +26,9 @@ class _InfoPageState extends State<InfoPage> {
   late TextEditingController newPasswordController = TextEditingController();
   late TextEditingController confirmPasswordController =
       TextEditingController();
-  String dbDate = "";
+  late String dbDate;
+  late int id;
+  bool isMatching = false;
 
   bool showPasswordFields = false;
   Map<String, bool> obscurePasswordFields = {
@@ -60,10 +65,11 @@ class _InfoPageState extends State<InfoPage> {
   void initState() {
     super.initState();
     final user = Provider.of<UserProvider>(context, listen: false).user;
-    nameController = TextEditingController(text: user?.fullname ?? '');
-    phoneController = TextEditingController(text: user?.phone ?? '');
-    emailController = TextEditingController(text: user?.email ?? '');
-    addressController = TextEditingController(text: user?.address ?? '');
+    id = user!.id;
+    nameController = TextEditingController(text: user.fullname ?? '');
+    phoneController = TextEditingController(text: user.phone ?? '');
+    emailController = TextEditingController(text: user.email ?? '');
+    addressController = TextEditingController(text: user.address ?? '');
 
     // Định dạng birthday nếu có
     if (user?.birthday != null) {
@@ -139,9 +145,10 @@ class _InfoPageState extends State<InfoPage> {
             _buildInputField(
                 'Name', nameController, nameFocusNode, screenWidth * 1),
             _buildInputField(
-                'Phone', phoneController, phoneFocusNode, screenWidth * 0.5),
+                'Phone', phoneController, phoneFocusNode, screenWidth * 0.48),
             _buildInputField('Birthday', birthdayController, birthdayFocusNode,
-                screenWidth * 0.5),
+                screenWidth * 0.48,
+                onTap: () => _pickDate(context), readOnly: true),
             _buildInputField('Address', addressController, addressFocusNode,
                 screenWidth * 1),
           ],
@@ -154,25 +161,30 @@ class _InfoPageState extends State<InfoPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              showPasswordFields = !showPasswordFields;
-            });
-          },
-          child: Text(
-            'Update Password',
-            style: TextStyle(
-              color: AppTheme.colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
-              decorationColor: AppTheme.colors.white,
-              decorationThickness: 2.0,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  showPasswordFields = !showPasswordFields;
+                });
+              },
+              child: Text(
+                'Update Password',
+                style: TextStyle(
+                  color: AppTheme.colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                  decorationColor: AppTheme.colors.white,
+                  decorationThickness: 2.0,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         if (showPasswordFields)
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -192,7 +204,12 @@ class _InfoPageState extends State<InfoPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: isMatching
+                          ? () async {
+                              updateInfo(context);
+                              changePassword(context);
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.colors.buttonColor,
                         padding: const EdgeInsets.symmetric(
@@ -211,13 +228,45 @@ class _InfoPageState extends State<InfoPage> {
               ),
             ],
           ),
+        if (!showPasswordFields)
+          Padding(
+            padding: const EdgeInsets.only(right: 50),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    updateInfo(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.colors.buttonColor,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                  ),
+                  child: Text(
+                    "Update",
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: AppTheme.colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }
 
-  Widget _buildInputField(String label, TextEditingController controller,
-      FocusNode focusNode, double width,
-      {bool showIcon = true}) {
+  Widget _buildInputField(
+    String label,
+    TextEditingController controller,
+    FocusNode focusNode,
+    double width, {
+    bool showIcon = true,
+    bool readOnly = false,
+    VoidCallback? onTap,
+  }) {
     return SizedBox(
       width: width,
       child: Column(
@@ -235,8 +284,9 @@ class _InfoPageState extends State<InfoPage> {
           TextField(
             controller: controller,
             focusNode: focusNode,
-            obscureText: label.contains('Password'),
             style: TextStyle(color: AppTheme.colors.white),
+            onTap: (!readOnly) ? focusNode.requestFocus : onTap,
+            readOnly: readOnly,
             decoration: InputDecoration(
               hintText: 'Enter $label',
               hintStyle:
@@ -255,7 +305,7 @@ class _InfoPageState extends State<InfoPage> {
                         color: AppTheme.colors.white,
                       ),
                       onPressed: () {
-                        focusNode.requestFocus();
+                        print('Update $label');
                       },
                     )
                   : null,
@@ -268,7 +318,7 @@ class _InfoPageState extends State<InfoPage> {
 
   Widget _buildPasswordField(String label, TextEditingController controller,
       double width, String fieldKey) {
-    return Container(
+    return SizedBox(
       width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,6 +333,7 @@ class _InfoPageState extends State<InfoPage> {
           ),
           const SizedBox(height: 10),
           TextField(
+            onChanged: (_) => validatePasswords(),
             controller: controller,
             obscureText: obscurePasswordFields[fieldKey]!,
             style: TextStyle(color: AppTheme.colors.white),
@@ -316,5 +367,112 @@ class _InfoPageState extends State<InfoPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _pickDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.parse(dbDate),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.teal, // Màu tiêu đề và nút "OK"
+              onPrimary: Colors.white, // Màu chữ trên nút "OK"
+              onSurface: Colors.black, // Màu chữ tiêu đề
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.teal, // Màu nút "CANCEL"
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      // Định dạng ngày hiển thị trong UI
+      String displayDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      // Định dạng ngày lưu trữ trong DB
+      dbDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      setState(() {
+        birthdayController.text = displayDate; // Cập nhật UI
+      });
+    }
+  }
+
+  Future<void> updateInfo(BuildContext context) async {
+    try {
+      final response = await updateUser(id, nameController.text.trim(),
+          phoneController.text.trim(), dbDate, addressController.text.trim());
+      if (response["status"] == "SUCCESS") {
+        saveLogin(context, response);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text(response['message'] ?? 'Cập nhật thông tin thành công!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message'] ?? "Cập nhật thất bại!"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Có lỗi xảy ra: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> changePassword(BuildContext context) async {
+    try {
+      final response = await updatePassword(
+          id,
+          currentPasswordController.text.trim(),
+          newPasswordController.text.trim());
+      if (response["status"] == "SUCCESS") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text(response['message'] ?? 'Thay đổi mật khẩu thành công!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message'] ?? "Thay đổi mật khẩu thất bại!"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Có lỗi xảy ra: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void validatePasswords() {
+    setState(() {
+      isMatching = newPasswordController.text.isNotEmpty &&
+          confirmPasswordController.text.isNotEmpty &&
+          newPasswordController.text == confirmPasswordController.text;
+    });
   }
 }

@@ -3,13 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_app/Api/auth/login.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
+import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/main.dart';
-import 'package:movie_app/manager/UserProvider.dart';
-
-import 'package:movie_app/models/user.dart';
-import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
