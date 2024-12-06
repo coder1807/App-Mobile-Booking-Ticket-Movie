@@ -305,7 +305,9 @@ class _InfoPageState extends State<InfoPage> {
                         Icons.edit,
                         color: AppTheme.colors.white,
                       ),
-                      onPressed: onTap,
+                      onPressed: () {
+                        print('Update $label');
+                      },
                     )
                   : null,
             ),

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:movie_app/config.dart';
 import 'package:movie_app/manager/UserProvider.dart';
-// import 'package:movie_app/manager/shared_preferences.dart';
+
 import 'package:movie_app/models/user.dart';
 import 'package:provider/provider.dart';
 

@@ -254,9 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
         borderRadius: BorderRadius.circular(10),
       ),
       onTap: () async {
-        await logout();
-        final provider = Provider.of<UserProvider>(context, listen: false);
-        provider.clearUser();
+        // await logout();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => SignInPage()),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/Themes/app_theme.dart';
-import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
 
 class DetailMoviePage extends StatefulWidget {
   const DetailMoviePage({super.key});
@@ -11,33 +9,6 @@ class DetailMoviePage extends StatefulWidget {
 }
 
 class _DetailMoviePageState extends State<DetailMoviePage> {
-  VideoPlayerController? _videoPlayerController;
-  ChewieController? _chewieController;
-  bool _isPlaying = true;
-
-  @override
-  void dispose() {
-    _videoPlayerController?.dispose();
-    _chewieController?.dispose();
-    super.dispose();
-  }
-
-  void _initialisePlayer() {
-    _videoPlayerController = VideoPlayerController.asset(
-      "assets/videos/Deadpool_1.mp4",
-    );
-    _videoPlayerController!.initialize().then((_) {
-      setState(() {
-        _chewieController = ChewieController(
-          videoPlayerController: _videoPlayerController!,
-          autoPlay: false,
-          looping: false,
-        );
-        _isPlaying = true;
-      });
-    }).catchError((error) {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,13 +139,6 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                         color: AppTheme.colors.white,
                         fontWeight: FontWeight.w600),
                   ),
-                  const SizedBox(height: 20),
-                  Center(
-                      child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
-                    child: Chewie(controller: _chewieController!),
-                  )),
                   const SizedBox(height: 20),
                   Text(
                     'Synopsis',

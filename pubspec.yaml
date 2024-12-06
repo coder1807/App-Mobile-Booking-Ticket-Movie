@@ -38,11 +38,6 @@ dependencies:
   intl: ^0.17.0
   http: ^1.2.2
   provider: ^6.1.2
-  chewie: ^1.8.5
-  video_player: ^2.9.2
-  flutter_dotenv: ^5.2.1
-  # google_map_flutter: ^2.6.1
-  # google_map_flutter_android: ^2.8.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
