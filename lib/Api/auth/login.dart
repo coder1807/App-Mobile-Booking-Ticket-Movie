@@ -18,7 +18,7 @@ Future<Map<String, dynamic>> login(String username, String password) async {
       body: jsonEncode({'username': username, 'password': password}),
     );
 
-    final data = jsonDecode(utf8.decode(response.bodyBytes));
+    final data = jsonDecode(response.body);
     return data;
   } catch (error) {
     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};

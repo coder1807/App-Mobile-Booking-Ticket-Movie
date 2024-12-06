@@ -19,7 +19,7 @@ Future<Map<String, dynamic>> register(
         'birthday': birthday
       }),
     );
-    final data = jsonDecode(utf8.decode(response.bodyBytes));
+    final data = jsonDecode(response.body);
     return data;
   } catch (error) {
     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};

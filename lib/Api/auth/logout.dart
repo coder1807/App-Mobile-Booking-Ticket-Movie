@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> logout() async {
       Uri.parse(apiUrl),
       headers: {'Content-Type': 'application/json'},
     );
-    final data = jsonDecode(utf8.decode(response.bodyBytes));
+    final data = jsonDecode(response.body);
     return data;
   } catch (error) {
     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};
