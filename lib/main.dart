@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Foods/BookingSummary.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
@@ -10,6 +12,12 @@ import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    throw Exception('Error loading .env file: $e');
+  }
   runApp(
     MultiProvider(
       providers: [
