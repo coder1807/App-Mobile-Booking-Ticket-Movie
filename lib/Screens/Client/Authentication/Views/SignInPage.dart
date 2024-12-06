@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_app/Api/auth/login.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/main.dart';
+import 'package:movie_app/manager/UserProvider.dart';
+
+import 'package:movie_app/models/user.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -86,21 +91,67 @@ class _SignInPageState extends State<SignInPage> {
                     ? const Center(child: CircularProgressIndicator())
                     : CustomButton(
                         text: 'Sign In',
-                        onPressed: () {
+                        onPressed: () async {
+                          if (usernameController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Username không được để trống!')),
+                            );
+                            return;
+                          }
+                          if (passwordController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Password không được để trống!')),
+                            );
+                            return;
+                          }
                           setState(() {
                             isLoading = true;
                           });
-                          Future.delayed(const Duration(seconds: 2), () {
+
+                          try {
+                            final response = await login(
+                              usernameController.text.trim(),
+                              passwordController.text.trim(),
+                            );
+                            if (response["status"] == "SUCCESS") {
+                              saveLogin(context, response);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      'Đăng nhập thành công!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainPage()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      "Đăng nhập thất bại!"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } catch (error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Có lỗi xảy ra: $error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } finally {
                             setState(() {
                               isLoading = false;
                             });
-                            Navigator.push(
-                              // ignore: use_build_context_synchronously
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MainPage()),
-                            );
-                          });
+                          }
                         },
                       ),
                 const SizedBox(height: 30),

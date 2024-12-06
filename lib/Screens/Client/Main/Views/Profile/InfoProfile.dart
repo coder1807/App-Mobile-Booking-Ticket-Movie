@@ -1,6 +1,9 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/manager/UserProvider.dart';
+import 'package:provider/provider.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({super.key});
@@ -10,18 +13,66 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPageState extends State<InfoPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController currentPasswordController =
+  late TextEditingController nameController = TextEditingController();
+  late TextEditingController phoneController = TextEditingController();
+  late TextEditingController birthdayController = TextEditingController();
+  late TextEditingController emailController = TextEditingController();
+  late TextEditingController addressController = TextEditingController();
+  late TextEditingController currentPasswordController =
       TextEditingController();
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
+  late TextEditingController newPasswordController = TextEditingController();
+  late TextEditingController confirmPasswordController =
       TextEditingController();
+  String dbDate = "";
 
   bool showPasswordFields = false;
+  Map<String, bool> obscurePasswordFields = {
+    'currentPassword': true,
+    'newPassword': true,
+    'confirmPassword': true,
+  };
+
+  final FocusNode nameFocusNode = FocusNode();
+  final FocusNode phoneFocusNode = FocusNode();
+  final FocusNode birthdayFocusNode = FocusNode();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode addressFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    // Dispose controllers and focus nodes
+    nameController.dispose();
+    phoneController.dispose();
+    birthdayController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+
+    nameFocusNode.dispose();
+    phoneFocusNode.dispose();
+    birthdayFocusNode.dispose();
+    emailFocusNode.dispose();
+    addressFocusNode.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    nameController = TextEditingController(text: user?.fullname ?? '');
+    phoneController = TextEditingController(text: user?.phone ?? '');
+    emailController = TextEditingController(text: user?.email ?? '');
+    addressController = TextEditingController(text: user?.address ?? '');
+
+    // Định dạng birthday nếu có
+    if (user?.birthday != null) {
+      birthdayController = TextEditingController(
+        text: DateFormat('dd/MM/yyyy').format(user!.birthday!),
+      );
+      dbDate = DateFormat('yyyy-MM-dd').format(user.birthday!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +136,14 @@ class _InfoPageState extends State<InfoPage> {
           spacing: 10,
           runSpacing: 10,
           children: [
-            _buildInputField('Name', nameController, screenWidth * 0.55),
-            _buildInputField('Phone', phoneController, screenWidth * 0.2),
-            _buildInputField('Age', ageController, screenWidth * 0.2),
-            _buildInputField('Address', addressController, screenWidth * 1),
+            _buildInputField(
+                'Name', nameController, nameFocusNode, screenWidth * 1),
+            _buildInputField(
+                'Phone', phoneController, phoneFocusNode, screenWidth * 0.5),
+            _buildInputField('Birthday', birthdayController, birthdayFocusNode,
+                screenWidth * 0.5),
+            _buildInputField('Address', addressController, addressFocusNode,
+                screenWidth * 1),
           ],
         );
       },
@@ -122,17 +177,14 @@ class _InfoPageState extends State<InfoPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildInputField('Current Password', currentPasswordController,
-                  MediaQuery.of(context).size.width * 0.9,
-                  showIcon: false),
+              _buildPasswordField('Current Password', currentPasswordController,
+                  MediaQuery.of(context).size.width * 0.9, 'currentPassword'),
               const SizedBox(height: 10),
-              _buildInputField('New Password', newPasswordController,
-                  MediaQuery.of(context).size.width * 0.9,
-                  showIcon: false),
+              _buildPasswordField('New Password', newPasswordController,
+                  MediaQuery.of(context).size.width * 0.9, 'newPassword'),
               const SizedBox(height: 10),
-              _buildInputField('Confirm Password', confirmPasswordController,
-                  MediaQuery.of(context).size.width * 0.9,
-                  showIcon: false),
+              _buildPasswordField('Confirm Password', confirmPasswordController,
+                  MediaQuery.of(context).size.width * 0.9, 'confirmPassword'),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(right: 50),
@@ -163,8 +215,8 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  Widget _buildInputField(
-      String label, TextEditingController controller, double width,
+  Widget _buildInputField(String label, TextEditingController controller,
+      FocusNode focusNode, double width,
       {bool showIcon = true}) {
     return SizedBox(
       width: width,
@@ -182,6 +234,7 @@ class _InfoPageState extends State<InfoPage> {
           const SizedBox(height: 10),
           TextField(
             controller: controller,
+            focusNode: focusNode,
             obscureText: label.contains('Password'),
             style: TextStyle(color: AppTheme.colors.white),
             decoration: InputDecoration(
@@ -201,9 +254,63 @@ class _InfoPageState extends State<InfoPage> {
                         Icons.edit,
                         color: AppTheme.colors.white,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        focusNode.requestFocus();
+                      },
                     )
                   : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(String label, TextEditingController controller,
+      double width, String fieldKey) {
+    return Container(
+      width: width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+                color: AppTheme.colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: controller,
+            obscureText: obscurePasswordFields[fieldKey]!,
+            style: TextStyle(color: AppTheme.colors.white),
+            decoration: InputDecoration(
+              hintText: 'Enter $label',
+              hintStyle:
+                  TextStyle(color: AppTheme.colors.white.withOpacity(0.5)),
+              filled: true,
+              fillColor: AppTheme.colors.black.withOpacity(0.2),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 15),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  obscurePasswordFields[fieldKey]!
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                  color: AppTheme.colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    obscurePasswordFields[fieldKey] =
+                        !obscurePasswordFields[fieldKey]!;
+                  });
+                },
+              ),
             ),
           ),
         ],

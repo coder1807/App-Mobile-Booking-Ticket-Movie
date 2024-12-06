@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/Api/auth/logout.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/FavoriteMovie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/InfoProfile.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/Notification.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/manager/UserProvider.dart';
+import 'package:movie_app/models/user.dart';
+
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,13 +21,14 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isDarkMode = true;
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      backgroundColor: const Color(0xFF121011),
-      body: _page(),
+      backgroundColor: Color(0xFF121011),
+      body: _page(user),
     );
   }
 
-  Widget _page() {
+  Widget _page(User? user) {
     return Stack(
       children: [
         SingleChildScrollView(
@@ -29,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
             child: Column(
               children: [
-                _headerPage(),
+                _headerPage(user),
                 const SizedBox(height: 30),
                 _mainPage()
               ],
@@ -40,87 +47,95 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _headerPage() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          'Profile',
-          style: TextStyle(
-            color: AppTheme.colors.white,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/images/User/avatar.jpg'),
+  Widget _headerPage(User? user) {
+    return user == null
+        ? Center(
+            child: Text(
+              "Không có thông tin người dùng!",
+              style: TextStyle(color: AppTheme.colors.white, fontSize: 18),
             ),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'John Doe',
-                  style: TextStyle(
-                    color: AppTheme.colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Profile',
+                style: TextStyle(
+                  color: AppTheme.colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        AssetImage('assets/images/User/avatar.jpg'),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.phone,
-                      color: AppTheme.colors.white,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      '+123 456 789',
-                      style: TextStyle(
-                        color: AppTheme.colors.white,
-                        fontSize: 16,
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.fullname ?? "Anonymous User",
+                        style: TextStyle(
+                          color: AppTheme.colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.email,
-                      color: AppTheme.colors.white,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      'johndoe@example.com',
-                      style: TextStyle(
-                        color: AppTheme.colors.white,
-                        fontSize: 16,
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.phone,
+                            color: AppTheme.colors.white,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            user.phone ?? "+123 456 789",
+                            style: TextStyle(
+                              color: AppTheme.colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Container(
-          width: double.infinity,
-          height: 1,
-          color: Colors.grey,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.email,
+                            color: AppTheme.colors.white,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            user.email ?? "anonymous-user@exemple.com",
+                            style: TextStyle(
+                              color: AppTheme.colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                height: 1,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 20),
+            ],
+          );
   }
 
   Widget _mainPage() {
@@ -238,7 +253,13 @@ class _ProfilePageState extends State<ProfilePage> {
         side: BorderSide(color: AppTheme.colors.buttonColor, width: 1),
         borderRadius: BorderRadius.circular(10),
       ),
-      onTap: () {},
+      onTap: () async {
+        await logout();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SignInPage()),
+        );
+      },
     );
   }
 }
