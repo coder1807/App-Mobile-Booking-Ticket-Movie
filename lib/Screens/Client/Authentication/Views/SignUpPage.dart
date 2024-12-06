@@ -5,11 +5,6 @@ import 'package:movie_app/Api/auth/register.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
-import 'package:movie_app/config.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'package:movie_app/models/user.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
