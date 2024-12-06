@@ -1,20 +1,20 @@
-import 'dart:convert';
+// import 'dart:convert';
 
-import 'package:movie_app/config.dart';
+// import 'package:movie_app/config.dart';
 
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
-Future<Map<String, dynamic>> logout() async {
-  final String apiUrl = '${AppConfig.MY_URL}/logout';
+// Future<Map<String, dynamic>> logout() async {
+//   final String apiUrl = '${AppConfig.MY_URL}/logout';
 
-  try {
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {'Content-Type': 'application/json'},
-    );
-    final data = jsonDecode(utf8.decode(response.bodyBytes));
-    return data;
-  } catch (error) {
-    return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};
-  }
-}
+//   try {
+//     final response = await http.post(
+//       Uri.parse(apiUrl),
+//       headers: {'Content-Type': 'application/json'},
+//     );
+//     final data = jsonDecode(utf8.decode(response.bodyBytes));
+//     return data;
+//   } catch (error) {
+//     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};
+//   }
+// }
