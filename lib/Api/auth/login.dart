@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:movie_app/config.dart';
 import 'package:movie_app/manager/UserProvider.dart';
-
 import 'package:movie_app/models/user.dart';
 import 'package:provider/provider.dart';
 
