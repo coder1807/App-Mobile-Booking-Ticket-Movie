@@ -23,7 +23,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      backgroundColor: Color(0xFF121011),
+      backgroundColor:
+          _isDarkMode ? AppTheme.colors.mainBackground : AppTheme.colors.white,
       body: _page(user),
     );
   }

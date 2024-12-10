@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Foods/BookingSummary.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';

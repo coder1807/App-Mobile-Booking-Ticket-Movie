@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:movie_app/models/movie.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-Future<List<Movie>> getListMovie() async {
+Future<List<Map<String, dynamic>>> fetchMovies() async {
   final String apiUrl = '${dotenv.env['MY_URL']}/movies';
+
   try {
     final response = await http.get(
       Uri.parse(apiUrl),
@@ -14,16 +13,13 @@ Future<List<Movie>> getListMovie() async {
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      List<Movie> movieList = [];
-      for (var item in data) {
-        movieList.add(Movie.fromJson(item));
-      }
-      return movieList;
+      return List<Map<String, dynamic>>.from(data);
     } else {
-      throw Exception('Failed to load movies list');
+      print('Error: ${response.statusCode}');
+      return [];
     }
   } catch (error) {
-    log('Lỗi khi gọi API: ${error}');
+    print('Error occurred: $error');
     return [];
   }
 }

@@ -14,7 +14,7 @@ class _CinemaPageState extends State<CinemaPage> {
   String searchQuery = '';
   List<CinemaItem> cinemas = [
     CinemaItem(
-      imageUrl: 'assets/images/theater/cinema1.jpg',
+      imageUrl: 'assets/images/Theater/cinema1.jpg',
       name: 'Cinema 99 Premiere',
       rating: 4.9,
       reviewCount: '10.4k reviews',
@@ -23,7 +23,7 @@ class _CinemaPageState extends State<CinemaPage> {
       isFavorite: false,
     ),
     CinemaItem(
-      imageUrl: 'assets/images/theater/cinema2.jpg',
+      imageUrl: 'assets/images/Theater/cinema2.jpg',
       name: 'Black Prime Future',
       rating: 5.0,
       reviewCount: '20.1k reviews',
@@ -32,7 +32,7 @@ class _CinemaPageState extends State<CinemaPage> {
       isFavorite: true,
     ),
     CinemaItem(
-      imageUrl: 'assets/images/theater/cinema3.jpg',
+      imageUrl: 'assets/images/Theater/cinema3.jpg',
       name: 'Cinema 99 Premiere',
       rating: 4.9,
       reviewCount: '10.4k reviews',
@@ -41,7 +41,7 @@ class _CinemaPageState extends State<CinemaPage> {
       isFavorite: false,
     ),
     CinemaItem(
-      imageUrl: 'assets/images/theater/cinema4.jpg',
+      imageUrl: 'assets/images/Theater/cinema4.jpg',
       name: 'Cinema 99 Premiere',
       rating: 4.9,
       reviewCount: '10.4k reviews',
