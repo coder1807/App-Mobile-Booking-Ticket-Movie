@@ -1,14 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/models/movie.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailMoviePage extends StatefulWidget {
-  const DetailMoviePage({super.key});
+  final Movie movie;
+  const DetailMoviePage({Key? key, required this.movie}) : super(key: key);
 
   @override
   State<DetailMoviePage> createState() => _DetailMoviePageState();
 }
 
 class _DetailMoviePageState extends State<DetailMoviePage> {
+  late YoutubePlayerController _youtubePlayerController;
+  bool _isPlayerReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Khởi tạo controller cho YouTube Player với video ID
+    _youtubePlayerController = YoutubePlayerController(
+      initialVideoId: widget.movie.trailer, // Mã trailer YouTube
+      flags: YoutubePlayerFlags(
+        autoPlay: false, // Không tự động phát khi mở
+        mute: false, // Không tắt âm
+      ),
+    );
+    _isPlayerReady = true;
+  }
+
+  @override
+  void dispose() {
+    if (_isPlayerReady) {
+      _youtubePlayerController
+          .dispose(); // Giải phóng tài nguyên khi không sử dụng nữa
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +79,8 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          'assets/images/Poster/poster1.jpg',
+                        child: Image.network(
+                          '${dotenv.env['API']}' + widget.movie.poster,
                           height: 250,
                           width: 200,
                           fit: BoxFit.cover,
@@ -61,7 +92,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'DEADPOOL 3',
+                              widget.movie.name,
                               style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
@@ -70,7 +101,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Duration: 128 minutes',
+                              'Duration: ${widget.movie.duration} minutes',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -78,7 +109,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Director: John Doe',
+                              'Director: ${widget.movie.director}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -104,8 +135,8 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                                         Border.all(color: Colors.red, width: 1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Text(
-                                    'PG-13',
+                                  child: Text(
+                                    widget.movie.limitAge,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontFamily: 'Poppins',
@@ -119,7 +150,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                               height: 10,
                             ),
                             Text(
-                              'Genres: Action, Adventure',
+                              'Genres: ${widget.movie.categories.map((e) => e['categoryName']).join(', ')}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -139,6 +170,27 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                         color: AppTheme.colors.white,
                         fontWeight: FontWeight.w600),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  YoutubePlayerBuilder(
+                      player: YoutubePlayer(
+                        controller: _youtubePlayerController,
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: Colors.amber,
+                        onReady: () {
+                          print("Player is ready.");
+                        },
+                      ),
+                      builder: (context, player) {
+                        return Column(
+                          children: [
+                            // some widgets
+                            player,
+                            //some other widgets
+                          ],
+                        );
+                      }),
                   const SizedBox(height: 20),
                   Text(
                     'Synopsis',
@@ -150,7 +202,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'This is the synopsis of the movie. It provides a brief overview of the',
+                    '${widget.movie.description}',
                     textAlign: TextAlign.justify,
                     style: TextStyle(
                         fontFamily: 'Poppins',
