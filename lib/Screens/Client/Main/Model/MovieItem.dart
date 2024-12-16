@@ -33,22 +33,22 @@ class MovieItem {
 
   factory MovieItem.fromJson(Map<String, dynamic> json) {
     return MovieItem(
-      id: json['id'],
-      name: json['name'],
-      trailer: json['trailer'],
-      description: json['description'],
-      poster: json['poster'],
-      director: json['director'],
-      actor: json['actor'],
-      openingday: json['openingday'],
-      subtitle: json['subtitle'],
-      duration: json['duration'],
-      limit_age: json['limit_age'],
-      quanlity: json['quanlity'],
-      countryName: json['countryName'],
-      categories: (json['categories'] as List)
-          .map((category) => Category.fromJson(category))
-          .toList(),
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      trailer: json['trailer'] ?? '',
+      description: json['description'] ?? '',
+      poster: json['poster'] ?? '',
+      director: json['director'] ?? '',
+      actor: json['actor'] ?? '',
+      openingday: json['openingday'] ?? '',
+      subtitle: json['subtitle'] ?? '',
+      duration: json['duration'] ?? 0,
+      limit_age: json['limit_age']?.toString() ?? '',  // Convert to String if needed
+      quanlity: json['quanlity'] ?? '',
+      countryName: json['countryName'] ?? '',
+      categories: (json['categories'] as List?)
+          ?.map((category) => Category.fromJson(category))
+          .toList() ?? [],
     );
   }
 }

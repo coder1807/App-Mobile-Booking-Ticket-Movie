@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Screens/Client/Main/Model/MovieItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/ScheduleItem.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/SeatBooking.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/SeatTest.dart';
 
 class CinemaDetailPage extends StatefulWidget {
   final int cinemaId;
@@ -76,30 +78,44 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
     }
 
     try {
-      // Check if filmId is valid
       if (filmId <= 0) {
-        throw Exception('Invalid filmId: $filmId');
+        print('Invalid filmId: $filmId');
+        return [];
       }
 
-      final response = await http.get(Uri.parse('$baseUrl/movie?id=$filmId'));
+      final response = await http.get(Uri.parse('$baseUrl/movie/$filmId'));
       print("Movie Response body for filmId $filmId: ${response.body}");
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-
-        // Check if data is null or empty
-        if (data.isEmpty) {
-          print('No movie data found for filmId $filmId');
+        if (response.body.isEmpty) {
+          print('Empty response for filmId $filmId');
           return [];
         }
 
-        return data.map((json) => MovieItem.fromJson(json)).toList();
+        final dynamic decodedData = json.decode(response.body);
+        if (decodedData == null) {
+          print('Null response data for filmId $filmId');
+          return [];
+        }
+
+        if (decodedData is List) {
+          return decodedData
+              .where((item) => item != null)
+              .map((json) => MovieItem.fromJson(json))
+              .toList();
+        } else if (decodedData is Map<String, dynamic>) {
+          return [MovieItem.fromJson(decodedData)];
+        }
+
+        print('Unexpected response format for filmId $filmId');
+        return [];
       } else {
-        throw Exception('Failed to load film $filmId. Status code: ${response.statusCode}');
+        print('Failed to load film $filmId. Status code: ${response.statusCode}');
+        return [];
       }
     } catch (e) {
       print('Error in fetchFilmsByFilmId for filmId $filmId: $e');
-      return []; // Return empty list instead of throwing exception
+      return [];
     }
   }
 
@@ -334,6 +350,15 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
                                   ),
                                   onPressed: () {
                                     // Xử lý khi chọn giờ chiếu
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SeatBooking(
+                                          scheduleId: schedule.scheduleId,
+                                          roomId: schedule.roomId,
+                                        ),
+                                      ),
+                                    );
                                     print('Selected time: ${schedule.start}');
                                   },
                                   child: Text(
