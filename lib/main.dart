@@ -142,7 +142,7 @@ class FoodPageCl extends StatelessWidget {
   const FoodPageCl({super.key});
   @override
   Widget build(BuildContext context) {
-    return const BasePage(child: FoodPage());
+    return const BasePage(child: ListFood());
   }
 }
 
