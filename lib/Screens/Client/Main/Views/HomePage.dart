@@ -6,6 +6,7 @@ import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovieComing.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/models/movie.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -123,25 +124,26 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                               builder: (context) => const ListPlayingPage()));
                     },
-                  child: Row(
-                    children: [
-                      Text(
-                        'View ALL',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.colors.orange),
-                      ),
-                      SizedBox(width: 15,),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: AppTheme.colors.orange,
-                        size: 15,
-                      )
-                    ],
-                  )
-                )
+                    child: Row(
+                      children: [
+                        Text(
+                          'View ALL',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.colors.orange),
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: AppTheme.colors.orange,
+                          size: 15,
+                        )
+                      ],
+                    ))
               ],
             ),
             const SizedBox(height: 10),
@@ -224,17 +226,20 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        final selectedMovie = Movie.fromJson(movie);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const DetailMoviePage(),
+                            builder: (context) =>
+                                DetailMoviePage(movie: selectedMovie),
                           ),
                         );
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Image.network(
-                          '${dotenv.env['API']}' + movie['poster'],  // Lấy poster từ API (ipv4 local)
+                          '${dotenv.env['API']}' +
+                              movie['poster'], // Lấy poster từ API (ipv4 local)
                           width: 150,
                           height: 250,
                           fit: BoxFit.cover,
@@ -244,10 +249,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 28),
                     GestureDetector(
                       onTap: () {
+                        final selectedMovie = Movie.fromJson(movie);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const DetailMoviePage(),
+                            builder: (context) =>
+                                DetailMoviePage(movie: selectedMovie),
                           ),
                         );
                       },

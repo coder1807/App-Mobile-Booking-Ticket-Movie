@@ -15,7 +15,7 @@ Future<Map<String, dynamic>> login(String username, String password) async {
       body: jsonEncode({'username': username, 'password': password}),
     );
 
-    final data = jsonDecode(response.body);
+    final data = jsonDecode(utf8.decode(response.bodyBytes));
     return data;
   } catch (error) {
     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};
@@ -26,5 +26,4 @@ Future<void> saveLogin(
     BuildContext context, Map<String, dynamic> response) async {
   User user = User.fromJson(response['data']['user']);
   Provider.of<UserProvider>(context, listen: false).setUser(user);
-  print(user);
 }

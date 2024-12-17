@@ -12,7 +12,7 @@ Future<List<Map<String, dynamic>>> fetchMovies() async {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       return List<Map<String, dynamic>>.from(data);
     } else {
       print('Error: ${response.statusCode}');
