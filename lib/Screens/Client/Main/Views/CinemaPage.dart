@@ -215,47 +215,6 @@ class _CinemaPageState extends State<CinemaPage> {
     );
   }
 
-  /*Widget _buildCinemaItem(CinemaItem cinema) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: Icon(
-                cinema.isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: cinema.isFavorite ? Colors.pink : Colors.grey,
-              ),
-              onPressed: () {
-                setState(() {
-                  cinema.isFavorite = !cinema.isFavorite;
-                });
-              },
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    cinema.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    cinema.location,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-
-          ],
-        ),
-      ),
-    );
-  }*/
   Widget _buildCinemaItem(CinemaItem cinema) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),

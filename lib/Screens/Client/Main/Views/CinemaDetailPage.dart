@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Screens/Client/Main/Model/MovieItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/ScheduleItem.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/SeatBooking.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/SeatTest.dart';
 
 class CinemaDetailPage extends StatefulWidget {
   final int cinemaId;
@@ -359,7 +358,6 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
                                         ),
                                       ),
                                     );
-                                    print('Selected time: ${schedule.start}');
                                   },
                                   child: Text(
                                     time,
