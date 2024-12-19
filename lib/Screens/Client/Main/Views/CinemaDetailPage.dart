@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Screens/Client/Main/Model/MovieItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/ScheduleItem.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/SeatBooking.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/SeatTest.dart';
 
 class CinemaDetailPage extends StatefulWidget {
   final int cinemaId;
@@ -52,9 +51,7 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
     if (baseUrl == null) {
       throw Exception('Base URL is null. Please check the .env file.');
     }
-
     final response = await http.get(Uri.parse('$baseUrl/cinema/$cinemaId'));
-
     // Debugging response body
     print("Response body: ${response.body}");
 

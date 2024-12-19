@@ -21,13 +21,13 @@ class _SeatBookingState extends State<SeatBooking> {
   final List<String> coupleSeatRows = ['G'];
 
   final int singleSeatsPerRow = 10;
-  final int coupleSeatsPerRow = 8;
+  final int coupleSeatsPerRow = 6;
 
   final double singleSeatPrice = 13.0;
   final double coupleSeatPrice = 25.0;
 
   final List<String> coupleSeats = [
-    'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8','G9','G10','G11','G12','G13','G14','G15','G16'
+    'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8','G9','G10','G11','G12',
   ];
 
   List<String> selectedSeats = [];
@@ -67,42 +67,26 @@ class _SeatBookingState extends State<SeatBooking> {
               color: Colors.pinkAccent,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildLegend(Icons.square_rounded, AppTheme.colors.white, "Available"),
+                  _buildLegend(Icons.square_rounded, AppTheme.colors.white, "Có sẵn"),
 
-                   _buildLegend(Icons.square_rounded, AppTheme.colors.pink, "Your Seat"),
-                  _buildLegend(Icons.square_rounded, AppTheme.colors.orangeColor, "Couple"),
-                  _buildLegend(Icons.square_rounded, AppTheme.colors.blueSky, "Booked"),
+                   _buildLegend(Icons.square_rounded, AppTheme.colors.pink, "Ghế đã chọn"),
+                  _buildLegend(Icons.rectangle_rounded, AppTheme.colors.orangeColor, "Ghế đôi"),
+                  _buildLegend(Icons.square_rounded, AppTheme.colors.blueSky, "Ghế đã đặt"),
 
                 ],
               ),
             ),
-            Expanded(//tên vô giữa icon, 2 cột 1 bên 5 ghế, available nền đen chữ trắng, booked xám đậm chữ trắng bold
+            Expanded(//tên vô giữa icon, 2 cột 1 bên 5 ghế, available nền đen chữ trắng
+                // , booked xám đậm chữ trắng bold
               child: CustomScrollView(
                 slivers: [
                   // Phần ghế single
-                  SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: singleSeatsPerRow,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 2,
-                      childAspectRatio:0.6,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        int rowIndex = index ~/ singleSeatsPerRow;
-                        String seat = singleSeatRows[rowIndex] +
-                            (index % singleSeatsPerRow + 1).toString();
-                        return _buildSeatWidget(seat);
-                      },
-                      childCount: singleSeatRows.length * singleSeatsPerRow,
-                    ),
-                  ),
+                  _buildSingleSeatsSection(),
 
-                  // Phần ghế couple
                   // Phần ghế couple
                   SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -140,7 +124,7 @@ class _SeatBookingState extends State<SeatBooking> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Your Seat",
+                      const Text("Gh đã chọn",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(
                         selectedSeats.join(', '),
@@ -151,7 +135,7 @@ class _SeatBookingState extends State<SeatBooking> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text("Total Price",
+                      const Text("Tổng tiền",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(
                         "\$${calculateTotalPrice().toStringAsFixed(2)}",
@@ -208,22 +192,30 @@ class _SeatBookingState extends State<SeatBooking> {
       bool isFirstInCouplePair = seatNumber % 2 == 1;
 
       if (isFirstInCouplePair) {
-        seat = '${seat[0]}${seatNumber}${seatNumber+1}';
+        seat = '${seat[0]}${seatNumber}${seat[0]}${seatNumber + 1}';
       } else {
         return SizedBox.shrink();
       }
     }
 
     if (bookedSeats.contains(seat)) {
-      seatColor = AppTheme.colors.blueSky;
+      seatColor = Colors.grey[800]!;
     } else if (selectedSeats.contains(seat)) {
       seatColor = AppTheme.colors.pink;
     } else {
       seatColor = isCoupleRow ? AppTheme.colors.orangeColor : AppTheme.colors.white;
     }
 
+    TextStyle textStyle = TextStyle(
+      fontSize: 12, // Tăng kích thước chữ nếu cần
+      fontWeight: bookedSeats.contains(seat) ? FontWeight.bold : FontWeight.w600,
+      color: seatColor == AppTheme.colors.white ? Colors.black : Colors.white,
+    );
+
     return GestureDetector(
-      onTap: bookedSeats.contains(seat) ? null : () {
+      onTap: bookedSeats.contains(seat)
+          ? null
+          : () {
         setState(() {
           if (selectedSeats.contains(seat)) {
             selectedSeats.remove(seat);
@@ -232,22 +224,29 @@ class _SeatBookingState extends State<SeatBooking> {
           }
         });
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
+        alignment: Alignment.center, // Đảm bảo căn giữa text
         children: [
           Icon(
-            Icons.square_rounded,
-            size: isCoupleRow ? 40 : 30,
+            isCoupleRow ? Icons.rectangle_rounded : Icons.square_rounded,
+            size: isCoupleRow ? 60: 40,
             color: seatColor,
           ),
-          Text(
-            seat,
-            style: TextStyle(
-              fontSize: 12,
-              fontFamily: 'Poppins',
-              color: AppTheme.colors.white,
+          if(!isCoupleRow)
+            Center(
+              child: Text(
+                '  ' + '$seat',
+                style: textStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
+
+          if(isCoupleRow)
+            Text(
+              seat,
+              style: textStyle,
+              textAlign: TextAlign.center,
+            ),
         ],
       ),
     );
@@ -259,11 +258,48 @@ class _SeatBookingState extends State<SeatBooking> {
         Icon(icon, color: color, size: 24),
         const SizedBox(width: 4),
         Text(label,
+            textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 14,
                 color: AppTheme.colors.white,
                 fontFamily: 'Poppins')),
       ],
+    );
+  }
+  Widget _buildSingleSeatsSection() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      sliver: SliverGrid(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 12, // Tăng số cột lên để tạo khoảng trống ở giữa
+          mainAxisSpacing:15,
+          crossAxisSpacing: 2,
+          childAspectRatio: 0.5,
+        ),
+        delegate: SliverChildBuilderDelegate(
+              (context, index) {
+            int rowIndex = index ~/ 12; // Số cột mới
+            int colIndex = index % 12; // Vị trí trong hàng
+
+            // Bỏ qua 2 cột ở giữa (cột 5 và 6)
+            if (colIndex == 5 || colIndex == 6) {
+              return const SizedBox(); // Khoảng trống ở giữa
+            }
+
+            // Tính số ghế thực tế
+            int actualSeatNumber;
+            if (colIndex < 5) {
+              actualSeatNumber = colIndex + 1; // Ghế 1-5 bên trái
+            } else {
+              actualSeatNumber = colIndex - 1; // Ghế 6-10 bên phải
+            }
+
+            String seat = '${singleSeatRows[rowIndex]}$actualSeatNumber';
+            return _buildSeatWidget(seat);
+          },
+          childCount: singleSeatRows.length * 12, // Số cột mới
+        ),
+      ),
     );
   }
 }
