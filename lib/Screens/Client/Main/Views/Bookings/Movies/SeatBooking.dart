@@ -75,7 +75,7 @@ class _SeatBookingState extends State<SeatBooking> {
 
                    _buildLegend(Icons.square_rounded, AppTheme.colors.pink, "Ghế đã chọn"),
                   _buildLegend(Icons.rectangle_rounded, AppTheme.colors.orangeColor, "Ghế đôi"),
-                  _buildLegend(Icons.square_rounded, AppTheme.colors.blueSky, "Ghế đã đặt"),
+                  _buildLegend(Icons.square_rounded, Colors.grey[800]!, "Ghế đã đặt"),
 
                 ],
               ),
