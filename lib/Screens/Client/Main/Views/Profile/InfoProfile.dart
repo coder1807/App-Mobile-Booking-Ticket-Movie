@@ -206,7 +206,6 @@ class _InfoPageState extends State<InfoPage> {
                     ElevatedButton(
                       onPressed: isMatching
                           ? () async {
-                              updateInfo(context);
                               changePassword(context);
                             }
                           : null,

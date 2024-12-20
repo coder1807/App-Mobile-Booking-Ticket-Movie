@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Foods/BookingSummary.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/BookingSummary.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // Để parse JSON từ response
+
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/BookingSummary.dart';
 
 class SeatBooking extends StatefulWidget {
   final int scheduleId;
   final int roomId;
+
   const SeatBooking({super.key, required this.scheduleId, required this.roomId});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SeatBookingState createState() => _SeatBookingState();
 }
 
 class _SeatBookingState extends State<SeatBooking> {
-  // Danh sách các hàng ghế single
-  final List<String> singleSeatRows = ['A', 'B', 'C', 'D', 'E', 'F', ];
-
-  // Danh sách các hàng ghế couple
+  final List<String> singleSeatRows = ['A', 'B', 'C', 'D', 'E', 'F'];
   final List<String> coupleSeatRows = ['G'];
 
   final int singleSeatsPerRow = 10;
@@ -31,7 +31,46 @@ class _SeatBookingState extends State<SeatBooking> {
   ];
 
   List<String> selectedSeats = [];
-  List<String> bookedSeats = ['A5', 'A6', 'B3', 'F6', 'F7'];
+  List<String> bookedSeats = []; // Ghế đã đặt sẽ được lưu ở đây
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBookedSeats();
+  }
+
+  // Gọi API để lấy danh sách ghế đã đặt
+  Future<void> _fetchBookedSeats() async {
+    final baseUrl = dotenv.env['MY_URL']; // Thay đổi URL cho phù hợp
+
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/seats/${widget.scheduleId}'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        setState(() {
+          if (responseData.isNotEmpty) {
+            bookedSeats = responseData.map((seat) => seat['symbol'] as String).toList();
+          } else {
+            bookedSeats = []; // Nếu không có ghế nào được đặt, bookedSeats vẫn là danh sách trống
+          }
+          isLoading = false; // Đã xong việc lấy dữ liệu, dừng loading
+        });
+      } else {
+        // Xử lý lỗi nếu API không thành công
+        print('Error fetching booked seats: ${response.statusCode}');
+        setState(() {
+          isLoading = false; // Dừng loading ngay cả khi có lỗi
+        });
+      }
+    } catch (e) {
+      print('Error fetching booked seats: $e');
+      setState(() {
+        isLoading = false; // Dừng loading khi có lỗi
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,14 +147,12 @@ class _SeatBookingState extends State<SeatBooking> {
                 ],
               ),
             ),
-
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12, blurRadius: 4, offset: Offset(0, -2)),
+                  BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2)),
                 ],
               ),
               child: Row(
@@ -147,8 +184,7 @@ class _SeatBookingState extends State<SeatBooking> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const BookingSummaryMovie()),
+                        MaterialPageRoute(builder: (context) => const BookingSummaryMovie()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -157,11 +193,7 @@ class _SeatBookingState extends State<SeatBooking> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(
-                      "Next",
-                      style: TextStyle(
-                          fontFamily: 'Poppins', color: AppTheme.colors.white),
-                    ),
+                    child: Text("Next", style: TextStyle(fontFamily: 'Poppins', color: AppTheme.colors.white)),
                   ),
                 ],
               ),
@@ -183,6 +215,7 @@ class _SeatBookingState extends State<SeatBooking> {
     }
     return total;
   }
+
   Widget _buildSeatWidget(String seat, {bool isCouple = false}) {
     Color seatColor;
     bool isCoupleRow = coupleSeatRows.contains(seat[0]);
@@ -201,9 +234,9 @@ class _SeatBookingState extends State<SeatBooking> {
     if (bookedSeats.contains(seat)) {
       seatColor = Colors.grey[800]!;
     } else if (selectedSeats.contains(seat)) {
-      seatColor = AppTheme.colors.pink;
+      seatColor = AppTheme.colors.pink; // Màu ghế đã chọn
     } else {
-      seatColor = isCoupleRow ? AppTheme.colors.orangeColor : AppTheme.colors.white;
+      seatColor = isCouple ? AppTheme.colors.orangeColor : AppTheme.colors.white; // Màu ghế còn trống
     }
 
     TextStyle textStyle = TextStyle(

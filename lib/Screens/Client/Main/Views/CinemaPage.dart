@@ -11,8 +11,8 @@ class CinemaPage extends StatefulWidget {
 
   @override
   State<CinemaPage> createState() => _CinemaPageState();
-
 }
+
 class _CinemaPageState extends State<CinemaPage> {
   String selectedTab = 'All';
   String searchQuery = '';
@@ -28,7 +28,8 @@ class _CinemaPageState extends State<CinemaPage> {
   Future<void> fetchCinemas() async {
     try {
       final baseUrl = dotenv.env['MY_URL']; // Đọc MY_URL từ .env
-      final response = await http.get(Uri.parse('$baseUrl/cinemas')); // Thêm /cinemas vào cuối URL
+      final response = await http
+          .get(Uri.parse('$baseUrl/cinemas')); // Thêm /cinemas vào cuối URL
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         setState(() {
@@ -95,7 +96,7 @@ class _CinemaPageState extends State<CinemaPage> {
               decoration: InputDecoration(
                 hintText: 'Search cinema',
                 hintStyle:
-                TextStyle(color: AppTheme.colors.white.withOpacity(0.5)),
+                    TextStyle(color: AppTheme.colors.white.withOpacity(0.5)),
                 filled: true,
                 fillColor: AppTheme.colors.black.withOpacity(0.2),
                 border: OutlineInputBorder(
@@ -131,10 +132,10 @@ class _CinemaPageState extends State<CinemaPage> {
                   decoration: BoxDecoration(
                     gradient: selectedTab == 'All'
                         ? LinearGradient(
-                      colors: [Colors.pink, Colors.purple],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
+                            colors: [Colors.pink, Colors.purple],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          )
                         : null,
                     color: selectedTab == 'All' ? null : Colors.transparent,
                     borderRadius: BorderRadius.circular(20),
@@ -144,7 +145,7 @@ class _CinemaPageState extends State<CinemaPage> {
                       'All',
                       style: TextStyle(
                         color:
-                        selectedTab == 'All' ? Colors.white : Colors.grey,
+                            selectedTab == 'All' ? Colors.white : Colors.grey,
                         fontSize: 16,
                       ),
                     ),
@@ -166,13 +167,13 @@ class _CinemaPageState extends State<CinemaPage> {
                   decoration: BoxDecoration(
                     gradient: selectedTab == 'Favorites'
                         ? LinearGradient(
-                      colors: [Colors.purple, Colors.pink],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
+                            colors: [Colors.purple, Colors.pink],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          )
                         : null,
                     color:
-                    selectedTab == 'Favorites' ? null : Colors.transparent,
+                        selectedTab == 'Favorites' ? null : Colors.transparent,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -202,9 +203,9 @@ class _CinemaPageState extends State<CinemaPage> {
 
     final filteredCinemas = cinemas
         .where((cinema) =>
-    (selectedTab == 'All' ||
-        (selectedTab == 'Favorites' && cinema.isFavorite)) &&
-        cinema.name.toLowerCase().contains(searchQuery.toLowerCase()))
+            (selectedTab == 'All' ||
+                (selectedTab == 'Favorites' && cinema.isFavorite)) &&
+            cinema.name.toLowerCase().contains(searchQuery.toLowerCase()))
         .toList();
 
     return Column(
@@ -214,47 +215,6 @@ class _CinemaPageState extends State<CinemaPage> {
     );
   }
 
-  /*Widget _buildCinemaItem(CinemaItem cinema) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: Icon(
-                cinema.isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: cinema.isFavorite ? Colors.pink : Colors.grey,
-              ),
-              onPressed: () {
-                setState(() {
-                  cinema.isFavorite = !cinema.isFavorite;
-                });
-              },
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    cinema.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    cinema.location,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-
-          ],
-        ),
-      ),
-    );
-  }*/
   Widget _buildCinemaItem(CinemaItem cinema) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -278,7 +238,9 @@ class _CinemaPageState extends State<CinemaPage> {
                 children: [
                   IconButton(
                     icon: Icon(
-                      cinema.isFavorite ? Icons.favorite : Icons.favorite_border,
+                      cinema.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
                       color: cinema.isFavorite ? Colors.pink : Colors.grey,
                     ),
                     onPressed: () {

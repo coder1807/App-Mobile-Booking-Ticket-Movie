@@ -356,7 +356,6 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
                                         ),
                                       ),
                                     );
-                                    print('Selected time: ${schedule.start}');
                                   },
                                   child: Text(
                                     time,
