@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
@@ -5,6 +6,9 @@ import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Foods/BookingSummary.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentBooking.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentSuccess.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
@@ -15,6 +19,7 @@ import 'package:movie_app/Screens/Components/BasePage.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +28,14 @@ void main() async {
   } catch (e) {
     throw Exception('Error loading .env file: $e');
   }
+
+  final appLinks = AppLinks(); // AppLinks is singleton
+  // Subscribe to all events (initial link and further)
+  final sub = appLinks.uriLinkStream.listen((uri) {
+    // Do something (navigation, ...)
+    print("appLink: " + uri.path);
+  });
+
   runApp(
     MultiProvider(
       providers: [
@@ -31,6 +44,34 @@ void main() async {
       child: MyApp(),
     ),
   );
+  // runApp(MaterialApp.router(
+  //     routerConfig: GoRouter(
+  //   routes: [
+  //     GoRoute(
+  //       path: '/',
+  //       builder: (_, __) => MultiProvider(
+  //         providers: [
+  //           ChangeNotifierProvider(create: (_) => UserProvider()),
+  //         ],
+  //         child: MyApp(),
+  //       ),
+  //       routes: [
+  //         GoRoute(
+  //           path: 'test',
+  //           builder: (_, __) {
+  //             print("Testtt: ");
+  //             return MultiProvider(
+  //               providers: [
+  //                 ChangeNotifierProvider(create: (_) => UserProvider()),
+  //               ],
+  //               child: MyApp(),
+  //             );
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   ],
+  // )));
 }
 
 class MyApp extends StatelessWidget {
@@ -40,13 +81,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInPage(),
+      home: PaymentErrorPage(),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
   @override
   // ignore: library_private_types_in_public_api
   _MainPageState createState() => _MainPageState();
@@ -55,6 +97,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   late final List<Widget> _children;
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +107,8 @@ class _MainPageState extends State<MainPage> {
       const FoodPageCl(),
       const ProfilePageCl(),
     ];
+
+
   }
 
   void onTappedBar(int index) {
@@ -135,6 +180,7 @@ class HomePageCl extends StatelessWidget {
 
 class CinemaPageCl extends StatelessWidget {
   const CinemaPageCl({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const BasePage(child: CinemaPage());
@@ -143,6 +189,7 @@ class CinemaPageCl extends StatelessWidget {
 
 class FoodPageCl extends StatelessWidget {
   const FoodPageCl({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const BasePage(child: ListFood());
@@ -151,6 +198,7 @@ class FoodPageCl extends StatelessWidget {
 
 class ProfilePageCl extends StatelessWidget {
   const ProfilePageCl({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const BasePage(child: ProfilePage());

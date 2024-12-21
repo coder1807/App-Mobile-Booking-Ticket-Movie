@@ -16,7 +16,6 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.colors.mainBackground,
-
         title: Text(
           'Review Summary',
           style: TextStyle(
@@ -26,8 +25,10 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
               color: AppTheme.colors.white),
         ),
         centerTitle: true,
-        leading: IconButton(icon: const Icon(Icons.arrow_back),
-          color: AppTheme.colors.white, onPressed: () {
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppTheme.colors.white,
+          onPressed: () {
             Navigator.pop(context);
           },
         ),
@@ -248,10 +249,10 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         ),
                       ),
                       onPressed: () {
-                        // Navigate to payment
+                        print("Momooooo!");
                       },
                       child: Text(
-                        'Continue to Payment',
+                        'Continue to payment',
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,
