@@ -4,12 +4,11 @@ class ScheduleItem {
   final DateTime? start;
   final int roomId;
 
-  ScheduleItem({
-    required this.scheduleId,
-    required this.roomId,
-    required this.filmId,
-    required this.start
-  });
+  ScheduleItem(
+      {required this.scheduleId,
+      required this.roomId,
+      required this.filmId,
+      required this.start});
 
   factory ScheduleItem.fromJson(Map<String, dynamic> json) {
     return ScheduleItem(
