@@ -85,3 +85,38 @@ Future<Map<String, dynamic>> fetchCinemaBySchedule(int scheduleId) async {
     return {};
   }
 }
+
+Future<List<Map<String, dynamic>>> fetchRatingByMovies(int movieId) async {
+  final String apiUrl = '${dotenv.env['MY_URL']}/rating/$movieId';
+  try {
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data);
+    } else {
+      print('Error: ${response.statusCode}');
+      return [];
+    }
+  } catch (error) {
+    print('Error occurred: $error');
+    return [];
+  }
+}
+
+Future<bool> submitRating(Map<String, dynamic> ratingDTO) async {
+  final String apiUrl = '${dotenv.env['MY_URL']}/rating';
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(ratingDTO),
+    );
+    return response.statusCode == 200;
+  } catch (error) {
+    print('Error occurred: $error');
+    return false;
+  }
+}
