@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/Api/movie/movie.dart';
 import 'package:movie_app/Screens/Client/Main/Model/CinemaItem.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -6,11 +7,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Screens/Client/Main/Model/MovieItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/ScheduleItem.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/SeatBooking.dart';
+import 'package:movie_app/models/movie.dart';
 
 class CinemaDetailPage extends StatefulWidget {
   final int cinemaId;
+  final Movie? selectedMovie; // Truyền vào selectedMovie từ page trước đó
 
-  const CinemaDetailPage({super.key, required this.cinemaId});
+  const CinemaDetailPage(
+      {super.key, required this.cinemaId, this.selectedMovie});
 
   @override
   _CinemaDetailPageState createState() => _CinemaDetailPageState();
@@ -27,6 +31,11 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
   void initState() {
     super.initState();
     _fetchCinemaDetails();
+    print("Selected Movie in CinemaDetailPage: ${widget.selectedMovie?.name}");
+    // Kiểm tra nếu selectedMovie là null
+    if (widget.selectedMovie == null) {
+      print("No movie selected.");
+    }
     loadSchedulesAndMovies();
   }
 
@@ -164,7 +173,14 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
     try {
       // Debug: Print the grouped schedules by filmId
       try {
-        final details = await fetchSchedules(widget.cinemaId);
+        late List<ScheduleItem> details;
+        print(widget.selectedMovie);
+        if (widget.selectedMovie != null) {
+          details = await fetchSchedulesByMovieAndCinema(
+              widget.cinemaId, widget.selectedMovie!.id);
+        } else {
+          details = await fetchSchedules(widget.cinemaId);
+        }
         final groupedSchedules = groupSchedulesByFilmId(details);
         print('Grouped Schedules by FilmId: $groupedSchedules');
 

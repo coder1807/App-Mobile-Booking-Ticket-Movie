@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/movie/movie.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/CinemaBooking.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:movie_app/models/movie.dart';
@@ -454,7 +455,13 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CinemaBookingPage(movie: widget.movie)));
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.colors.buttonColor,
                           shape: RoundedRectangleBorder(

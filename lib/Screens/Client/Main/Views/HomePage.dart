@@ -280,10 +280,13 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 12),
                     ElevatedButton(
                       onPressed: () {
+                        final selectedMovie = Movie.fromJson(movie);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CinemaBookingPage(),
+                            builder: (context) => CinemaBookingPage(
+                              movie: selectedMovie,
+                            ),
                           ),
                         );
                       },
