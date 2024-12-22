@@ -21,7 +21,7 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
   bool isLoading = true; // Loading state for UI
   List<ScheduleItem> schedules = []; // List of schedules
   List<MovieItem> films = [];
-  List<Category> categories =[];
+  List<Category> categories = [];
 
   @override
   void initState() {
@@ -29,6 +29,7 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
     _fetchCinemaDetails();
     loadSchedulesAndMovies();
   }
+
 
   // Fetch cinema details using the provided cinemaId
   Future<void> _fetchCinemaDetails() async {
@@ -45,6 +46,7 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
       print('Error fetching cinema details: $e');
     }
   }
+
   // Fetch cinema details from the API
   Future<CinemaItem> fetchCinemaDetail(int cinemaId) async {
     final baseUrl = dotenv.env['MY_URL'];
@@ -64,9 +66,11 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
         throw Exception('No cinema data found');
       }
     } else {
-      throw Exception('Failed to load cinema details. Status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to load cinema details. Status code: ${response.statusCode}');
     }
   }
+
   //fetch all schedules associated with the chosen cinema
   Future<List<MovieItem>> fetchFilmsByFilmId(int filmId) async {
     final baseUrl = dotenv.env['MY_URL'];
@@ -107,7 +111,8 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
         print('Unexpected response format for filmId $filmId');
         return [];
       } else {
-        print('Failed to load film $filmId. Status code: ${response.statusCode}');
+        print(
+            'Failed to load film $filmId. Status code: ${response.statusCode}');
         return [];
       }
     } catch (e) {
@@ -116,10 +121,12 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
     }
   }
 
-  Map<int, List<ScheduleItem>> groupSchedulesByFilmId(List<ScheduleItem> schedules) {
+  Map<int, List<ScheduleItem>> groupSchedulesByFilmId(
+      List<ScheduleItem> schedules) {
     var map = <int, List<ScheduleItem>>{};
     for (var schedule in schedules) {
-      if (schedule.filmId != null && schedule.filmId! > 0) { // Check for null or invalid filmId
+      if (schedule.filmId != null && schedule.filmId! > 0) {
+        // Check for null or invalid filmId
         if (!map.containsKey(schedule.filmId!)) {
           map[schedule.filmId!] = [];
         }
@@ -135,14 +142,16 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
       throw Exception('Base URL is null. Please check the .env file.');
     }
     try {
-      final response = await http.get(Uri.parse('$baseUrl/schedules/$cinemaId'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/schedules/$cinemaId'));
       print("Schedules Response body: ${response.body}");
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => ScheduleItem.fromJson(json)).toList();
       } else {
-        throw Exception('Failed to load schedules. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load schedules. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error in fetchSchedulesByCinemaId: $e');
@@ -166,7 +175,8 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
         for (var filmId in listFilmId) {
           final movies = await fetchFilmsByFilmId(filmId);
           if (movies.isNotEmpty) {
-            print('Fetched movie details for filmId $filmId: ${movies[0].name}');
+            print(
+                'Fetched movie details for filmId $filmId: ${movies[0].name}');
             fetchedMovies.add(movies[0]);
           } else {
             print('No movie found for filmId $filmId');
@@ -187,6 +197,7 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
       print('Error in loadSchedulesAndMovies: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,185 +211,224 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : cinema == null
-            ? const Center(child: Text('Failed to load cinema details'))
-            : Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Địa chỉ: ${cinema!.location}',
-                style: const TextStyle(fontSize: 18, color: Colors.white),
-              ),
-              const SizedBox(height: 20),
-              // const Text(
-              //   'Lịch chiếu:',
-              //   style: TextStyle(
-              //     fontSize: 20,
-              //     fontWeight: FontWeight.bold,
-              //     color: Colors.white,
-              //   ),
-              // ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: schedules.isEmpty
-                    ? const Text('Không có lịch chiếu', style: TextStyle(color: Colors.white))
-                    : ListView.builder(
-                  itemCount: groupSchedulesByFilmId(schedules).length,
-                  itemBuilder: (context, index) {
-                    final groupedSchedules = groupSchedulesByFilmId(schedules);
-                    final filmId = groupedSchedules.keys.elementAt(index);
-                    final filmSchedules = groupedSchedules[filmId]!;
+                ? const Center(child: Text('Failed to load cinema details'))
+                : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Địa chỉ: ${cinema!.location}',
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.white),
+                        ),
+                        const SizedBox(height: 20),
+                        // const Text(
+                        //   'Lịch chiếu:',
+                        //   style: TextStyle(
+                        //     fontSize: 20,
+                        //     fontWeight: FontWeight.bold,
+                        //     color: Colors.white,
+                        //   ),
+                        // ),
+                        const SizedBox(height: 10),
+                        Expanded(
+                          child: schedules.isEmpty
+                              ? const Text('Không có lịch chiếu',
+                                  style: TextStyle(color: Colors.white))
+                              : ListView.builder(
+                                  itemCount:
+                                      groupSchedulesByFilmId(schedules).length,
+                                  itemBuilder: (context, index) {
+                                    final groupedSchedules =
+                                        groupSchedulesByFilmId(schedules);
+                                    final filmId =
+                                        groupedSchedules.keys.elementAt(index);
+                                    final filmSchedules =
+                                        groupedSchedules[filmId]!;
 
-                    // Tìm thông tin movie tương ứng
-                    final movie = films.firstWhere(
-                          (m) => m.id == filmId,
-                      orElse: () => MovieItem(
-                        id: filmId,
-                        name: 'Unknown',
-                        poster: '',
-                        categories: categories,
-                        openingday: '',
-                        quanlity: '',
-                        subtitle: '',
-                        trailer: '',
-                        description: '',
-                        director: '',
-                        duration: 0,
-                        limit_age: 'NaN',
-                        actor: '',
-                        countryName: '',
-                      ),
-                    );
+                                    // Tìm thông tin movie tương ứng
+                                    final movie = films.firstWhere(
+                                      (m) => m.id == filmId,
+                                      orElse: () => MovieItem(
+                                        id: filmId,
+                                        name: 'Unknown',
+                                        poster: '',
+                                        categories: categories,
+                                        openingday: '',
+                                        quanlity: '',
+                                        subtitle: '',
+                                        trailer: '',
+                                        description: '',
+                                        director: '',
+                                        duration: 0,
+                                        limit_age: 'NaN',
+                                        actor: '',
+                                        countryName: '',
+                                      ),
+                                    );
 
-                    return Card(
-                      color: Color(0xFF1E1E1E),
-                      margin: EdgeInsets.only(bottom: 16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Movie info section
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Movie poster
-                                if (movie.poster.isNotEmpty)
-                                  Container(
-                                    width: 100,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          '${dotenv.env['API']}'+movie.poster
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                SizedBox(width: 12),
-                                // Movie details
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        movie.name,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        'Đạo diễn: ${movie.director}',
-                                        style: TextStyle(fontSize: 14, color: Colors.white70),
-                                      ),
-                                      Text(
-                                        'Thời lượng: ${movie.duration} phút',
-                                        style: TextStyle(fontSize: 14, color: Colors.white70),
-                                      ),
-                                      Text(
-                                        'Giới hạn độ tuổi: ${movie.limit_age}',
-                                        style: TextStyle(fontSize: 14, color: Colors.white70),
-                                      ),
-                                      Wrap(
-                                        spacing: 8,
-                                        runSpacing: 8,
-                                        children: movie.categories.map((category) {
-                                          return Chip(
-                                            label: Text(
-                                              category.categoryName,
-                                              style: TextStyle(color: Colors.white),
+                                    return Card(
+                                      color: Color(0xFF1E1E1E),
+                                      margin: EdgeInsets.only(bottom: 16),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // Movie info section
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // Movie poster
+                                                if (movie.poster.isNotEmpty)
+                                                  Container(
+                                                    width: 100,
+                                                    height: 150,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            '${dotenv.env['API']}' +
+                                                                movie.poster),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                SizedBox(width: 12),
+                                                // Movie details
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        movie.name,
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8),
+                                                      Text(
+                                                        'Đạo diễn: ${movie.director}',
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      Text(
+                                                        'Thời lượng: ${movie.duration} phút',
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      Text(
+                                                        'Giới hạn độ tuổi: ${movie.limit_age}',
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      Wrap(
+                                                        spacing: 8,
+                                                        runSpacing: 8,
+                                                        children: movie
+                                                            .categories
+                                                            .map((category) {
+                                                          return Chip(
+                                                            label: Text(
+                                                              category
+                                                                  .categoryName,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                            backgroundColor:
+                                                                Color(
+                                                                    0xFF141414),
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            backgroundColor: Color(0xFF141414),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16),
-                            // Showtimes section
-                            Text(
-                              'Giờ chiếu:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: filmSchedules.map((schedule) {
-                                final time = _formatDateTime(schedule.start);
-                                return ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF2C2C2C),
-                                    foregroundColor: Colors.white,
-                                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  ),
-                                  onPressed: () {
-                                    // Xử lý khi chọn giờ chiếu
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SeatBooking(
-                                          scheduleId: schedule.scheduleId,
-                                          roomId: schedule.roomId,
+                                            SizedBox(height: 16),
+                                            // Showtimes section
+                                            Text(
+                                              'Giờ chiếu:',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white70,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Wrap(
+                                              spacing: 10,
+                                              runSpacing: 10,
+                                              children:
+                                                  filmSchedules.map((schedule) {
+                                                final time = _formatDateTime(
+                                                    schedule.start);
+                                                return ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Color(0xFF2C2C2C),
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 16,
+                                                            vertical: 8),
+                                                  ),
+                                                  onPressed: () {
+                                                    // Xử lý khi chọn giờ chiếu
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SeatBooking(
+                                                          scheduleId: schedule
+                                                              .scheduleId,
+                                                          roomId:
+                                                              schedule.roomId,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    time,
+                                                    style:
+                                                        TextStyle(fontSize: 16),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     );
                                   },
-                                  child: Text(
-                                    time,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
+                                ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+                      ],
+                    ),
+                  ),
       ),
     );
   }
-
-
 
   String _formatDateTime(DateTime? dateTime) {
     if (dateTime == null) return 'Chưa có lịch';

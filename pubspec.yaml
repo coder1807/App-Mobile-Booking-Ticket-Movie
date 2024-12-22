@@ -40,6 +40,9 @@ dependencies:
   provider: ^6.1.2
   flutter_dotenv: ^5.2.1
   youtube_player_flutter: ^9.1.1
+  app_links: ^6.3.3
+  go_router: ^14.6.2
+  shared_preferences: ^2.3.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -74,8 +77,9 @@ flutter:
     - assets/icons/lock.png
     - assets/icons/user.png
     - assets/icons/birthday.png
+    - assets/icons/successOrder.png
     - assets/images/Movies/
-    # Payment
+    # payment
     # Casts
     - assets/images/Casts/
     # User

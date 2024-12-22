@@ -271,7 +271,7 @@ class _BookingSummaryFoodsState extends State<BookingSummaryFoods> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Actual Payment',
+                          'Actual payment',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               color: AppTheme.colors.white,
@@ -331,7 +331,7 @@ class _BookingSummaryFoodsState extends State<BookingSummaryFoods> {
                     minimumSize: const Size(double.infinity, 50),
                     backgroundColor: AppTheme.colors.buttonColor),
                 child: Text(
-                  'Proceed to Payment',
+                  'Proceed to payment',
                   style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 14,

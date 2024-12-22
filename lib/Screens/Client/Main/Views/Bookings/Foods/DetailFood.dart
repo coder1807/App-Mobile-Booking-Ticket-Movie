@@ -210,7 +210,7 @@ class _DetailFoodState extends State<DetailFood> {
                     child: Row(
                       children: [
                         Text(
-                          'Payment',
+                          'payment',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 14,
