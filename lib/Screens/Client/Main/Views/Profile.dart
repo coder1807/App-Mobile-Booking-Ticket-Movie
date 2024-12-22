@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/Api/auth/logout.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/FavoriteMovie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/InfoProfile.dart';

@@ -17,7 +17,6 @@ Future<Map<String, dynamic>> updateUser(int id, String fullname, String phone,
         'address': address
       }),
     );
-    ;
 
     final data = jsonDecode(utf8.decode(response.bodyBytes));
     return data;

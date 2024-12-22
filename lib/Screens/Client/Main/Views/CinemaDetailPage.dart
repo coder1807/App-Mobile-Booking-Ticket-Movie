@@ -30,7 +30,6 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
     loadSchedulesAndMovies();
   }
 
-
   // Fetch cinema details using the provided cinemaId
   Future<void> _fetchCinemaDetails() async {
     try {
@@ -295,8 +294,7 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
                                                               8),
                                                       image: DecorationImage(
                                                         image: NetworkImage(
-                                                            '${dotenv.env['API']}' +
-                                                                movie.poster),
+                                                            '${dotenv.env['API']}${movie.poster}'),
                                                         fit: BoxFit.cover,
                                                       ),
                                                     ),

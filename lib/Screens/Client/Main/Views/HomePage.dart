@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/movie/movie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/CinemaBooking.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovieComing.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/models/movie.dart';

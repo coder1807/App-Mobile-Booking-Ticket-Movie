@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+Future<void> _launchUrl(String url) async {
+  final Uri _url = Uri.parse(url);
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
+  }
+}
 
 class BookingSummaryMovie extends StatefulWidget {
   const BookingSummaryMovie({super.key});
@@ -249,6 +257,8 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         ),
                       ),
                       onPressed: () {
+                        _launchUrl(
+                            "https://test-payment.momo.vn/v2/gateway/pay?s=2e3310a5693367b460adddf793a82bbcf70eb626bb011ee8e497c89132d2b55e&t=TU9NT3xNT01PMTczNDg4NjUyOTk4NQ");
                         print("Momooooo!");
                       },
                       child: Text(
