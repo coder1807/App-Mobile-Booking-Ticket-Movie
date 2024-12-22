@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_app/Api/auth/google.dart';
 import 'package:movie_app/Api/auth/login.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
@@ -180,7 +181,18 @@ class _SignInPageState extends State<SignInPage> {
                         child: IconButton(
                           icon: const FaIcon(FontAwesomeIcons.google,
                               color: Colors.white),
-                          onPressed: () {},
+                          onPressed: () async {
+                            // Tạo một instance của GoogleLoginService
+                            final googleLoginService = GoogleLoginService();
+                            // Gọi phương thức đăng nhập
+                            saveLogin(context,
+                                await googleLoginService.signInWithGoogle());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MainPage()),
+                            );
+                          },
                         ),
                       ),
                     ),
