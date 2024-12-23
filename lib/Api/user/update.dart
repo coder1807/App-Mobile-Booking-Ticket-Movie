@@ -14,7 +14,7 @@ Future<Map<String, dynamic>> updateUser(int id, String fullname, String phone,
         'fullname': fullname,
         'phone': phone,
         'birthday': birthday,
-        'address': address
+        'address': address,
       }),
     );
 

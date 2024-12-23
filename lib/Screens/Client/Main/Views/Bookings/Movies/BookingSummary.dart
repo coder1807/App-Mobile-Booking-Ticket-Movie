@@ -1,6 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
+import 'package:movie_app/Api/Food/foods.dart';
+import 'package:movie_app/Api/movie/movie.dart';
+import 'package:movie_app/Screens/Client/Main/Model/BookingItem.dart';
+import 'package:movie_app/Screens/Client/Main/Model/CinemaItem.dart';
+import 'package:movie_app/Screens/Client/Main/Model/MovieItem.dart';
+import 'package:movie_app/Screens/Client/Main/Model/ScheduleItem.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:movie_app/manager/UserProvider.dart';
+import 'package:provider/provider.dart';
 
 Future<void> _launchUrl(String url) async {
   final Uri _url = Uri.parse(url);
@@ -10,13 +22,104 @@ Future<void> _launchUrl(String url) async {
 }
 
 class BookingSummaryMovie extends StatefulWidget {
-  const BookingSummaryMovie({super.key});
-
+  final BookingItem bookingItem;
+  final MovieItem movie;
+  final ScheduleItem scheduleItem;
+  final Map<String, String> seatTypeMap; // Nhận map loại ghế
+  const BookingSummaryMovie(
+      {Key? key,
+      required this.bookingItem,
+      required this.movie,
+      required this.scheduleItem,
+      required this.seatTypeMap})
+      : super(key: key);
   @override
   State<BookingSummaryMovie> createState() => _BookingSummaryMovieState();
 }
 
 class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
+  late String cinema = "";
+  late List<String> singleSeats = List.empty();
+  late List<String> coupleSeats = List.empty();
+  late double singleTotalPrice;
+  late double coupleTotalPrice;
+  late double previousComboFoodPrice = 0.0;
+  late double comboFoodPrice = 0.0; // Thêm biến này để lưu giá combo food
+  late DateTime displayDate;
+  String? selectComboFood = '';
+  String? selectedPromo;
+  double originPrice = 0;
+  double promoDiscount = 0.0;
+  List<Map<String, dynamic>> foodCombos = [];
+  List<Map<String, dynamic>> promoOptions = [];
+  @override
+  void initState() {
+    _fetchCinemaName();
+    _buildSeatSummary();
+    fetchFoods().then((data) {
+      setState(() {
+        foodCombos = data;
+        foodCombos
+            .insert(0, {'id': 0, 'name': 'Không chọn combo food', 'price': 0});
+        if (foodCombos.isNotEmpty) {
+          selectComboFood = foodCombos.first['name'];
+        }
+      });
+    });
+    final scheduleDate = widget.scheduleItem.start ?? DateTime.now();
+    displayDate = scheduleDate.isAfter(DateTime.now())
+        ? scheduleDate
+        : DateTime.now().add(Duration(days: 1));
+    final userType =
+        Provider.of<UserProvider>(context, listen: false).user!.type;
+    originPrice = widget.bookingItem.totalPrice;
+    _buildPromoOptions(userType);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void _buildSeatSummary() {
+    final seatDetails = _calculateSeatDetails();
+    singleSeats = seatDetails['singleSeats'] as List<String>;
+    coupleSeats = seatDetails['coupleSeats'] as List<String>;
+    singleTotalPrice = (seatDetails['singleTotalPrice'] as num).toDouble();
+    coupleTotalPrice = (seatDetails['coupleTotalPrice'] as num).toDouble();
+  }
+
+  void _fetchCinemaName() async {
+    final response =
+        await fetchCinemaBySchedule(widget.scheduleItem.scheduleId);
+    cinema = response[0]['name'];
+  }
+
+  void _updateComboFood(String? comboName) {
+    final combo =
+        foodCombos.firstWhere((element) => element['name'] == comboName);
+    setState(() {
+      comboFoodPrice = combo['price'].toDouble();
+      widget.bookingItem.totalPrice = originPrice + comboFoodPrice;
+      widget.bookingItem.foodID = combo['id'];
+    });
+  }
+
+  void _buildPromoOptions(String? userType) {
+    promoOptions = [
+      if (userType == 'VIP')
+        {'value': 0.1, 'label': 'Thành viên VIP - Giảm 10%'},
+      if (userType == 'VIP' || userType == 'FRIEND')
+        {'value': 0.05, 'label': 'Thành viên FRIEND - Giảm 5%'},
+      {'value': 0.0, 'label': 'Không có mã khuyến mãi'},
+    ];
+  }
+
+  void _updatePromo(String? promoValue) {
+    setState(() {
+      selectedPromo = promoValue;
+      promoDiscount = double.parse(promoValue!);
+      widget.bookingItem.totalPrice *= (1 - promoDiscount);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -63,8 +166,8 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          'assets/images/Poster/poster1.jpg',
+                        child: Image.network(
+                          '${dotenv.env['API']}' + widget.movie.poster,
                           width: 170,
                           height: 250,
                           fit: BoxFit.cover,
@@ -76,7 +179,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'DEADPOOL 3',
+                              widget.movie.name,
                               style: TextStyle(
                                   color: AppTheme.colors.white,
                                   fontFamily: 'Poppins',
@@ -85,7 +188,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              'Duration : 128 minutes',
+                              'Duration : ${widget.movie.duration} minutes',
                               style: TextStyle(
                                   color: AppTheme.colors.white,
                                   fontFamily: 'Poppins',
@@ -94,7 +197,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Director : Shown Levy',
+                              'Director : ${widget.movie.director}',
                               style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w400,
@@ -114,7 +217,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                                 ),
                                 const SizedBox(width: 40),
                                 Text(
-                                  ':',
+                                  ":",
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       color: AppTheme.colors.white,
@@ -132,19 +235,19 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                                         width: 1),
                                   ),
                                   child: Text(
-                                    'R 17+',
+                                    'C${widget.movie.limit_age}',
                                     style: TextStyle(
-                                        color: AppTheme.colors.buttonColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Poppins',
-                                        fontSize: 14),
+                                      fontSize: 14,
+                                      fontFamily: 'Poppins',
+                                      color: Colors.red,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Genres : Action, Adventure',
+                              'Genres: ${widget.movie.categories.map((e) => e.categoryName).join(', ')}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -178,12 +281,18 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         const Divider(color: Colors.grey),
                         Column(
                           children: [
-                            _detailRow('Cinema', 'ABC Cinema'),
-                            _detailRow('Package', 'Gold'),
-                            _detailRow('Auditorium', 'Auditorium 1'),
-                            _detailRow('Seat(s)', 'A1, A2'),
-                            _detailRow('Date', '2024-12-01'),
-                            _detailRow('Hour', '19:30'),
+                            _detailRow('Cinema', cinema),
+                            _detailRow('Seat(s)',
+                                widget.bookingItem.seatSymbols.join(', ')),
+                            _detailRow(
+                              'Date',
+                              DateFormat('dd/MM/yyyy').format(displayDate),
+                            ),
+                            _detailRow(
+                              'Hour',
+                              DateFormat('HH:mm').format(
+                                  widget.scheduleItem.start ?? displayDate),
+                            ),
                           ],
                         ),
                       ],
@@ -212,17 +321,79 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         Divider(color: AppTheme.colors.greyColor),
                         Column(
                           children: [
-                            _detailRow('Standard (x1)', "\$12.00"),
-                            _detailRow('Convenience Free (x1)', '\$1.00'),
+                            _detailRow(
+                              'Single   (${singleSeats.length}): ${singleSeats.join(', ')}',
+                              singleTotalPrice.toStringAsFixed(0) + ' VNĐ',
+                            ),
+                            _detailRow(
+                              'Couple (${coupleSeats.length}): ${coupleSeats.join(', ')}',
+                              coupleTotalPrice.toStringAsFixed(0) + ' VNĐ',
+                            ),
+                            _detailRow(
+                                '${selectComboFood ?? 'Không chọn combo food'}:',
+                                comboFoodPrice.toStringAsFixed(0) + ' VNĐ'),
                           ],
                         ),
                         Divider(
                           color: AppTheme.colors.greyColor,
                         ),
-                        _detailRow('Actual Pay', "\$13.00")
+                        _detailRow('Actual Pay',
+                            '${widget.bookingItem.totalPrice.toStringAsFixed(0)} VNĐ')
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Select Combo Food',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.colors.containerBackground,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        dropdownColor: AppTheme.colors.containerBackground,
+                        value: selectComboFood,
+                        hint: Text(
+                          'Choose a combo',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            color: Colors.grey,
+                          ),
+                        ),
+                        icon: Icon(Icons.arrow_drop_down,
+                            color: AppTheme.colors.white),
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          color: AppTheme.colors.white,
+                        ),
+                        underline: SizedBox(),
+                        items: foodCombos.map<DropdownMenuItem<String>>(
+                            (Map<String, dynamic> combo) {
+                          return DropdownMenuItem<String>(
+                            value: combo['name'],
+                            child: Text(
+                                '${combo['name']} ${combo['price'] > 0 ? ' - ' + combo['price'].toString() + ' VND' : ''}'),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectComboFood = newValue;
+                            _updateComboFood(newValue);
+                            _updatePromo(selectedPromo);
+                          });
+                        },
+                      )),
                   const SizedBox(height: 20),
                   Text(
                     'Promo & Vouchers',
@@ -234,16 +405,41 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Enter the promo code or voucher',
-                      hintStyle: const TextStyle(color: Colors.grey),
-                      filled: true,
-                      fillColor: AppTheme.colors.containerBackground,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppTheme.colors.containerBackground,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      dropdownColor: AppTheme.colors.containerBackground,
+                      value: selectedPromo,
+                      hint: Text(
+                        'Choose a promo code',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.grey,
+                        ),
                       ),
+                      icon: Icon(Icons.arrow_drop_down,
+                          color: AppTheme.colors.white),
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: AppTheme.colors.white,
+                      ),
+                      underline: SizedBox(),
+                      items:
+                          promoOptions.map<DropdownMenuItem<String>>((promo) {
+                        return DropdownMenuItem<String>(
+                          value: promo['value'].toString(),
+                          child: Text(promo['label']),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        _updatePromo(newValue);
+                      },
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -305,5 +501,28 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
         ],
       ),
     );
+  }
+
+  Map<String, dynamic> _calculateSeatDetails() {
+    final singleSeats = widget.bookingItem.seatSymbols
+        .where((seat) => widget.seatTypeMap[seat] == 'single')
+        .toList();
+
+    final coupleSeats = widget.bookingItem.seatSymbols
+        .where((seat) => widget.seatTypeMap[seat] == 'couple')
+        .toList();
+
+    final singleSeatPrice = 80000;
+    final coupleSeatPrice = 120000;
+
+    final singleTotalPrice = singleSeats.length * singleSeatPrice;
+    final coupleTotalPrice = coupleSeats.length * coupleSeatPrice;
+
+    return {
+      'singleSeats': singleSeats,
+      'coupleSeats': coupleSeats,
+      'singleTotalPrice': singleTotalPrice,
+      'coupleTotalPrice': coupleTotalPrice,
+    };
   }
 }
