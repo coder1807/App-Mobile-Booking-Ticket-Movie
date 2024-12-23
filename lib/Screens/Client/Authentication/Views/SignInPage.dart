@@ -253,40 +253,4 @@ class _SignInPageState extends State<SignInPage> {
       ),
     );
   }
-
-  final Future<SharedPreferencesWithCache> _prefs =
-      SharedPreferencesWithCache.create(
-          cacheOptions: const SharedPreferencesWithCacheOptions(
-              // This cache will only accept the key 'counter'.
-              allowList: <String>{'counter'}));
-  late Future<int> _counter;
-  int _externalCounter = 0;
-
-  Future<void> _incrementCounter() async {
-    final SharedPreferencesWithCache prefs = await _prefs;
-    final int counter = (prefs.getInt('counter') ?? 0) + 1;
-
-    setState(() {
-      _counter = prefs.setInt('counter', counter).then((_) {
-        return counter;
-      });
-    });
-  }
-
-  Future<void> _getExternalCounter() async {
-    final SharedPreferencesAsync prefs = SharedPreferencesAsync();
-    setState(() async {
-      _externalCounter = (await prefs.getInt('externalCounter')) ?? 0;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _counter = _prefs.then((SharedPreferencesWithCache prefs) {
-      return prefs.getInt('counter') ?? 0;
-    });
-
-    _getExternalCounter();
-  }
 }
