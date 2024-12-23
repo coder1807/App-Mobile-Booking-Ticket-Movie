@@ -5,7 +5,11 @@ import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/CinemaBookin
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/manager/UserProvider.dart';
 import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/models/user.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,12 +19,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? _user_fullname;
+
   late Future<List<Map<String, dynamic>>> movies;
   Map<int, bool> bookmarkedMovies = {};
+
+  Future<void> _loadInfoUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _user_fullname = prefs.getString('user_fullname') ?? 'Chào mừng';
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadInfoUser();
   }
 
   @override
@@ -72,7 +86,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hey, Leonor! ',
+                  '$_user_fullname!',
                   style: TextStyle(
                       color: AppTheme.colors.white,
                       fontSize: 20,

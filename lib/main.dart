@@ -1,6 +1,7 @@
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:movie_app/Api/auth/login.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
@@ -28,54 +29,20 @@ void main() async {
     // call api toi localhost:8080/api/payment/handlePayment?transaction_id=MOMO1734864017501&json=true
   });
 
+  bool skipLogin = await isLogined();
+  print("skipLogin: ${skipLogin ? "Đã bỏ qua đăng nhập." : "Chưa đăng nhập."}");
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
-      child: MyApp(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: skipLogin ? MainPage() : SignInPage(),
+      ),
     ),
   );
-  // runApp(MaterialApp.router(
-  //     routerConfig: GoRouter(
-  //   routes: [
-  //     GoRoute(
-  //       path: '/',
-  //       builder: (_, __) => MultiProvider(
-  //         providers: [
-  //           ChangeNotifierProvider(create: (_) => UserProvider()),
-  //         ],
-  //         child: MyApp(),
-  //       ),
-  //       routes: [
-  //         GoRoute(
-  //           path: 'test',
-  //           builder: (_, __) {
-  //             print("Testtt: ");
-  //             return MultiProvider(
-  //               providers: [
-  //                 ChangeNotifierProvider(create: (_) => UserProvider()),
-  //               ],
-  //               child: MyApp(),
-  //             );
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   ],
-  // )));
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SignInPage(),
-    );
-  }
 }
 
 class MainPage extends StatefulWidget {

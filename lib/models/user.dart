@@ -23,7 +23,9 @@ class User {
         username = json['username'],
         fullname = json['fullname'],
         address = json['address'],
-        birthday = DateTime.parse(json['birthday']);
+        birthday = json['birthday'] != null
+            ? DateTime.tryParse(json['birthday'])
+            : null;
   Map<String, dynamic> toJson() => {
         'id': id,
         'email': email,
