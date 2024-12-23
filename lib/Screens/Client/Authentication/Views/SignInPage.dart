@@ -6,7 +6,6 @@ import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -252,41 +251,5 @@ class _SignInPageState extends State<SignInPage> {
             fontWeight: FontWeight.w500),
       ),
     );
-  }
-
-  final Future<SharedPreferencesWithCache> _prefs =
-      SharedPreferencesWithCache.create(
-          cacheOptions: const SharedPreferencesWithCacheOptions(
-              // This cache will only accept the key 'counter'.
-              allowList: <String>{'counter'}));
-  late Future<int> _counter;
-  int _externalCounter = 0;
-
-  Future<void> _incrementCounter() async {
-    final SharedPreferencesWithCache prefs = await _prefs;
-    final int counter = (prefs.getInt('counter') ?? 0) + 1;
-
-    setState(() {
-      _counter = prefs.setInt('counter', counter).then((_) {
-        return counter;
-      });
-    });
-  }
-
-  Future<void> _getExternalCounter() async {
-    final SharedPreferencesAsync prefs = SharedPreferencesAsync();
-    setState(() async {
-      _externalCounter = (await prefs.getInt('externalCounter')) ?? 0;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _counter = _prefs.then((SharedPreferencesWithCache prefs) {
-      return prefs.getInt('counter') ?? 0;
-    });
-
-    _getExternalCounter();
   }
 }

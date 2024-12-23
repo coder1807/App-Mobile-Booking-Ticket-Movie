@@ -18,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isDarkMode = true;
+  
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;

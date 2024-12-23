@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:movie_app/models/user.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Map<String, dynamic>> login(String username, String password) async {
   final String apiUrl = '${dotenv.env['MY_URL']}/login';
@@ -22,8 +23,17 @@ Future<Map<String, dynamic>> login(String username, String password) async {
   }
 }
 
+Future<bool> isLogined() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.getInt("user_id") != null) return true;
+  return false;
+}
+
 Future<void> saveLogin(
     BuildContext context, Map<String, dynamic> response) async {
   User user = User.fromJson(response['data']['user']);
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt("user_id", user.id);
+  if (user.fullname != null) prefs.setString("user_fullname", user.fullname!);
   Provider.of<UserProvider>(context, listen: false).setUser(user);
 }
