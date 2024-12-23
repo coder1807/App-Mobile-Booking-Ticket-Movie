@@ -6,10 +6,9 @@ class User {
   final String? fullname;
   final String? address;
   final DateTime? birthday;
-  final String? type;
 
   User(this.id, this.email, this.phone, this.username, this.fullname,
-      this.address, this.birthday, this.type);
+      this.address, this.birthday);
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         email = json['email'],
@@ -27,7 +26,6 @@ class User {
         'username': username,
         'fullname': fullname,
         'address': address,
-        'birthday': birthday?.toIso8601String(),
-        'type': type
+        'birthday': birthday?.toIso8601String()
       };
 }

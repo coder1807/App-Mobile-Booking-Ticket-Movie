@@ -68,6 +68,12 @@ class _MainPageState extends State<MainPage> {
     ];
   }
 
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    await loadUser(context);
+  }
+
   void onTappedBar(int index) {
     setState(() {
       _currentIndex = index;

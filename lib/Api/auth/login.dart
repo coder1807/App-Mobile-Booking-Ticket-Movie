@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_app/Api/user/update.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:movie_app/models/user.dart';
 import 'package:provider/provider.dart';
@@ -29,9 +30,16 @@ Future<bool> isLogined() async {
   return false;
 }
 
-Future<void> saveLogin(
-    BuildContext context, Map<String, dynamic> response) async {
-  User user = User.fromJson(response['data']['user']);
+Future<void> loadUser(BuildContext context) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.getInt("user_id") != null) {
+    Map<String, dynamic> response = await getInfoUser(prefs.getInt("user_id")!);
+    User user = User.fromJson(response);
+    await saveLogin(context, user);
+  }
+}
+
+Future<void> saveLogin(BuildContext context, user) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt("user_id", user.id);
   if (user.fullname != null) prefs.setString("user_fullname", user.fullname!);

@@ -6,6 +6,7 @@ import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/main.dart';
+import 'package:movie_app/models/user.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -114,7 +115,8 @@ class _SignInPageState extends State<SignInPage> {
                               passwordController.text.trim(),
                             );
                             if (response["status"] == "SUCCESS") {
-                              saveLogin(context, response);
+                              saveLogin(context,
+                                  User.fromJson(response['data']['user']));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(response['message'] ??
