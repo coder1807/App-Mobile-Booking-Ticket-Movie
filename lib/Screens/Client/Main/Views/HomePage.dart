@@ -7,7 +7,6 @@ import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/models/user.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
