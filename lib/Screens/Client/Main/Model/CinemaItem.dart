@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class CinemaItem {
   final int id;
   // final String imageUrl;

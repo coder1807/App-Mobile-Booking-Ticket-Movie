@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<List<Map<String, dynamic>>> fetchFoods() async {
   final String apiUrl = '${dotenv.env['MY_URL']}/foods';
-  if (apiUrl == null || apiUrl.isEmpty) {
+  if (apiUrl.isEmpty) {
     throw Exception('API URL is not defined in .env file');
   }
 

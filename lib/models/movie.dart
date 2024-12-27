@@ -40,7 +40,7 @@ class Movie {
         director = json['director'],
         actors =
             (json['actor'] as String).split(',').map((e) => e.trim()).toList(),
-        openingDay = DateTime.parse(json['openingday']),
+        openingDay = DateTime.parse(json['openingay']),
         subtitle = json['subtitle'],
         duration = json['duration'],
         limitAge = json['limit_age'],
@@ -59,7 +59,7 @@ class Movie {
       'poster': poster,
       'director': director,
       'actor': actors.join(', '),
-      'openingday': openingDay.toIso8601String(),
+      'openingay': openingDay.toIso8601String(),
       'subtitle': subtitle,
       'duration': duration,
       'limit_age': limitAge,

@@ -3,11 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_app/Api/auth/login.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
-import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:movie_app/models/user.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -88,74 +87,71 @@ class _SignInPageState extends State<SignInPage> {
                 isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : CustomButton(
-                  text: 'Sign In',
-                  onPressed: () async {
-                    if (usernameController.text
-                        .trim()
-                        .isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                            Text('Username không được để trống!')),
-                      );
-                      return;
-                    }
-                    if (passwordController.text
-                        .trim()
-                        .isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                            Text('Password không được để trống!')),
-                      );
-                      return;
-                    }
-                    setState(() {
-                      isLoading = true;
-                    });
+                        text: 'Sign In',
+                        onPressed: () async {
+                          if (usernameController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Username không được để trống!')),
+                            );
+                            return;
+                          }
+                          if (passwordController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Password không được để trống!')),
+                            );
+                            return;
+                          }
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                    try {
-                      final response = await login(
-                        usernameController.text.trim(),
-                        passwordController.text.trim(),
-                      );
-                      if (response["status"] == "SUCCESS") {
-                        saveLogin(context, response);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(response['message'] ??
-                                'Đăng nhập thành công!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainPage()),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(response['message'] ??
-                                "Đăng nhập thất bại!"),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    } catch (error) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Có lỗi xảy ra: $error'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    } finally {
-                      setState(() {
-                        isLoading = false;
-                      });
-                    }
-                  },
-                ),
+                          try {
+                            final response = await login(
+                              usernameController.text.trim(),
+                              passwordController.text.trim(),
+                            );
+                            if (response["status"] == "SUCCESS") {
+                              saveLogin(context,
+                                  User.fromJson(response['data']['user']));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      'Đăng nhập thành công!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainPage()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response['message'] ??
+                                      "Đăng nhập thất bại!"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } catch (error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Có lỗi xảy ra: $error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        },
+                      ),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -258,42 +254,4 @@ class _SignInPageState extends State<SignInPage> {
       ),
     );
   }
-
-  final Future<SharedPreferencesWithCache> _prefs =
-  SharedPreferencesWithCache.create(
-      cacheOptions: const SharedPreferencesWithCacheOptions(
-        // This cache will only accept the key 'counter'.
-          allowList: <String>{'counter'}));
-  late Future<int> _counter;
-  int _externalCounter = 0;
-
-  Future<void> _incrementCounter() async {
-    final SharedPreferencesWithCache prefs = await _prefs;
-    final int counter = (prefs.getInt('counter') ?? 0) + 1;
-
-    setState(() {
-      _counter = prefs.setInt('counter', counter).then((_) {
-        return counter;
-      });
-    });
-  }
-
-  Future<void> _getExternalCounter() async {
-    final SharedPreferencesAsync prefs = SharedPreferencesAsync();
-    setState(() async {
-      _externalCounter = (await prefs.getInt('externalCounter')) ?? 0;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _counter = _prefs.then((SharedPreferencesWithCache prefs) {
-      return prefs.getInt('counter') ?? 0;
-    });
-
-    _getExternalCounter();
-  }
 }
-
-

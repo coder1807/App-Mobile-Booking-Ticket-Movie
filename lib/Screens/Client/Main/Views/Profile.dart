@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/Api/auth/logout.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/FavoriteMovie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile/InfoProfile.dart';
@@ -19,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isDarkMode = true;
+  
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;

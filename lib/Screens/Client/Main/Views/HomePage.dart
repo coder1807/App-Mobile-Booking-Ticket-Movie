@@ -3,10 +3,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/movie/movie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/CinemaBooking.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovieComing.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/manager/UserProvider.dart';
 import 'package:movie_app/models/movie.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,12 +18,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? _user_fullname;
+
   late Future<List<Map<String, dynamic>>> movies;
   Map<int, bool> bookmarkedMovies = {};
+
+  Future<void> _loadInfoUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _user_fullname = prefs.getString('user_fullname') ?? 'Chào mừng';
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadInfoUser();
   }
 
   @override
@@ -73,7 +85,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hey, Leonor! ',
+                  '$_user_fullname!',
                   style: TextStyle(
                       color: AppTheme.colors.white,
                       fontSize: 20,
@@ -277,10 +289,13 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 12),
                     ElevatedButton(
                       onPressed: () {
+                        final selectedMovie = Movie.fromJson(movie);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CinemaBookingPage(),
+                            builder: (context) => CinemaBookingPage(
+                              movie: selectedMovie,
+                            ),
                           ),
                         );
                       },
