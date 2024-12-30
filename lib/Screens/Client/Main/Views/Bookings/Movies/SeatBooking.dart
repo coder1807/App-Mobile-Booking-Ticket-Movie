@@ -34,7 +34,7 @@ class _SeatBookingState extends State<SeatBooking> {
   Map<String, String> seatTypeMap = {};
 
   final int singleSeatsPerRow = 10;
-  final int coupleSeatsPerRow = 8;
+  final int coupleSeatsPerRow = 6;
 
   final double singleSeatPrice = 80000;
   final double coupleSeatPrice = 120000;
@@ -52,10 +52,6 @@ class _SeatBookingState extends State<SeatBooking> {
     'G10',
     'G11',
     'G12',
-    'G13',
-    'G14',
-    'G15',
-    'G16'
   ];
 
   List<String> selectedSeats = [];
@@ -137,7 +133,7 @@ class _SeatBookingState extends State<SeatBooking> {
               color: Colors.pinkAccent,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -293,9 +289,21 @@ class _SeatBookingState extends State<SeatBooking> {
 
   Widget _buildSeatWidget(String seat, {bool isCouple = false}) {
     Color seatColor;
+    bool isCoupleRow = coupleSeatRows.contains(seat[0]);
+
+    if (isCoupleRow) {
+      int seatNumber = int.parse(seat.substring(1));
+      bool isFirstInCouplePair = seatNumber % 2 == 1;
+
+      if (isFirstInCouplePair) {
+        seat = '${seat[0]}${seatNumber}${seat[0]}${seatNumber + 1}';
+      } else {
+        return SizedBox.shrink();
+      }
+    }
 
     if (bookedSeats.contains(seat)) {
-      seatColor = AppTheme.colors.blueSky; // Màu ghế đã đặt
+      seatColor = Colors.grey[800]!;
     } else if (selectedSeats.contains(seat)) {
       seatColor = AppTheme.colors.pink; // Màu ghế đã chọn
     } else {
@@ -303,6 +311,13 @@ class _SeatBookingState extends State<SeatBooking> {
           ? AppTheme.colors.orangeColor
           : AppTheme.colors.white; // Màu ghế còn trống
     }
+
+    TextStyle textStyle = TextStyle(
+      fontSize: 12, // Tăng kích thước chữ nếu cần
+      fontWeight:
+          bookedSeats.contains(seat) ? FontWeight.bold : FontWeight.w600,
+      color: seatColor == AppTheme.colors.white ? Colors.black : Colors.white,
+    );
 
     return GestureDetector(
       onTap: bookedSeats.contains(seat)
@@ -325,18 +340,24 @@ class _SeatBookingState extends State<SeatBooking> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.square_rounded,
-            size: isCouple ? 40 : 30,
+            isCoupleRow ? Icons.rectangle_rounded : Icons.square_rounded,
+            size: isCoupleRow ? 60 : 40,
             color: seatColor,
           ),
-          Text(
-            seat,
-            style: TextStyle(
-              fontSize: 12,
-              fontFamily: 'Poppins',
-              color: AppTheme.colors.white,
+          if (!isCoupleRow)
+            Center(
+              child: Text(
+                '  ' + '$seat',
+                style: textStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
+          if (isCoupleRow)
+            Text(
+              seat,
+              style: textStyle,
+              textAlign: TextAlign.center,
+            ),
         ],
       ),
     );
@@ -353,6 +374,43 @@ class _SeatBookingState extends State<SeatBooking> {
                 color: AppTheme.colors.white,
                 fontFamily: 'Poppins')),
       ],
+    );
+  }
+
+  Widget _buildSingleSeatsSection() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      sliver: SliverGrid(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 12, // Tăng số cột lên để tạo khoảng trống ở giữa
+          mainAxisSpacing: 15,
+          crossAxisSpacing: 2,
+          childAspectRatio: 0.5,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            int rowIndex = index ~/ 12; // Số cột mới
+            int colIndex = index % 12; // Vị trí trong hàng
+
+            // Bỏ qua 2 cột ở giữa (cột 5 và 6)
+            if (colIndex == 5 || colIndex == 6) {
+              return const SizedBox(); // Khoảng trống ở giữa
+            }
+
+            // Tính số ghế thực tế
+            int actualSeatNumber;
+            if (colIndex < 5) {
+              actualSeatNumber = colIndex + 1; // Ghế 1-5 bên trái
+            } else {
+              actualSeatNumber = colIndex - 1; // Ghế 6-10 bên phải
+            }
+
+            String seat = '${singleSeatRows[rowIndex]}$actualSeatNumber';
+            return _buildSeatWidget(seat);
+          },
+          childCount: singleSeatRows.length * 12, // Số cột mới
+        ),
+      ),
     );
   }
 }

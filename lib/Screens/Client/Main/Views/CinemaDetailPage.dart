@@ -61,9 +61,7 @@ class _CinemaDetailPageState extends State<CinemaDetailPage> {
     if (baseUrl == null) {
       throw Exception('Base URL is null. Please check the .env file.');
     }
-
     final response = await http.get(Uri.parse('$baseUrl/cinema/$cinemaId'));
-
     // Debugging response body
     print("Response body: ${response.body}");
 
