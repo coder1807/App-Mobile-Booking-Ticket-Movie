@@ -318,7 +318,8 @@ class _SeatBookingState extends State<SeatBooking> {
 
     TextStyle textStyle = TextStyle(
       fontSize: 12, // Tăng kích thước chữ nếu cần
-      fontWeight: bookedSeats.contains(seat) ? FontWeight.bold : FontWeight.w600,
+      fontWeight:
+          bookedSeats.contains(seat) ? FontWeight.bold : FontWeight.w600,
       color: seatColor == AppTheme.colors.white ? Colors.black : Colors.white,
     );
 
@@ -344,10 +345,10 @@ class _SeatBookingState extends State<SeatBooking> {
         children: [
           Icon(
             isCoupleRow ? Icons.rectangle_rounded : Icons.square_rounded,
-            size: isCoupleRow ? 60: 40,
+            size: isCoupleRow ? 60 : 40,
             color: seatColor,
           ),
-          if(!isCoupleRow)
+          if (!isCoupleRow)
             Center(
               child: Text(
                 '  ' + '$seat',
@@ -355,8 +356,7 @@ class _SeatBookingState extends State<SeatBooking> {
                 textAlign: TextAlign.center,
               ),
             ),
-
-          if(isCoupleRow)
+          if (isCoupleRow)
             Text(
               seat,
               style: textStyle,
@@ -380,18 +380,19 @@ class _SeatBookingState extends State<SeatBooking> {
       ],
     );
   }
+
   Widget _buildSingleSeatsSection() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 12, // Tăng số cột lên để tạo khoảng trống ở giữa
-          mainAxisSpacing:15,
+          mainAxisSpacing: 15,
           crossAxisSpacing: 2,
           childAspectRatio: 0.5,
         ),
         delegate: SliverChildBuilderDelegate(
-              (context, index) {
+          (context, index) {
             int rowIndex = index ~/ 12; // Số cột mới
             int colIndex = index % 12; // Vị trí trong hàng
 
