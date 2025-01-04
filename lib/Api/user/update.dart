@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:movie_app/config.dart';
 import 'package:http/http.dart' as http;
-import 'package:movie_app/manager/UserProvider.dart';
-import 'package:provider/provider.dart';
 
 Future<Map<String, dynamic>> updateUser(int id, String fullname, String phone,
     String birthday, String address) async {
@@ -17,12 +14,11 @@ Future<Map<String, dynamic>> updateUser(int id, String fullname, String phone,
         'fullname': fullname,
         'phone': phone,
         'birthday': birthday,
-        'address': address
+        'address': address,
       }),
     );
-    ;
 
-    final data = jsonDecode(utf8.decode(response.bodyBytes));
+    final data = jsonDecode(response.body);
     return data;
   } catch (error) {
     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};
@@ -41,7 +37,21 @@ Future<Map<String, dynamic>> updatePassword(
         'newPassword': newPassword,
       }),
     );
-    final data = jsonDecode(utf8.decode(response.bodyBytes));
+    final data = jsonDecode(response.body);
+    return data;
+  } catch (error) {
+    return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};
+  }
+}
+
+Future<Map<String, dynamic>> getInfoUser(int id) async {
+  final String apiUrl = '${dotenv.env['MY_URL']}/user/$id';
+  try {
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+    );
+    final data = jsonDecode(response.body);
     return data;
   } catch (error) {
     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};

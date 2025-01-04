@@ -1,16 +1,80 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:movie_app/Api/movie/movie.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/CinemaBooking.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/manager/UserProvider.dart';
+import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/models/user.dart';
+import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailMoviePage extends StatefulWidget {
-  const DetailMoviePage({super.key});
+  final Movie movie;
+  const DetailMoviePage({super.key, required this.movie});
 
   @override
   State<DetailMoviePage> createState() => _DetailMoviePageState();
 }
 
 class _DetailMoviePageState extends State<DetailMoviePage> {
+  late YoutubePlayerController _youtubePlayerController;
+  bool _isPlayerReady = false;
+  List<Map<String, dynamic>> _ratings = [];
+  double _averageRating = 0.0;
+  bool _isLoading = true;
+  late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRatings();
+
+    // Khởi tạo controller cho YouTube Player với video ID
+    _youtubePlayerController = YoutubePlayerController(
+      initialVideoId: widget.movie.trailer, // Mã trailer YouTube
+      flags: YoutubePlayerFlags(
+        autoPlay: false, // Không tự động phát khi mở
+        mute: false, // Không tắt âm
+      ),
+    );
+    _isPlayerReady = true;
+  }
+
+  @override
+  void dispose() {
+    if (_isPlayerReady) {
+      _youtubePlayerController
+          .dispose(); // Giải phóng tài nguyên khi không sử dụng nữa
+    }
+    super.dispose();
+  }
+
+  Future<void> _fetchRatings() async {
+    final ratings =
+        await fetchRatingByMovies(widget.movie.id); // Gọi hàm API với ID phim.
+    if (ratings.isNotEmpty) {
+      // Tính điểm trung bình.
+      double average =
+          ratings.fold(0.0, (sum, item) => sum + item['ratingNumber']) /
+              ratings.length;
+      setState(() {
+        _ratings = ratings;
+        _averageRating = average;
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<UserProvider>(context).user!;
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -48,8 +112,8 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          'assets/images/Poster/poster1.jpg',
+                        child: Image.network(
+                          '${dotenv.env['API']}${widget.movie.poster}',
                           height: 250,
                           width: 200,
                           fit: BoxFit.cover,
@@ -61,7 +125,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'DEADPOOL 3',
+                              widget.movie.name,
                               style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
@@ -70,7 +134,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Duration: 128 minutes',
+                              'Duration: ${widget.movie.duration} minutes',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -78,7 +142,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Director: John Doe',
+                              'Director: ${widget.movie.director}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -104,8 +168,8 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                                         Border.all(color: Colors.red, width: 1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Text(
-                                    'PG-13',
+                                  child: Text(
+                                    widget.movie.limitAge,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontFamily: 'Poppins',
@@ -119,7 +183,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                               height: 10,
                             ),
                             Text(
-                              'Genres: Action, Adventure',
+                              'Genres: ${widget.movie.categories.map((e) => e['categoryName']).join(', ')}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -139,6 +203,27 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                         color: AppTheme.colors.white,
                         fontWeight: FontWeight.w600),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  YoutubePlayerBuilder(
+                      player: YoutubePlayer(
+                        controller: _youtubePlayerController,
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: Colors.amber,
+                        onReady: () {
+                          print("Player is ready.");
+                        },
+                      ),
+                      builder: (context, player) {
+                        return Column(
+                          children: [
+                            // some widgets
+                            player,
+                            //some other widgets
+                          ],
+                        );
+                      }),
                   const SizedBox(height: 20),
                   Text(
                     'Synopsis',
@@ -150,7 +235,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'This is the synopsis of the movie. It provides a brief overview of the',
+                    widget.movie.description,
                     textAlign: TextAlign.justify,
                     style: TextStyle(
                         fontFamily: 'Poppins',
@@ -231,46 +316,128 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                         fontFamily: 'Poppins'),
                   ),
                   const SizedBox(height: 10),
-                  Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          '4.5',
-                          style: TextStyle(
+                  if (_isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (_ratings.isEmpty)
+                    Center(
+                      child: Text(
+                        'No rating yet',
+                        style: TextStyle(
+                          color: AppTheme.colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    )
+                  else
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            _averageRating.toStringAsFixed(1),
+                            style: TextStyle(
                               fontFamily: 'Poppins',
                               color: AppTheme.colors.white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 30),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            5,
-                            (index) {
-                              return const Icon(
+                              fontSize: 30,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              5,
+                              (index) => Icon(
                                 Icons.star,
                                 size: 25,
-                                color: Colors.amber,
+                                color: index < _averageRating.round()
+                                    ? Colors.amber
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            '(${_ratings.length} Reviews)',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              color: AppTheme.colors.white,
+                            ),
+                          ),
+                          const SizedBox(
+                              height: 20), // Hiển thị danh sách đánh giá
+                          ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _ratings.length,
+                            itemBuilder: (context, index) {
+                              final rating = _ratings[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.colors.darkBlue,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .start, // Căn lề trái cho toàn bộ Column
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                rating['fullName'],
+                                                style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  color: AppTheme.colors.white,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                children: List.generate(
+                                                  5,
+                                                  (starIndex) => Icon(
+                                                    Icons.star,
+                                                    size: 20,
+                                                    color: starIndex <
+                                                            rating[
+                                                                'ratingNumber']
+                                                        ? Colors.amber
+                                                        : Colors.grey,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            rating['ratingContent'],
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 13,
+                                              color: AppTheme.colors.white,
+                                            ),
+                                          ),
+                                        ])),
                               );
                             },
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          "(100 Reviews)",
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 13,
-                              color: AppTheme.colors.white),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _showRatingDialog();
+                        },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.colors.buttonColor,
                             shape: RoundedRectangleBorder(
@@ -288,7 +455,13 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CinemaBookingPage(movie: widget.movie)));
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.colors.buttonColor,
                           shape: RoundedRectangleBorder(
@@ -308,5 +481,130 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
             ),
           ],
         ));
+  }
+
+  void _showRatingDialog() {
+    final TextEditingController _contentController = TextEditingController();
+    int _selectedRating = 0;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.colors.mainBackground,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          title: Text(
+            'Rate this Movie',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.colors.white,
+            ),
+          ),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedRating = index + 1;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.star,
+                          color: index < _selectedRating
+                              ? Colors.amber
+                              : Colors.grey,
+                          size: 30,
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: _contentController,
+                    maxLines: 3,
+                    style: TextStyle(color: AppTheme.colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Enter your review...',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: AppTheme.colors.darkBlue,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final ratingDTO = {
+                  'filmId': widget.movie.id,
+                  'userId': user.id, // Đặt ID người dùng hiện tại.
+                  'content': _contentController.text,
+                  'ratingNumber': _selectedRating,
+                };
+
+                final result = await submitRating(ratingDTO);
+                if (result) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Thank you for your review!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  _fetchRatings();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to submit your review.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.colors.buttonColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+              child: Text(
+                'Submit',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: AppTheme.colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

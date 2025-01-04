@@ -114,7 +114,7 @@ class _PaymentBookingState extends State<PaymentBooking> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Choose Payment Method',
+              'Choose payment Method',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -152,16 +152,16 @@ class _PaymentBookingState extends State<PaymentBooking> {
             child: Column(
               children: [
                 _buildPaymentMethod(
-                    'assets/images/Payment/Paypal.jpg', 'Paypal', 0),
+                    'assets/images/payment/Paypal.jpg', 'Paypal', 0),
                 _buildPaymentMethod(
-                    'assets/images/Payment/googlePay.jpg', 'Google Pay', 1),
+                    'assets/images/payment/googlePay.jpg', 'Google Pay', 1),
                 _buildPaymentMethod(
-                    'assets/images/Payment/applesStore.jpg', 'Apple Store', 2),
+                    'assets/images/payment/applesStore.jpg', 'Apple Store', 2),
                 _buildPaymentMethod(
-                    'assets/images/Payment/visa.jpg', '**** 4973', 3,
+                    'assets/images/payment/visa.jpg', '**** 4973', 3,
                     cardNumber: '1368497534973'),
                 _buildPaymentMethod(
-                    'assets/images/Payment/masterCard.jpg', '**** 4973', 4,
+                    'assets/images/payment/masterCard.jpg', '**** 4973', 4,
                     cardNumber: '1368497534973'),
                 const Spacer(),
                 ElevatedButton(
@@ -205,7 +205,7 @@ class _PaymentBookingState extends State<PaymentBooking> {
                   child: Stack(
                     children: [
                       Text(
-                        "Confirm Payment - \$50.00",
+                        "Confirm payment - \$50.00",
                         style: TextStyle(
                             fontFamily: "Poppins",
                             fontWeight: FontWeight.w600,

@@ -35,9 +35,9 @@ class PaymentErrorPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/images/Payment/paymentError.jpg',
+                        'assets/icons/failureOrder.png',
                         height: 200,
-                        width: 300,
+                        width: 200,
                         fit: BoxFit.cover,
                       ),
                       const SizedBox(height: 20),
