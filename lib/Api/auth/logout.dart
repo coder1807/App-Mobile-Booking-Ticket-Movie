@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:movie_app/config.dart';
 
 import 'package:http/http.dart' as http;
 

@@ -10,9 +10,17 @@ import 'package:movie_app/Screens/Client/Main/Model/CinemaItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/MovieItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/ScheduleItem.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:movie_app/manager/UserProvider.dart';
-import 'package:movie_app/models/movie.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+Future<void> _launchUrl(String url) async {
+  final Uri _url = Uri.parse(url);
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
+  }
+}
 
 class BookingSummaryMovie extends StatefulWidget {
   final BookingItem bookingItem;
@@ -63,10 +71,8 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
     displayDate = scheduleDate.isAfter(DateTime.now())
         ? scheduleDate
         : DateTime.now().add(Duration(days: 1));
-    final userType =
-        Provider.of<UserProvider>(context, listen: false).user!.type;
     originPrice = widget.bookingItem.totalPrice;
-    _buildPromoOptions(userType);
+    _buildPromoOptions("NONE");
     // TODO: implement initState
     super.initState();
   }
@@ -99,7 +105,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
     promoOptions = [
       if (userType == 'VIP')
         {'value': 0.1, 'label': 'Thành viên VIP - Giảm 10%'},
-      if (userType == 'VIP' || userType == 'FRIEND')
+      if (userType == 'FRIEND')
         {'value': 0.05, 'label': 'Thành viên FRIEND - Giảm 5%'},
       {'value': 0.0, 'label': 'Không có mã khuyến mãi'},
     ];
@@ -445,11 +451,43 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: () {
-                        // Navigate to payment
+                      onPressed: () async {
+                        String paymentUrl =
+                            '${dotenv.env['MY_URL']}/payment/create_momo?amount=${widget.bookingItem.totalPrice.toInt()}&scheduleId=${widget.scheduleItem.scheduleId}&comboId=${widget.bookingItem.foodID}&isMobile=true';
+                        try {
+                          // Gửi yêu cầu GET
+                          final response =
+                              await http.get(Uri.parse(paymentUrl));
+
+                          if (response.statusCode == 200) {
+                            // Parse JSON để lấy "payUrl"
+                            final jsonResponse = json.decode(response.body);
+                            final String? payUrl = jsonResponse['payUrl'];
+
+                            if (payUrl != null) {
+                              // Mở URL trong trình duyệt
+                              final Uri payUri = Uri.parse(payUrl);
+                              if (await canLaunchUrl(payUri)) {
+                                await launchUrl(payUri);
+                              } else {
+                                throw 'Could not launch $payUrl';
+                              }
+                            } else {
+                              throw 'payUrl not found in response';
+                            }
+                          } else {
+                            throw 'Failed to load payment URL';
+                          }
+                        } catch (e) {
+                          print('Error: $e');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: $e')),
+                          );
+                        }
+                        _launchUrl(paymentUrl);
                       },
                       child: Text(
-                        'Continue to Payment',
+                        'Continue to payment',
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,

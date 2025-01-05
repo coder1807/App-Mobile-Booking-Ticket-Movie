@@ -35,7 +35,7 @@ class PaymentSuccessPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/images/Payment/paymentSuccess.jpg',
+                        'assets/icons/successOrder.png',
                         height: 200,
                         width: 300,
                         fit: BoxFit.cover,

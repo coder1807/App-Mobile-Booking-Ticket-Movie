@@ -1,17 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
-import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Foods/BookingSummary.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
+import 'package:movie_app/Api/auth/login.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Profile/InfoProfile.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Profile/Notification.dart';
 import 'package:movie_app/Screens/Components/BasePage.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/firebase_options.dart';
@@ -29,30 +26,34 @@ void main() async {
   } catch (e) {
     throw Exception('Error loading .env file: $e');
   }
+
+  final appLinks = AppLinks(); // AppLinks is singleton
+  // Subscribe to all events (initial link and further)
+  final sub = appLinks.uriLinkStream.listen((uri) {
+    // Do something (navigation, ...)
+    print("appLink: ${uri.path}");
+    // call api toi localhost:8080/api/payment/handlePayment?transaction_id=MOMO1734864017501&json=true
+  });
+
+  bool skipLogin = await isLogined();
+  print("skipLogin: ${skipLogin ? "Đã bỏ qua đăng nhập." : "Chưa đăng nhập."}");
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
-      child: MyApp(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: skipLogin ? MainPage() : SignInPage(),
+      ),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SignInPage(),
-    );
-  }
-}
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
   @override
   // ignore: library_private_types_in_public_api
   _MainPageState createState() => _MainPageState();
@@ -61,6 +62,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   late final List<Widget> _children;
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +72,12 @@ class _MainPageState extends State<MainPage> {
       const FoodPageCl(),
       const ProfilePageCl(),
     ];
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    await loadUser(context);
   }
 
   void onTappedBar(int index) {
@@ -141,6 +149,7 @@ class HomePageCl extends StatelessWidget {
 
 class CinemaPageCl extends StatelessWidget {
   const CinemaPageCl({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const BasePage(child: CinemaPage());
@@ -149,6 +158,7 @@ class CinemaPageCl extends StatelessWidget {
 
 class FoodPageCl extends StatelessWidget {
   const FoodPageCl({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const BasePage(child: ListFood());
@@ -157,6 +167,7 @@ class FoodPageCl extends StatelessWidget {
 
 class ProfilePageCl extends StatelessWidget {
   const ProfilePageCl({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const BasePage(child: ProfilePage());

@@ -325,14 +325,12 @@ class _SignUpPageState extends State<SignUpPage> {
       },
     );
 
-    if (pickedDate != null) {
-      // Định dạng ngày hiển thị trong UI
-      String displayDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-      // Định dạng ngày lưu trữ trong DB
-      dbDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      setState(() {
-        birthdayController.text = displayDate; // Cập nhật UI
-      });
-    }
+    // Định dạng ngày hiển thị trong UI
+    String displayDate = DateFormat('dd/MM/yyyy').format(pickedDate!);
+    // Định dạng ngày lưu trữ trong DB
+    dbDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+    setState(() {
+      birthdayController.text = displayDate; // Cập nhật UI
+    });
   }
 }

@@ -13,7 +13,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailMoviePage extends StatefulWidget {
   final Movie movie;
-  const DetailMoviePage({Key? key, required this.movie}) : super(key: key);
+  const DetailMoviePage({super.key, required this.movie});
 
   @override
   State<DetailMoviePage> createState() => _DetailMoviePageState();
@@ -113,7 +113,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          '${dotenv.env['API']}' + widget.movie.poster,
+                          '${dotenv.env['API']}${widget.movie.poster}',
                           height: 250,
                           width: 200,
                           fit: BoxFit.cover,
@@ -235,7 +235,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '${widget.movie.description}',
+                    widget.movie.description,
                     textAlign: TextAlign.justify,
                     style: TextStyle(
                         fontFamily: 'Poppins',

@@ -34,12 +34,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  font_awesome_flutter: ^10.1.0
-  intl: ^0.17.0
+  font_awesome_flutter: ^10.8.0
+  intl: ^0.20.1
   http: ^1.2.2
   provider: ^6.1.2
   flutter_dotenv: ^5.2.1
   youtube_player_flutter: ^9.1.1
+  app_links: ^6.3.3
+  shared_preferences: ^2.3.4
+  url_launcher: ^6.3.1
+  flutter_launcher_icons: ^0.14.2
   app_links: ^6.3.3
   go_router: ^14.6.2
   shared_preferences: ^2.3.4
@@ -84,9 +88,10 @@ flutter:
     - assets/icons/lock.png
     - assets/icons/user.png
     - assets/icons/birthday.png
+    - assets/icons/successOrder.png
     - assets/icons/app_icon.png
     - assets/images/Movies/
-    # Payment
+    # payment
     # Casts
     - assets/images/Casts/
     # User
@@ -162,3 +167,22 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/icons/test1.png"
+  image_path: "assets/icons/test1.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icons/test1.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/icons/test1.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icons/test1.png"
