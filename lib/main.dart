@@ -72,6 +72,7 @@ class _MainPageState extends State<MainPage> {
       const CinemaPageCl(),
       const MyTicketsPageCl(),
       const BlogCl(),
+      const ProfilePageCl()
     ];
   }
 
