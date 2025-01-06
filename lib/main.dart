@@ -2,6 +2,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/auth/login.dart';
+import 'package:movie_app/Screens/Client/Main/Views/BlogPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
@@ -64,6 +65,7 @@ class _MainPageState extends State<MainPage> {
       const HomePageCl(),
       const CinemaPageCl(),
       const FoodPageCl(),
+      const BlogCl(),
       const ProfilePageCl(),
     ];
   }
@@ -114,6 +116,10 @@ class _MainPageState extends State<MainPage> {
               label: 'Food Order',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.newspaper),
+              label: 'News',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
             ),
@@ -156,6 +162,15 @@ class FoodPageCl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const BasePage(child: ListFood());
+  }
+}
+
+class BlogCl extends StatelessWidget {
+  const BlogCl({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const BasePage(child: BlogPage());
   }
 }
 
