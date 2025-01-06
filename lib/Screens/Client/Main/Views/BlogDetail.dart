@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/Blog/blogs.dart';
+import 'package:movie_app/Api/Comment/comments.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+
 
 class BlogDetail extends StatelessWidget {
   final int blogId;
@@ -51,7 +53,7 @@ class BlogDetail extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(14),
                   child: Image.network(
-                    '${dotenv.env['API']}' + blogDetail['blogPoster']!,
+                    '${dotenv.env['API']}' + (blogDetail['blogPoster'] ?? ''),
                     width: double.infinity,
                     height: 250,
                     fit: BoxFit.cover,
@@ -62,7 +64,7 @@ class BlogDetail extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  blogDetail['blogTitle']!,
+                  blogDetail['blogTitle'] ?? 'Untitled', // Kiểm tra null và gán giá trị mặc định
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 20,
@@ -72,7 +74,7 @@ class BlogDetail extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  blogDetail['blogContent']!,
+                  blogDetail['blogContent'] ?? 'No content available.', // Kiểm tra null và gán giá trị mặc định
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 16,
@@ -89,37 +91,68 @@ class BlogDetail extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // Kiểm tra nếu có bình luận
-                if (blogDetail['comments'] != null && blogDetail['comments'].isNotEmpty)
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: blogDetail['comments'].length,
-                    itemBuilder: (context, index) {
-                      final comment = blogDetail['comments'][index];
+                // Hiển thị các comment từ hàm fetchCommentsByBlogID
+                FutureBuilder<List<dynamic>>(
+                  future: fetchCommentsByBlogID(blogId), // Lấy bình luận theo blogId
+                  builder: (context, commentSnapshot) {
+                    if (commentSnapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    if (commentSnapshot.hasError) {
+                      return Center(child: Text('Error: ${commentSnapshot.error}'));
+                    }
+
+                    final comments = commentSnapshot.data;
+
+                    if (comments == null || comments.isEmpty) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          comment,
+                          'No comments available.',
                           style: TextStyle(
                             fontSize: 14,
                             color: AppTheme.colors.white,
                           ),
                         ),
                       );
-                    },
-                  )
-                else
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'No comments available.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppTheme.colors.white,
-                      ),
-                    ),
-                  ),
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        final comment = comments[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                comment['fullName'] ?? 'Anonymous', // Kiểm tra null và gán giá trị mặc định
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppTheme.colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                comment['commentContent'] ?? 'No content available.', // Kiểm tra null và gán giá trị mặc định
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppTheme.colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           );
