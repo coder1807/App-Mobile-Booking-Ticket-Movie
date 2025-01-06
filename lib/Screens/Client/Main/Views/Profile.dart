@@ -173,11 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           },
         ),
-        _buildListTile(
-          icon: Icons.security,
-          title: 'Security',
-          onTap: () {},
-        ),
+
         _buildDarkModeTile(),
         const SizedBox(height: 20),
         _buildLogoutTile(),
