@@ -162,3 +162,27 @@ Future<List<ScheduleItem>> fetchSchedulesByMovieAndCinema(
     return [];
   }
 }
+
+Future<List<Map<String, dynamic>>> fetchCategories() async {
+  final String apiUrl = '${dotenv.env['MY_URL']}/categories';
+  try {
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body) as List;
+      return data.map((item) {
+        return {
+          'id': item['id'],
+          'name': item['name'],
+        };
+      }).toList();
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  } catch (error) {
+    print('Error occurred: $error');
+    return [];
+  }
+}

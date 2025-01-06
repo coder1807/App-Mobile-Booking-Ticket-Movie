@@ -52,6 +52,13 @@ dependencies:
   firebase_core: ^3.9.0
   firebase_auth: ^5.3.4
   google_sign_in: ^6.2.2
+  go_router: ^14.6.2
+  firebase_core: ^3.9.0
+  firebase_auth: ^5.3.4
+  google_sign_in: ^6.2.2
+  flutter_facebook_auth: ^7.1.1
+  google_maps_flutter: ^2.10.0
+  google_maps_url_extractor: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -79,6 +86,7 @@ flutter:
     - .env
     # Icon
     - assets/icons/
+    - assets/images/
     # Video
     - assets/videos/Deadpool_1.mp4
     # Movie
@@ -87,6 +95,7 @@ flutter:
     - assets/icons/user.png
     - assets/icons/birthday.png
     - assets/icons/successOrder.png
+    - assets/icons/app_icon.png
     - assets/images/Movies/
     # payment
     # Casts

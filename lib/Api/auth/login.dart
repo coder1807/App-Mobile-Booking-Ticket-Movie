@@ -44,7 +44,7 @@ Future<void> saveLogin(BuildContext context, user) async {
   prefs.setInt("user_id", user.id);
   if (user.fullname != null) prefs.setString("user_fullname", user.fullname!);
 Future<Map<String, dynamic>> fetchUserByEmail(String email) async {
-  final String apiUrl = '${dotenv.env['MY_URL']}/user/$email';
+  final String apiUrl = '${dotenv.env['MY_URL']}/user?email=$email';
   try {
     final response = await http.get(
       Uri.parse(apiUrl),
@@ -65,8 +65,24 @@ Future<Map<String, dynamic>> fetchUserByEmail(String email) async {
   }
 }
 
-Future<void> saveLogin(
-    BuildContext context, Map<String, dynamic> response) async {
-  User user = User.fromJson(response['data']['user']);
+Future<bool> isLogined() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.getInt("user_id") != null) return true;
+  return false;
+}
+
+Future<void> loadUser(BuildContext context) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.getInt("user_id") != null) {
+    Map<String, dynamic> response = await getInfoUser(prefs.getInt("user_id")!);
+    User user = User.fromJson(response);
+    await saveLogin(context, user);
+  }
+}
+
+Future<void> saveLogin(BuildContext context, user) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt("user_id", user.id);
+  if (user.fullname != null) prefs.setString("user_fullname", user.fullname!);
   Provider.of<UserProvider>(context, listen: false).setUser(user);
 }

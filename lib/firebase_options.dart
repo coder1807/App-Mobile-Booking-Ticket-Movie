@@ -42,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB0u45knB5pifApvQf0upAyMjmHrRCWDuE',
-    appId: '1:360352380572:android:b5e510c5f02e48b1511f59',
+    appId: '1:360352380572:android:3e8051e05cc39e22511f59',
     messagingSenderId: '360352380572',
     projectId: 'booking-ticket-8d7f1',
     storageBucket: 'booking-ticket-8d7f1.firebasestorage.app',
@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'booking-ticket-8d7f1.firebasestorage.app',
     measurementId: 'G-N8YZ99Z73V',
   );
-
 }
