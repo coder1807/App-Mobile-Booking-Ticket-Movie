@@ -1,4 +1,5 @@
 import 'package:app_links/app_links.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/auth/login.dart';
@@ -11,12 +12,17 @@ import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
 import 'package:movie_app/Screens/Components/BasePage.dart';
 import 'package:movie_app/Themes/app_theme.dart';
+import 'package:movie_app/firebase_options.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   try {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     await dotenv.load(fileName: ".env");
   } catch (e) {
     throw Exception('Error loading .env file: $e');
