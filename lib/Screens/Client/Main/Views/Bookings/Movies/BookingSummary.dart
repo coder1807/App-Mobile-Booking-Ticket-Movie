@@ -454,38 +454,38 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                       onPressed: () async {
                         String paymentUrl =
                             '${dotenv.env['MY_URL']}/payment/create_momo?amount=${widget.bookingItem.totalPrice.toInt()}&scheduleId=${widget.scheduleItem.scheduleId}&comboId=${widget.bookingItem.foodID}&isMobile=true';
+
                         try {
-                          // Gửi yêu cầu GET
-                          final response =
-                              await http.get(Uri.parse(paymentUrl));
+                          // Gửi yêu cầu GET để lấy payUrl
+                          final response = await http.get(Uri.parse(paymentUrl));
+                          print(response.statusCode);
 
                           if (response.statusCode == 200) {
-                            // Parse JSON để lấy "payUrl"
                             final jsonResponse = json.decode(response.body);
                             final String? payUrl = jsonResponse['payUrl'];
 
                             if (payUrl != null) {
-                              // Mở URL trong trình duyệt
+                              // Mở ứng dụng MoMo bằng payUrl
                               final Uri payUri = Uri.parse(payUrl);
                               if (await canLaunchUrl(payUri)) {
-                                await launchUrl(payUri);
+                                await launchUrl(payUri, mode: LaunchMode.externalApplication);
                               } else {
-                                throw 'Could not launch $payUrl';
+                                throw 'Không thể mở ứng dụng MoMo';
                               }
                             } else {
-                              throw 'payUrl not found in response';
+                              throw 'Không tìm thấy payUrl trong response';
                             }
                           } else {
-                            throw 'Failed to load payment URL';
+                            throw 'Lỗi khi tạo thanh toán MoMo';
                           }
                         } catch (e) {
-                          print('Error: $e');
+                          print('Lỗi: $e');
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $e')),
+                            SnackBar(content: Text('Lỗi: $e')),
                           );
                         }
-                        _launchUrl(paymentUrl);
                       },
+
                       child: Text(
                         'Continue to payment',
                         style: TextStyle(

@@ -3,6 +3,8 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/auth/login.dart';
+import 'package:movie_app/Screens/Client/Main/Views/BlogPage.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
@@ -69,7 +71,7 @@ class _MainPageState extends State<MainPage> {
       const HomePageCl(),
       const CinemaPageCl(),
       const MyTicketsPageCl(),
-      const ProfilePageCl(),
+      const BlogCl(),
     ];
   }
 
@@ -119,6 +121,10 @@ class _MainPageState extends State<MainPage> {
               label: 'Vé của tôi',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.newspaper),
+              label: 'News',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
             ),
@@ -161,6 +167,15 @@ class MyTicketsPageCl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasePage(child: MyTicketsPage());
+  }
+}
+
+class BlogCl extends StatelessWidget {
+  const BlogCl({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const BasePage(child: BlogPage());
   }
 }
 
