@@ -16,6 +16,7 @@ Future<List<Map<String, dynamic>>> fetchCommentsByBlogID(int blogID) async {
     );
     try {
       final data = jsonDecode(response.body);
+      print(data);
       if (data is List) {
         return List<Map<String, dynamic>>.from(data);
       } else {
@@ -29,5 +30,20 @@ Future<List<Map<String, dynamic>>> fetchCommentsByBlogID(int blogID) async {
   } catch (error) {
     print('Error occurred: $error');
     return [];
+  }
+}
+
+Future<bool> submitComment(Map<String, dynamic> ratingDTO) async {
+  final String apiUrl = '${dotenv.env['MY_URL']}/comment';
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(ratingDTO),
+    );
+    return response.statusCode == 200;
+  } catch (error) {
+    print('Error occurred: $error');
+    return false;
   }
 }
