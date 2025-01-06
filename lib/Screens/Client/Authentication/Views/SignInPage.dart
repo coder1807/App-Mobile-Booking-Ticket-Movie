@@ -173,7 +173,8 @@ class _SignInPageState extends State<SignInPage> {
                               final response = await facebookLoginService
                                   .signInWithFacebook(context);
                               if (response.isNotEmpty) {
-                                saveLogin(context, response);
+                                saveLogin(context,
+                                    User.fromJson(response['data']['user']));
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -203,60 +204,63 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     Expanded(
                       child: Container(
-                        height: 50,
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xff1E1E1E),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: IconButton(
-                          icon: const FaIcon(FontAwesomeIcons.google,
-                              color: Colors.white),
-                          onPressed: () async {
-                            // Hiển thị thanh tiến trình loading
-                            setState(() {
-                              isLoading = true;
-                            });
+                          height: 50,
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff1E1E1E),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                              icon: const FaIcon(FontAwesomeIcons.google,
+                                  color: Colors.white),
+                              onPressed: () async {
+                                // Hiển thị thanh tiến trình loading
+                                setState(() {
+                                  isLoading = true;
+                                });
 
-                            try {
-                              // Tạo một instance của GoogleLoginService
-                              final googleLoginService = GoogleLoginService();
-                              // Gọi phương thức đăng nhập
-                              final response = await googleLoginService
-                                  .signInWithGoogle(context);
+                                try {
+                                  // Tạo một instance của GoogleLoginService
+                                  final googleLoginService =
+                                      GoogleLoginService();
+                                  // Gọi phương thức đăng nhập
+                                  final response = await googleLoginService
+                                      .signInWithGoogle(context);
 
-                              // Nếu đăng nhập thành công, lưu thông tin người dùng và điều hướng đến MainPage
-                              if (response.isNotEmpty) {
-                                saveLogin(context, response);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MainPage()),
-                                );
-                              } else {
-                                // Xử lý lỗi đăng nhập nếu response rỗng
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Đăng nhập thất bại!'),
-                                  ),
-                                );
-                              }
-                            } catch (e) {
-                              // Xử lý lỗi nếu có
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Lỗi: ${e.toString()}'),
-                                ),
-                              );
-                            } finally {
-                              // Ẩn thanh tiến trình loading
-                              setState(() {
-                                isLoading = false;
-                              });
-                            }
-                          },
-                        ),
-                      ),
+                                  // Nếu đăng nhập thành công, lưu thông tin người dùng và điều hướng đến MainPage
+                                  if (response.isNotEmpty) {
+                                    saveLogin(
+                                        context,
+                                        User.fromJson(
+                                            response['data']['user']));
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainPage()),
+                                    );
+                                  } else {
+                                    // Xử lý lỗi đăng nhập nếu response rỗng
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Đăng nhập thất bại!'),
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  // Xử lý lỗi nếu có
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Lỗi: ${e.toString()}'),
+                                    ),
+                                  );
+                                } finally {
+                                  // Ẩn thanh tiến trình loading
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                              })),
                     ),
                     // Expanded(
                     //   child: Container(

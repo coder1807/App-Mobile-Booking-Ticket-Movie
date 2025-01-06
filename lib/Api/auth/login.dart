@@ -25,7 +25,7 @@ Future<Map<String, dynamic>> login(String username, String password) async {
 }
 
 Future<Map<String, dynamic>> fetchUserByEmail(String email) async {
-  final String apiUrl = '${dotenv.env['MY_URL']}/user/$email';
+  final String apiUrl = '${dotenv.env['MY_URL']}/user?email=$email';
   try {
     final response = await http.get(
       Uri.parse(apiUrl),

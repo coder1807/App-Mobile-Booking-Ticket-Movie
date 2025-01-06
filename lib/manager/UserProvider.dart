@@ -6,6 +6,14 @@ class UserProvider with ChangeNotifier {
 
   User? get user => _user;
 
+  bool? _theme;
+
+  bool? get theme => _theme;
+  void changeTheme() {
+    _theme = !_theme!;
+    notifyListeners();
+  }
+
   void setUser(User user) {
     _user = user;
     notifyListeners(); // Thông báo cho các widget đang lắng nghe

@@ -8,6 +8,7 @@ import 'package:movie_app/manager/UserProvider.dart';
 import 'package:movie_app/models/user.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,7 +19,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isDarkMode = true;
-  
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
@@ -256,9 +257,12 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       onTap: () async {
         // await logout();
+        // Xóa thông tin lưu trong SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+        // Xóa thông tin trong UserProvider
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.clearUser();
-
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => SignInPage()),

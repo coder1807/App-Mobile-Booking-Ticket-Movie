@@ -3,11 +3,10 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/auth/login.dart';
-import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
-import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
+import 'package:movie_app/Screens/Client/Main/Views/MyTicketsPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
 import 'package:movie_app/Screens/Components/BasePage.dart';
 import 'package:movie_app/Themes/app_theme.dart';
@@ -69,7 +68,7 @@ class _MainPageState extends State<MainPage> {
     _children = [
       const HomePageCl(),
       const CinemaPageCl(),
-      const FoodPageCl(),
+      const MyTicketsPageCl(),
       const ProfilePageCl(),
     ];
   }
@@ -116,8 +115,8 @@ class _MainPageState extends State<MainPage> {
               label: 'Cinemas',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.fastfood),
-              label: 'Food Order',
+              icon: Icon(Icons.confirmation_number),
+              label: 'Vé của tôi',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
@@ -156,12 +155,12 @@ class CinemaPageCl extends StatelessWidget {
   }
 }
 
-class FoodPageCl extends StatelessWidget {
-  const FoodPageCl({super.key});
+class MyTicketsPageCl extends StatelessWidget {
+  const MyTicketsPageCl({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const BasePage(child: ListFood());
+    return BasePage(child: MyTicketsPage());
   }
 }
 
