@@ -6,6 +6,7 @@ import 'package:movie_app/Api/auth/login.dart';
 import 'package:movie_app/Api/user/update.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
+import 'package:movie_app/models/user.dart';
 import 'package:provider/provider.dart';
 
 class InfoPage extends StatefulWidget {
@@ -407,7 +408,7 @@ class _InfoPageState extends State<InfoPage> {
       final response = await updateUser(id, nameController.text.trim(),
           phoneController.text.trim(), dbDate, addressController.text.trim());
       if (response["status"] == "SUCCESS") {
-        saveLogin(context, response);
+        saveLogin(context, User.fromJson(response['data']['user']));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
