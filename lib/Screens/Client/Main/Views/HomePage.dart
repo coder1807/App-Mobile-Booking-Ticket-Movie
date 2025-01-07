@@ -172,29 +172,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 10),
             _MovieRecommendation(),
             const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // const SizedBox(width: 10),
-                Text(
-                  'Upcoming',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.colors.white),
-                ),
-                Text(
-                  'View all',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.colors.white),
-                )
-              ],
-            ),
-            const SizedBox(height: 10),
+
             // _MovieUpcoming(),
           ],
         )

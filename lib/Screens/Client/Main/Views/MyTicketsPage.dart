@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/BookingDetailsPage.dart';
+import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -54,6 +55,20 @@ class _MyTicketsPageState extends State<MyTicketsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: AppTheme.colors.mainBackground,
+        title: Text(
+          'Lịch Sử Đặt Vé',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            color: AppTheme.colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : tickets.isEmpty

@@ -70,8 +70,8 @@ class _MainPageState extends State<MainPage> {
     _children = [
       const HomePageCl(),
       const CinemaPageCl(),
-      const MyTicketsPageCl(),
       const BlogCl(),
+      const MyTicketsPageCl(),
       const ProfilePageCl()
     ];
   }
@@ -118,12 +118,12 @@ class _MainPageState extends State<MainPage> {
               label: 'Rạp phim',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.confirmation_number),
-              label: 'Vé của tôi',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.newspaper),
               label: 'Tin tức',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.confirmation_number),
+              label: 'Vé của tôi',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

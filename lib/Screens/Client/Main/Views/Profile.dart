@@ -175,7 +175,6 @@ class _ProfilePageState extends State<ProfilePage> {
           },
         ),
 
-        _buildDarkModeTile(),
         const SizedBox(height: 20),
         _buildLogoutTile(),
       ],
