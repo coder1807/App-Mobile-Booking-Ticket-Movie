@@ -119,8 +119,9 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
 
         title: const Text('Phim yêu thích'),
         backgroundColor: Color(0xFF141414),
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.white,centerTitle: true,
       ),
+
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null

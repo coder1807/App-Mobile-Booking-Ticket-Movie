@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 10),
             _MovieRecommendation(),
-            const SizedBox(height: 30),
+
 
             // _MovieUpcoming(),
           ],

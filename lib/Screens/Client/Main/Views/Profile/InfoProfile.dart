@@ -84,6 +84,20 @@ class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppTheme.colors.mainBackground,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppTheme.colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Thông tin cá nhân', style: TextStyle(color: AppTheme.colors.white)),
+        centerTitle: true,
+      ),
+
       backgroundColor: AppTheme.colors.mainBackground,
       body: _page(),
     );
@@ -97,7 +111,7 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Column(
               children: [
-                _headerPage(),
+                /*_headerPage(),*/
                 const SizedBox(height: 30),
                 _mainPage(),
                 const SizedBox(height: 20),
