@@ -17,4 +17,6 @@ class UserProvider with ChangeNotifier {
   }
 
   updateUserInfo(Map<String, Object> updatedUser) {}
+  updateUserInfoDynamic(Map<String, dynamic> updatedUser) {}
+
 }

@@ -28,10 +28,10 @@ class Movie {
     this.limitAge,
     this.quality,
     this.countryName,
-    this.categories,
+    this.categories
   );
 
-  Movie.fromJson(Map<String, dynamic> json)
+  Movie.fromJson(Map<String, dynamic> json )
       : id = json['id'],
         name = json['name'],
         trailer = json['trailer'],
