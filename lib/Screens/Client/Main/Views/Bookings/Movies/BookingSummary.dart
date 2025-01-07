@@ -127,7 +127,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
       appBar: AppBar(
         backgroundColor: AppTheme.colors.mainBackground,
         title: Text(
-          'Review Summary',
+          'Tổng Quan Hóa Đơn',
           style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 18,
@@ -187,7 +187,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              'Duration : ${widget.movie.duration} minutes',
+                              'Thời Lượng : ${widget.movie.duration} minutes',
                               style: TextStyle(
                                   color: AppTheme.colors.white,
                                   fontFamily: 'Poppins',
@@ -196,7 +196,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Director : ${widget.movie.director}',
+                              'Đạo Diễn : ${widget.movie.director}',
                               style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.w400,
@@ -246,7 +246,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Genres: ${widget.movie.categories.map((e) => e.categoryName).join(', ')}',
+                              'Thể Loại: ${widget.movie.categories.map((e) => e.categoryName).join(', ')}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -269,7 +269,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Book Details',
+                          'Chi Tiết',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14,
@@ -280,15 +280,15 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         const Divider(color: Colors.grey),
                         Column(
                           children: [
-                            _detailRow('Cinema', cinema),
-                            _detailRow('Seat(s)',
+                            _detailRow('Rạp', cinema),
+                            _detailRow('Ghế',
                                 widget.bookingItem.seatSymbols.join(', ')),
                             _detailRow(
-                              'Date',
+                              'Ngày đặt',
                               DateFormat('dd/MM/yyyy').format(displayDate),
                             ),
                             _detailRow(
-                              'Hour',
+                              'Giờ chiếu',
                               DateFormat('HH:mm').format(
                                   widget.scheduleItem.start ?? displayDate),
                             ),
@@ -309,7 +309,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Price Details',
+                          'Chi Tiết Giá',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14,
@@ -321,11 +321,11 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         Column(
                           children: [
                             _detailRow(
-                              'Single   (${singleSeats.length}): ${singleSeats.join(', ')}',
+                              'Ghế đơn (${singleSeats.length}): ${singleSeats.join(', ')}',
                               singleTotalPrice.toStringAsFixed(0) + ' VNĐ',
                             ),
                             _detailRow(
-                              'Couple (${coupleSeats.length}): ${coupleSeats.join(', ')}',
+                              'Ghế đôi (${coupleSeats.length}): ${coupleSeats.join(', ')}',
                               coupleTotalPrice.toStringAsFixed(0) + ' VNĐ',
                             ),
                             _detailRow(
@@ -336,14 +336,14 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         Divider(
                           color: AppTheme.colors.greyColor,
                         ),
-                        _detailRow('Actual Pay',
+                        _detailRow('Tổng tiền',
                             '${widget.bookingItem.totalPrice.toStringAsFixed(0)} VNĐ')
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Select Combo Food',
+                    'Chọn Combo Food',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 16,
@@ -364,7 +364,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                         dropdownColor: AppTheme.colors.containerBackground,
                         value: selectComboFood,
                         hint: Text(
-                          'Choose a combo',
+                          'Chọn combo',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             color: Colors.grey,
@@ -416,7 +416,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                       dropdownColor: AppTheme.colors.containerBackground,
                       value: selectedPromo,
                       hint: Text(
-                        'Choose a promo code',
+                        'Chọn giảm giá',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           color: Colors.grey,
@@ -487,7 +487,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                       },
 
                       child: Text(
-                        'Continue to payment',
+                        'Thanh Toán',
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,

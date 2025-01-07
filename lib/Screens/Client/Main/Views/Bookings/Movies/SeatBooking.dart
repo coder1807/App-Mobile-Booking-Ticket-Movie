@@ -222,7 +222,7 @@ class _SeatBookingState extends State<SeatBooking> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text("Next",
+                    child: Text("Thanh Toán",
                         style: TextStyle(fontFamily: 'Poppins', color: AppTheme.colors.white)),
                   ),
                 ],

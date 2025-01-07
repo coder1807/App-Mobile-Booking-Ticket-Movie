@@ -38,7 +38,8 @@ class _CinemaBookingPageState extends State<CinemaBookingPage> {
       backgroundColor: AppTheme.colors.mainBackground,
       body: _page(),
       appBar: AppBar(
-        title: Text('Booking for ${widget.movie.name}'),
+        title: Text('Đặt Vé Phim ${widget.movie.name}'),
+        foregroundColor: AppTheme.colors.white,
         backgroundColor:
             AppTheme.colors.mainBackground, // Thêm màu sắc cho AppBar
         centerTitle: true,
@@ -78,7 +79,7 @@ class _CinemaBookingPageState extends State<CinemaBookingPage> {
     return Column(
       children: [
         Text(
-          'Cinema Booking',
+          'Chọn Rạp',
           style: TextStyle(
             color: AppTheme.colors.white,
             fontSize: 30,
@@ -96,7 +97,7 @@ class _CinemaBookingPageState extends State<CinemaBookingPage> {
                 });
               },
               decoration: InputDecoration(
-                hintText: 'Search cinema',
+                hintText: 'Tìm Kiếm Rạp',
                 hintStyle:
                     TextStyle(color: AppTheme.colors.white.withOpacity(0.5)),
                 filled: true,

@@ -317,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       child: Text(
-                        "Đặt vé",
+                        "Đặt Vé",
                         style: TextStyle(color: AppTheme.colors.white),
                       ),
                     ),

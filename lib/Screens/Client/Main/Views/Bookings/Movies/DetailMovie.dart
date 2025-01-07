@@ -162,7 +162,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Movie Title',
+            widget.movie.name,
             style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 18,
@@ -208,17 +208,17 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            /*Text(
                               widget.movie.name,
                               style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
                                   color: AppTheme.colors.white,
                                   fontFamily: 'Poppins'),
-                            ),
+                            ),*/
                             const SizedBox(height: 10),
                             Text(
-                              'Duration: ${widget.movie.duration} minutes',
+                              'Thời lượng: ${widget.movie.duration} minutes',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -226,7 +226,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Director: ${widget.movie.director}',
+                              'Đạo Diễn: ${widget.movie.director}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -267,7 +267,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                               height: 10,
                             ),
                             Text(
-                              'Genres: ${widget.movie.categories.map((e) => e['categoryName']).join(', ')}',
+                              'Thể loại: ${widget.movie.categories.map((e) => e['categoryName']).join(', ')}',
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Poppins',
@@ -316,7 +316,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
 
                   const SizedBox(height: 20),
                   Text(
-                    'Watch Trailer',
+                    'Trailer Phim',
                     style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Poppins',
@@ -346,7 +346,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                       }),
                   const SizedBox(height: 20),
                   Text(
-                    'Synopsis',
+                    'Tóm Tắt Phim',
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 18,
@@ -367,7 +367,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                     height: 10,
                   ),
                   Text(
-                    'Cast',
+                    'Dàn Diễn Viên',
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 18,
@@ -395,7 +395,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Photos',
+                    'Ảnh Trong Phim',
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         color: AppTheme.colors.white,
@@ -428,7 +428,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Rating',
+                    'Đánh Giá',
                     style: TextStyle(
                         color: AppTheme.colors.white,
                         fontSize: 18,
@@ -441,7 +441,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   else if (_ratings.isEmpty)
                     Center(
                       child: Text(
-                        'No rating yet',
+                        'Chưa Có Đánh Giá',
                         style: TextStyle(
                           color: AppTheme.colors.white,
                           fontSize: 14,
@@ -478,7 +478,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                           ),
                           const SizedBox(height: 20),
                           Text(
-                            '(${_ratings.length} Reviews)',
+                            '(${_ratings.length} Lượt Đánh Giá)',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -563,7 +563,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10))),
                         child: Text(
-                          'Rate this Movie',
+                          'Đánh Giá Phim Này',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 14,
@@ -587,7 +587,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
                       child: Text(
-                        'Book Now',
+                        'Đặt Vé Ngay',
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14,

@@ -31,7 +31,7 @@ class _ListPlayingPageState extends State<ListPlayingPage> {
       appBar: AppBar(
         backgroundColor: AppTheme.colors.mainBackground,
         title: Text(
-          'Now Playing',
+          'Các Phim Hiện Chiếu',
           style: TextStyle(
             fontFamily: 'Poppins',
             color: AppTheme.colors.white,
@@ -265,7 +265,7 @@ class _ListPlayingPageState extends State<ListPlayingPage> {
                         );
                       },
                       child: Text(
-                        'Book Now',
+                        'Đặt Vé Ngay',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 14,
