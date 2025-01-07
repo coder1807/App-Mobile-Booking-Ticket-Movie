@@ -18,7 +18,7 @@ class BookingDetailsPage extends StatefulWidget {
 }
 
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
-  late MovieItem movieDetails;
+  late MovieItem movieDetails ;
 
   @override
   void initState() {

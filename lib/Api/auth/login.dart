@@ -23,26 +23,6 @@ Future<Map<String, dynamic>> login(String username, String password) async {
     return {"status": "ERROR", "message": "Lỗi khi gọi API: $error"};
   }
 }
-
-Future<bool> isLogined() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (prefs.getInt("user_id") != null) return true;
-  return false;
-}
-
-Future<void> loadUser(BuildContext context) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (prefs.getInt("user_id") != null) {
-    Map<String, dynamic> response = await getInfoUser(prefs.getInt("user_id")!);
-    User user = User.fromJson(response);
-    await saveLogin(context, user);
-  }
-}
-
-Future<void> saveLogin(BuildContext context, user) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt("user_id", user.id);
-  if (user.fullname != null) prefs.setString("user_fullname", user.fullname!);
 Future<Map<String, dynamic>> fetchUserByEmail(String email) async {
   final String apiUrl = '${dotenv.env['MY_URL']}/user?email=$email';
   try {
@@ -64,7 +44,6 @@ Future<Map<String, dynamic>> fetchUserByEmail(String email) async {
     return {};
   }
 }
-
 Future<bool> isLogined() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getInt("user_id") != null) return true;
