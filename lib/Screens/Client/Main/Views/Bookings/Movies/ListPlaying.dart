@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/movie/movie.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/CinemaBooking.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/DetailMovie.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/models/movie.dart';
 
@@ -211,7 +212,6 @@ class _ListPlayingPageState extends State<ListPlayingPage> {
                       (category) => category['categoryName'] == _selectedGenre);
           return matchesSearchQuery && matchesGenre;
         }).toList();
-
         return Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -221,28 +221,54 @@ class _ListPlayingPageState extends State<ListPlayingPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: Image.network(
-                      '${dotenv.env['API']}' + movie['poster']!,
-                      width: double.infinity,
-                      height: 280,
-                      fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: () {
+                      final selectedMovie = Movie.fromJson(movie);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailMoviePage(
+                            movie: selectedMovie,
+                          ),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Image.network(
+                        '${dotenv.env['API']}' + movie['poster']!,
+                        width: double.infinity,
+                        height: 280,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    movie['name']!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
-                      color: AppTheme.colors.white,
-                      fontWeight: FontWeight.w600,
+                  GestureDetector(
+                    onTap: () {
+                      final selectedMovie = Movie.fromJson(movie);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailMoviePage(
+                            movie: selectedMovie,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      movie['name']!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
+                        color: AppTheme.colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Center(

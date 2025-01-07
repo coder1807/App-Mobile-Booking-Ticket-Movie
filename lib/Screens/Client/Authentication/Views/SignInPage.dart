@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_app/Api/auth/social.dart';
 import 'package:movie_app/Api/auth/login.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/ForgotPasswordPage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/GetFavoritePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Components/CustomButton.dart';
 import 'package:movie_app/Screens/Components/CustomInput.dart';
 import 'package:movie_app/main.dart';
 import 'package:movie_app/models/user.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -80,7 +82,7 @@ class _SignInPageState extends State<SignInPage> {
                   isPassword: true,
                 ),
                 const SizedBox(height: 10),
-                _forgotPasswordText(),
+                _forgotPasswordText(context),
                 const SizedBox(height: 50),
                 isLoading
                     ? const Center(child: CircularProgressIndicator())
@@ -318,16 +320,27 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget _forgotPasswordText() {
-    return const Align(
+  Widget _forgotPasswordText(BuildContext context) {
+    return Align(
       alignment: Alignment.centerRight,
-      child: Text(
-        "Forgot Password?",
-        style: TextStyle(
+      child: GestureDetector(
+        onTap: () {
+          // Điều hướng đến màn hình quên mật khẩu
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ForgotPasswordScreen()),
+          );
+        },
+        child: const Text(
+          "Forgot Password?",
+          style: TextStyle(
             fontSize: 14,
             color: Color(0xffD4D4D4),
             fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

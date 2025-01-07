@@ -66,7 +66,7 @@ Future<Map<String, dynamic>> fetchSchedulesById(int id) async {
   }
 }
 
-Future<Map<String, dynamic>> fetchCinemaBySchedule(int scheduleId) async {
+Future<List<Map<String, dynamic>>> fetchCinemaBySchedule(int scheduleId) async {
   final String apiUrl = '${dotenv.env['MY_URL']}/cinema?scheduleId=$scheduleId';
   try {
     final response = await http.get(
@@ -75,14 +75,14 @@ Future<Map<String, dynamic>> fetchCinemaBySchedule(int scheduleId) async {
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return Map<String, dynamic>.from(data);
+      return List<Map<String, dynamic>>.from(data);
     } else {
       print('Error: ${response.statusCode}');
-      return {};
+      return [];
     }
   } catch (error) {
     print('Error occurred: $error');
-    return {};
+    return [];
   }
 }
 

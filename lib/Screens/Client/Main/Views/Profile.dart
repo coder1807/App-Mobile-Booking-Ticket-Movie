@@ -23,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
+    print(user!.type);
     return Scaffold(
       backgroundColor:
           _isDarkMode ? AppTheme.colors.mainBackground : AppTheme.colors.white,
@@ -174,7 +175,6 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           },
         ),
-
         _buildDarkModeTile(),
         const SizedBox(height: 20),
         _buildLogoutTile(),

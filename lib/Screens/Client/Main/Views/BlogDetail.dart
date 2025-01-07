@@ -25,14 +25,11 @@ class _BlogDetailState extends State<BlogDetail> {
     }
     final user = Provider.of<UserProvider>(context, listen: false).user;
 
-
     final commentDTO = {
       'blogId': widget.blogId,
       'userId': user!.id, // Đặt ID người dùng hiện tại.
       'content': _commentController.text,
-
     };
-
 
     // Gọi hàm submitComment để gửi dữ liệu lên server
     await submitComment(commentDTO);
@@ -60,7 +57,8 @@ class _BlogDetailState extends State<BlogDetail> {
         centerTitle: true,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchBlogDetailByID(widget.blogId), // Hàm API lấy chi tiết blog theo id
+        future: fetchBlogDetailByID(
+            widget.blogId), // Hàm API lấy chi tiết blog theo id
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -96,7 +94,8 @@ class _BlogDetailState extends State<BlogDetail> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  blogDetail['blogTitle'] ?? 'Untitled', // Kiểm tra null và gán giá trị mặc định
+                  blogDetail['blogTitle'] ??
+                      'Untitled', // Kiểm tra null và gán giá trị mặc định
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 20,
@@ -106,7 +105,8 @@ class _BlogDetailState extends State<BlogDetail> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  blogDetail['blogContent'] ?? 'No content available.', // Kiểm tra null và gán giá trị mặc định
+                  blogDetail['blogContent'] ??
+                      'No content available.', // Kiểm tra null và gán giá trị mặc định
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 16,
@@ -125,14 +125,17 @@ class _BlogDetailState extends State<BlogDetail> {
                 ),
                 // Hiển thị các comment từ hàm fetchCommentsByBlogID
                 FutureBuilder<List<dynamic>>(
-                  future: fetchCommentsByBlogID(widget.blogId), // Lấy bình luận theo blogId
+                  future: fetchCommentsByBlogID(
+                      widget.blogId), // Lấy bình luận theo blogId
                   builder: (context, commentSnapshot) {
-                    if (commentSnapshot.connectionState == ConnectionState.waiting) {
+                    if (commentSnapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     }
 
                     if (commentSnapshot.hasError) {
-                      return Center(child: Text('Error: ${commentSnapshot.error}'));
+                      return Center(
+                          child: Text('Error: ${commentSnapshot.error}'));
                     }
 
                     final comments = commentSnapshot.data;
@@ -162,7 +165,8 @@ class _BlogDetailState extends State<BlogDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                comment['fullName'] ?? 'Anonymous', // Kiểm tra null và gán giá trị mặc định
+                                comment['fullName'] ??
+                                    'Anonymous', // Kiểm tra null và gán giá trị mặc định
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: AppTheme.colors.white,
@@ -171,7 +175,8 @@ class _BlogDetailState extends State<BlogDetail> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                comment['commentContent'] ?? 'No content available.', // Kiểm tra null và gán giá trị mặc định
+                                comment['commentContent'] ??
+                                    'No content available.', // Kiểm tra null và gán giá trị mặc định
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: AppTheme.colors.white,
@@ -199,14 +204,16 @@ class _BlogDetailState extends State<BlogDetail> {
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   ),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _submitComment,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.colors.mainBackground, // Màu nền của nút
+                    backgroundColor:
+                        AppTheme.colors.mainBackground, // Màu nền của nút
                     padding: EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

@@ -88,6 +88,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
   void _fetchCinemaName() async {
     final response =
         await fetchCinemaBySchedule(widget.scheduleItem.scheduleId);
+    print(response);
     cinema = response[0]['name'];
   }
 
@@ -457,7 +458,8 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
 
                         try {
                           // Gửi yêu cầu GET để lấy payUrl
-                          final response = await http.get(Uri.parse(paymentUrl));
+                          final response =
+                              await http.get(Uri.parse(paymentUrl));
                           print(response.statusCode);
 
                           if (response.statusCode == 200) {
@@ -468,7 +470,8 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                               // Mở ứng dụng MoMo bằng payUrl
                               final Uri payUri = Uri.parse(payUrl);
                               if (await canLaunchUrl(payUri)) {
-                                await launchUrl(payUri, mode: LaunchMode.externalApplication);
+                                await launchUrl(payUri,
+                                    mode: LaunchMode.externalApplication);
                               } else {
                                 throw 'Không thể mở ứng dụng MoMo';
                               }
@@ -485,7 +488,6 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                           );
                         }
                       },
-
                       child: Text(
                         'Continue to payment',
                         style: TextStyle(

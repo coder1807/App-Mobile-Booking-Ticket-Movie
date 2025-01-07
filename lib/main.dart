@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_app/Api/auth/login.dart';
+import 'package:movie_app/Screens/Client/Authentication/Views/ResetPasswordPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/BlogPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
@@ -15,11 +18,11 @@ import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/firebase_options.dart';
 import 'package:movie_app/manager/UserProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   try {
-    WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -27,14 +30,6 @@ void main() async {
   } catch (e) {
     throw Exception('Error loading .env file: $e');
   }
-
-  final appLinks = AppLinks(); // AppLinks is singleton
-  // Subscribe to all events (initial link and further)
-  final sub = appLinks.uriLinkStream.listen((uri) {
-    // Do something (navigation, ...)
-    print("appLink: ${uri.path}");
-    // call api toi localhost:8080/api/payment/handlePayment?transaction_id=MOMO1734864017501&json=true
-  });
 
   bool skipLogin = await isLogined();
   print("skipLogin: ${skipLogin ? "Đã bỏ qua đăng nhập." : "Chưa đăng nhập."}");
@@ -44,12 +39,73 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: skipLogin ? MainPage() : SignInPage(),
-      ),
+      child: MyApp(skipLogin: skipLogin),
     ),
   );
+}
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+class MyApp extends StatefulWidget {
+  final bool skipLogin;
+
+  const MyApp({super.key, required this.skipLogin});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  StreamSubscription? _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    _initDeepLinkListener();
+  }
+
+  void _initDeepLinkListener() async {
+    final initialUri = await getInitialUri();
+    if (initialUri != null) {
+      _handleDeepLink(initialUri);
+    }
+
+    _sub = uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        _handleDeepLink(uri);
+      }
+    }, onError: (err) {
+      print("Lỗi khi xử lý deep link: $err");
+    });
+  }
+
+  void _handleDeepLink(Uri uri) {
+    if (uri.host == "com.example.movie_app" && uri.path == "/reset-password") {
+      final token = uri.queryParameters['token'];
+      if (token != null) {
+        navigatorKey.currentState?.push(
+          MaterialPageRoute(
+            builder: (context) => ResetPasswordScreen(token: token),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey, // Gắn GlobalKey vào MaterialApp
+      home: widget.skipLogin ? MainPage() : SignInPage(),
+    );
+  }
 }
 
 class MainPage extends StatefulWidget {

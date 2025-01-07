@@ -18,12 +18,29 @@ class BookingDetailsPage extends StatefulWidget {
 }
 
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
-  late MovieItem movieDetails;
-
+  MovieItem? movieDetails;
+  num price = 0;
   @override
   void initState() {
     super.initState();
     fetchMovieDetails();
+  }
+
+  String getShowTime(Map<String, dynamic> ticket) {
+    DateTime startTime = DateTime.parse(ticket['startTime']);
+    DateTime createAt = DateTime.parse(ticket['createAt']);
+    DateTime startDate = DateTime(createAt.year, createAt.month, createAt.day,
+        startTime.hour, startTime.minute);
+
+    // So sánh giờ và phút của startTime với createAt
+    if (startTime.isBefore(createAt)) {
+      // Nếu giờ và phút của startTime nhỏ hơn createAt thì thay đổi ngày
+      startDate = DateTime(createAt.year, createAt.month, createAt.day + 1,
+          startTime.hour, startTime.minute);
+    }
+
+    // Trả về lịch chiếu đã được format
+    return formatDate(startDate.toIso8601String());
   }
 
   Future<void> fetchMovieDetails() async {
@@ -53,6 +70,10 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final ticket = widget.ticket;
+    final seatDetails = calculateSeatDetails(ticket['seatName']);
+    final comboFoodPrice =
+        ticket['comboFood'] != null ? ticket['comboFood']['price'] : 0;
+    price = seatDetails['totalPrice'] + comboFoodPrice;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -82,7 +103,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            '${dotenv.env['API']}' + movieDetails.poster,
+                            '${dotenv.env['API']}' + movieDetails!.poster,
                             width: 170,
                             height: 250,
                             fit: BoxFit.cover,
@@ -94,7 +115,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                movieDetails.name,
+                                movieDetails!.name,
                                 style: TextStyle(
                                     color: AppTheme.colors.white,
                                     fontFamily: 'Poppins',
@@ -103,7 +124,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               ),
                               const SizedBox(height: 20),
                               Text(
-                                'Duration : ${movieDetails.duration} minutes',
+                                'Thời lượng : ${movieDetails!.duration} minutes',
                                 style: TextStyle(
                                     color: AppTheme.colors.white,
                                     fontFamily: 'Poppins',
@@ -112,7 +133,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                'Director : ${movieDetails.director}',
+                                'Đạo diễn : ${movieDetails!.director}',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w400,
@@ -123,7 +144,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               Row(
                                 children: [
                                   Text(
-                                    'AR',
+                                    'Độ tuổi',
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
                                         color: AppTheme.colors.white,
@@ -150,7 +171,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                           width: 1),
                                     ),
                                     child: Text(
-                                      'C${movieDetails.limit_age}',
+                                      'C${movieDetails!.limit_age}',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: 'Poppins',
@@ -162,7 +183,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                'Genres: ${movieDetails.categories.map((e) => e.categoryName).join(', ')}',
+                                'Thể loại: ${movieDetails!.categories.map((e) => e.categoryName).join(', ')}',
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'Poppins',
@@ -175,19 +196,33 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                     ),
                     const SizedBox(height: 20),
                     // Booking Details
-                    const SectionTitle(title: 'Booking Details'),
-                    DetailRow(label: 'Cinema', value: ticket['cinemaName']),
-                    DetailRow(label: 'Seat(s)', value: ticket['seatName']),
+                    const SectionTitle(title: 'Chi tiết vé'),
+                    DetailRow(label: 'Rạp phim', value: ticket['cinemaName']),
+                    DetailRow(label: 'Ghế đã đặt', value: ticket['seatName']),
                     DetailRow(
-                        label: 'Date', value: formatDate(ticket['startTime'])),
+                      label: 'Suất chiếu',
+                      value: getShowTime(ticket),
+                    ),
                     DetailRow(
-                      label: 'Payment',
+                        label: 'Ngày đặt',
+                        value: formatDate(ticket['createAt'])),
+                    DetailRow(
+                      label: 'Phương thức thanh toán',
                       value: ticket['payment'].isEmpty
-                          ? 'Not Paid'
+                          ? 'Trực tiếp tại rạp'
                           : ticket['payment'],
                     ),
-                    const SectionTitle(title: 'Price Details'),
+                    const SectionTitle(title: 'Chi tiết giá'),
+                    if (ticket['comboFood'] != null)
+                      DetailRow(
+                          label: 'Combo food đã đặt',
+                          value: ticket['comboFood']['price']),
                     ..._buildPriceDetails(ticket['seatName']),
+                    DetailRow(
+                      label: 'Tổng tiền',
+                      value: '${price.toStringAsFixed(0)} VNĐ',
+                      isBold: true,
+                    ),
                   ],
                 ),
               ),
@@ -203,7 +238,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     if (seatDetails['singleSeats'].isNotEmpty) {
       priceDetails.add(
         DetailRow(
-          label: 'Single (${seatDetails['singleSeats'].length})',
+          label: 'Ghế đơn (${seatDetails['singleSeats'].length})',
           value:
               '${seatDetails['singleSeats'].join(', ')} - ${seatDetails['singleTotalPrice'].toStringAsFixed(0)} VNĐ',
         ),
@@ -214,17 +249,16 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     if (seatDetails['coupleSeats'].isNotEmpty) {
       priceDetails.add(
         DetailRow(
-          label: 'Couple (${seatDetails['coupleSeats'].length})',
+          label: 'Ghế đôi (${seatDetails['coupleSeats'].length})',
           value:
               '${seatDetails['coupleSeats'].join(', ')} - ${seatDetails['coupleTotalPrice'].toStringAsFixed(0)} VNĐ',
         ),
       );
     }
-
     // Luôn hiển thị tổng giá
     priceDetails.add(
       DetailRow(
-        label: 'Total Price',
+        label: 'Tiền ghế',
         value: '${seatDetails['totalPrice'].toStringAsFixed(0)} VNĐ',
       ),
     );
