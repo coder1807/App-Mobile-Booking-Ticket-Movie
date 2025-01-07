@@ -27,16 +27,7 @@ class _ListBlog extends State<BlogPage> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            size: 25,
-            color: AppTheme.colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+
       ),
       backgroundColor: Colors.black, // Đặt màu nền thành màu đen
       body: FutureBuilder<List<Map<String, dynamic>>>(

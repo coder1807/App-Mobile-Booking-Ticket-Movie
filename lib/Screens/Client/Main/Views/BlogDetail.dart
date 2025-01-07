@@ -58,6 +58,16 @@ class _BlogDetailState extends State<BlogDetail> {
           ),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            size: 25,
+            color: AppTheme.colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchBlogDetailByID(widget.blogId), // Hàm API lấy chi tiết blog theo id
