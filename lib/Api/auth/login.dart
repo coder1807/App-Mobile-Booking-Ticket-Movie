@@ -43,6 +43,7 @@ Future<void> saveLogin(BuildContext context, user) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt("user_id", user.id);
   if (user.fullname != null) prefs.setString("user_fullname", user.fullname!);
+}
 Future<Map<String, dynamic>> fetchUserByEmail(String email) async {
   final String apiUrl = '${dotenv.env['MY_URL']}/user/$email';
   try {
@@ -65,8 +66,8 @@ Future<Map<String, dynamic>> fetchUserByEmail(String email) async {
   }
 }
 
-Future<void> saveLogin(
-    BuildContext context, Map<String, dynamic> response) async {
-  User user = User.fromJson(response['data']['user']);
-  Provider.of<UserProvider>(context, listen: false).setUser(user);
-}
+// Future<void> saveLogin(
+//     BuildContext context, Map<String, dynamic> response) async {
+//   User user = User.fromJson(response['data']['user']);
+//   Provider.of<UserProvider>(context, listen: false).setUser(user);
+// }

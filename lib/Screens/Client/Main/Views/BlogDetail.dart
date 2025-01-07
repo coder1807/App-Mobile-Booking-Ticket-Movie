@@ -58,6 +58,9 @@ class _BlogDetailState extends State<BlogDetail> {
           ),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Colors.white, // Thiết lập màu trắng cho nút trở về
+        ),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchBlogDetailByID(widget.blogId), // Hàm API lấy chi tiết blog theo id
@@ -206,14 +209,14 @@ class _BlogDetailState extends State<BlogDetail> {
                 ElevatedButton(
                   onPressed: _submitComment,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.colors.mainBackground, // Màu nền của nút
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                    backgroundColor: Colors.blue, // Màu nền của nút
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text(
-                    'Submit Comment',
+                    ' Comment ',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 16,
