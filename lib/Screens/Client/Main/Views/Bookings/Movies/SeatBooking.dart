@@ -18,11 +18,7 @@ class SeatBooking extends StatefulWidget {
   final int roomId;
   final MovieItem movie;
 
-  const SeatBooking(
-      {super.key,
-      required this.schedule,
-      required this.roomId,
-      required this.movie});
+  const SeatBooking({super.key, required this.schedule, required this.roomId, required this.movie});
 
   @override
   _SeatBookingState createState() => _SeatBookingState();
@@ -73,18 +69,15 @@ class _SeatBookingState extends State<SeatBooking> {
     final baseUrl = dotenv.env['MY_URL']; // Thay đổi URL cho phù hợp
 
     try {
-      final response = await http
-          .get(Uri.parse('$baseUrl/seats/${widget.schedule.scheduleId}'));
+      final response = await http.get(Uri.parse('$baseUrl/seats/${widget.schedule.scheduleId}'));
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         setState(() {
           if (responseData.isNotEmpty) {
-            bookedSeats =
-                responseData.map((seat) => seat['symbol'] as String).toList();
+            bookedSeats = responseData.map((seat) => seat['symbol'] as String).toList();
           } else {
-            bookedSeats =
-                []; // Nếu không có ghế nào được đặt, bookedSeats vẫn là danh sách trống
+            bookedSeats = []; // Nếu không có ghế nào được đặt, bookedSeats vẫn là danh sách trống
           }
           isLoading = false; // Đã xong việc lấy dữ liệu, dừng loading
         });
@@ -125,10 +118,7 @@ class _SeatBookingState extends State<SeatBooking> {
           children: [
             const SizedBox(height: 20),
             Text("MÀN HÌNH",
-                style: TextStyle(
-                    color: AppTheme.colors.pink,
-                    fontFamily: 'Poppins',
-                    fontSize: 16)),
+                style: TextStyle(color: AppTheme.colors.pink, fontFamily: 'Poppins', fontSize: 16)),
             Image.asset('assets/images/Movies/screen-thumb.png'),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
@@ -138,33 +128,51 @@ class _SeatBookingState extends State<SeatBooking> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildLegend(Icons.square_rounded, AppTheme.colors.white, "Có sẵn"),
-                  _buildLegend(Icons.square_rounded, AppTheme.colors.pink, "Ghế đã chọn"),
-                  _buildLegend(Icons.rectangle_rounded, AppTheme.colors.orangeColor, "Ghế đôi"),
-                  _buildLegend(Icons.square_rounded, Colors.grey[800]!, "Ghế đã đặt"),
-                ],
+              child: Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 30,),// Space for pushing first column to the right
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildLegend(Icons.square_rounded, AppTheme.colors.white, "Có sẵn"),
+                          SizedBox(height: 5,),
+                          _buildLegend(Icons.rectangle_rounded, AppTheme.colors.orangeColor, "Ghế đôi"),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildLegend(Icons.square_rounded, AppTheme.colors.pink, "Ghế đã chọn"),
+                          SizedBox(height: 5,),
+                          _buildLegend(Icons.square_rounded, Colors.grey[800]!, "Ghế đã đặt"),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            Expanded(
+            ),            Expanded(
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : CustomScrollView(
-                slivers: [
-                  _buildSingleSeatsSection(),
-                  _buildCoupleSeatsSection(),
-                ],
-              ),
+                      slivers: [
+                        _buildSingleSeatsSection(),
+                        _buildCoupleSeatsSection(),
+                      ],
+                    ),
             ),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12, blurRadius: 4, offset: Offset(0, -2)),
+                  BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2)),
                 ],
               ),
               child: Row(
@@ -173,17 +181,14 @@ class _SeatBookingState extends State<SeatBooking> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Ghế đã chọn",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text(selectedSeats.join(', '),
-                          style: TextStyle(color: AppTheme.colors.pink)),
+                      const Text("Ghế đã chọn", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(selectedSeats.join(', '), style: TextStyle(color: AppTheme.colors.pink)),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text("Tổng tiền",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text("Tổng tiền", style: TextStyle(fontWeight: FontWeight.bold)),
                       Text("${calculateTotalPrice().toStringAsFixed(0)} VNĐ",
                           style: TextStyle(color: AppTheme.colors.pink)),
                     ],
@@ -218,9 +223,7 @@ class _SeatBookingState extends State<SeatBooking> {
                       ),
                     ),
                     child: Text("Next",
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            color: AppTheme.colors.white)),
+                        style: TextStyle(fontFamily: 'Poppins', color: AppTheme.colors.white)),
                   ),
                 ],
               ),
@@ -234,13 +237,17 @@ class _SeatBookingState extends State<SeatBooking> {
   Widget _buildSeatWidget(String seat, {bool isCouple = false}) {
     Color seatColor;
     bool isCoupleRow = coupleSeatRows.contains(seat[0]);
+    String firstSeat = '';
+    String secondSeat = '';
 
     if (isCoupleRow) {
       int seatNumber = int.parse(seat.substring(1));
       bool isFirstInCouplePair = seatNumber % 2 == 1;
 
       if (isFirstInCouplePair) {
-        seat = '${seat[0]}${seatNumber}${seat[0]}${seatNumber + 1}';
+        firstSeat = '${seat[0]}${seatNumber}';
+        secondSeat = '${seat[0]}${seatNumber + 1}';
+        seat = '$firstSeat$secondSeat';
       } else {
         return SizedBox.shrink();
       }
@@ -264,40 +271,56 @@ class _SeatBookingState extends State<SeatBooking> {
       onTap: bookedSeats.contains(seat)
           ? null
           : () {
-        setState(() {
-          if (selectedSeats.contains(seat)) {
-            selectedSeats.remove(seat);
-            seatTypeMap.remove(seat);
-          } else {
-            selectedSeats.add(seat);
-            seatTypeMap[seat] = isCoupleRow ? 'couple' : 'single';
-          }
-        });
-      },
+              setState(() {
+                if (selectedSeats.contains(seat)) {
+                  selectedSeats.remove(seat);
+                  seatTypeMap.remove(seat);
+                } else {
+                  selectedSeats.add(seat);
+                  seatTypeMap[seat] = isCoupleRow ? 'couple' : 'single';
+                }
+              });
+            },
       child: Stack(
         alignment: Alignment.center,
         children: [
           Icon(
             isCoupleRow ? Icons.rectangle_rounded : Icons.square_rounded,
-            size: isCoupleRow ? 65 : 45, // increased icon size
+            size: isCoupleRow ? 70 : 45,
             color: seatColor,
           ),
           Padding(
-            padding:isCoupleRow ? const EdgeInsets.fromLTRB(6, 0,0, 0) :const EdgeInsets.fromLTRB(3, 0,0, 0),
-              child: SizedBox(
-                width: isCoupleRow ? 60: 45,
-                child: Center(
-                  child: Text(
-                    seat,
-                    style: textStyle,
-                    textAlign: TextAlign.center,
-                    maxLines: isCoupleRow ? 2 : 1, // Enable wrapping for couple seats
-                    overflow: TextOverflow.visible,
-                  ),
-                ),
+            padding: isCoupleRow
+                ? const EdgeInsets.fromLTRB(6, 0, 0, 0)
+                : const EdgeInsets.fromLTRB(3, 0, 0, 0),
+            child: SizedBox(
+              width: isCoupleRow ? 70 : 45,
+              height: isCoupleRow ? 70 : 45, // Increased height for two lines
+              child: Center(
+                child: isCoupleRow
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            firstSeat,
+                            style: textStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            secondSeat,
+                            style: textStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )
+                    : Text(
+                        seat,
+                        style: textStyle,
+                        textAlign: TextAlign.center,
+                      ),
               ),
-          )
-
+            ),
+          ),
         ],
       ),
     );
@@ -327,14 +350,14 @@ class _SeatBookingState extends State<SeatBooking> {
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 9,
-          mainAxisSpacing: 15,
-          crossAxisSpacing: 2,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: .5,
           childAspectRatio: 0.5,
         ),
         delegate: SliverChildBuilderDelegate(
-              (context, index) {
+          (context, index) {
             int rowIndex = index ~/ 9;
-            int colIndex = index % 9 +1;
+            int colIndex = index % 9 + 1;
 
             String seat = '${singleSeatRows[rowIndex]}$colIndex';
             return _buildSeatWidget(seat);
@@ -344,18 +367,18 @@ class _SeatBookingState extends State<SeatBooking> {
       ),
     );
   }
+
   Widget _buildCoupleSeatsSection() {
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(8.0, 0, 16.0, 0),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
-                (context, index) {
-              int rowIndex = index ~/ coupleSeatsPerRow;
-              String seat = coupleSeatRows[rowIndex] +
-                  (index % coupleSeatsPerRow * 2 + 1).toString();
-              return _buildSeatWidget(seat, isCouple: true);
-            },
-            childCount: coupleSeatRows.length * coupleSeatsPerRow,
+          (context, index) {
+            int rowIndex = index ~/ coupleSeatsPerRow;
+            String seat = coupleSeatRows[rowIndex] + (index % coupleSeatsPerRow * 2 + 1).toString();
+            return _buildSeatWidget(seat, isCouple: true);
+          },
+          childCount: coupleSeatRows.length * coupleSeatsPerRow,
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: coupleSeatsPerRow,
@@ -366,6 +389,7 @@ class _SeatBookingState extends State<SeatBooking> {
       ),
     );
   }
+
   double calculateTotalPrice() {
     double total = 0;
     for (String seat in selectedSeats) {
@@ -378,8 +402,6 @@ class _SeatBookingState extends State<SeatBooking> {
     return total;
   }
 }
-
-
 
 /*  @override
   Widget build(BuildContext context) {

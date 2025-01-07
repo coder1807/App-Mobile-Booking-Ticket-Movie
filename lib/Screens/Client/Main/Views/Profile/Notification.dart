@@ -83,11 +83,11 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         const Spacer(),
         Text(
-          'Notification',
+          'Thông báo',
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: AppTheme.colors.white,
             fontSize: 22,
-            fontWeight: FontWeight.bold,
             fontFamily: 'Poppins',
           ),
         ),

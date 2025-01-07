@@ -62,7 +62,18 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+  String _getGreeting() {
+    final now = DateTime.now();
+    final hour = now.hour;
 
+    if (hour < 12) {
+      return 'Chào buổi sáng!';
+    } else if (hour < 17) {
+      return 'Buổi chiều vui vẻ!';
+    } else {
+      return 'Buổi tối vui vẻ!';
+    }
+  }
   Widget _headerPage() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                       fontFamily: 'Poppins'),
                 ),
                 Text(
-                  'Good morning!',
+                  _getGreeting(),
                   style:
                       TextStyle(fontSize: 14, color: AppTheme.colors.greyColor),
                 ),
@@ -122,9 +133,9 @@ class _HomePageState extends State<HomePage> {
               children: [
                 // const SizedBox(width: 10),
                 Text(
-                  'Now Playing',
+                  'Các Phim Hiện Chiếu'.toUpperCase(),
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w600,
                       color: AppTheme.colors.white),
@@ -139,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       children: [
                         Text(
-                          'View ALL',
+                          'Xem tất cả phim',
                           style: TextStyle(
                               fontSize: 15,
                               fontFamily: 'Poppins',
@@ -147,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                               color: AppTheme.colors.orange),
                         ),
                         SizedBox(
-                          width: 15,
+                          width:5,
                         ),
                         Icon(
                           Icons.arrow_forward_ios,
@@ -306,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       child: Text(
-                        "Book",
+                        "Đặt vé",
                         style: TextStyle(color: AppTheme.colors.white),
                       ),
                     ),

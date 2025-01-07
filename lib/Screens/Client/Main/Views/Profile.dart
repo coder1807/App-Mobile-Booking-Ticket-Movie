@@ -61,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Profile',
+                'Thông tin cá nhân',
                 style: TextStyle(
                   color: AppTheme.colors.white,
                   fontSize: 30,
@@ -145,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         _buildListTile(
           icon: Icons.person,
-          title: 'Personal Info',
+          title: 'Thông tin cá nhân',
           onTap: () {
             Navigator.push(
               context,
@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         _buildListTile(
           icon: Icons.notifications,
-          title: 'Notification',
+          title: 'Thông báo',
           onTap: () {
             Navigator.push(
               context,
@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         _buildListTile(
           icon: Icons.movie,
-          title: 'Favorite Movie',
+          title: 'Phim yêu thích',
           onTap: () {
             Navigator.push(
               context,
@@ -216,7 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
         color: _isDarkMode ? AppTheme.colors.pink : AppTheme.colors.black,
       ),
       title: Text(
-        'Dark Mode',
+        'Chế độ tối',
         style: TextStyle(
           color: _isDarkMode ? AppTheme.colors.white : AppTheme.colors.black,
           fontSize: 18,
@@ -241,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
         color: AppTheme.colors.buttonColor,
       ),
       title: Text(
-        'Logout',
+        'Thoát',
         style: TextStyle(
           color: AppTheme.colors.buttonColor,
           fontSize: 18,
