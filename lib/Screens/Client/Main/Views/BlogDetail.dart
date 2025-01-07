@@ -25,7 +25,6 @@ class _BlogDetailState extends State<BlogDetail> {
     }
     final user = Provider.of<UserProvider>(context, listen: false).user;
 
-
     final commentDTO = {
       'blogId': widget.blogId,
       'userId': user!.id, // Đặt ID người dùng hiện tại.
