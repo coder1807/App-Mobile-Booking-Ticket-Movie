@@ -279,11 +279,11 @@ class _SeatBookingState extends State<SeatBooking> {
         children: [
           Icon(
             isCoupleRow ? Icons.rectangle_rounded : Icons.square_rounded,
-            size: isCoupleRow ? 65 : 40, // increased icon size
+            size: isCoupleRow ? 65 : 45, // increased icon size
             color: seatColor,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(6, 0,0, 0),
+            padding:isCoupleRow ? const EdgeInsets.fromLTRB(6, 0,0, 0) :const EdgeInsets.fromLTRB(3, 0,0, 0),
               child: SizedBox(
                 width: isCoupleRow ? 60: 45,
                 child: Center(
@@ -291,6 +291,8 @@ class _SeatBookingState extends State<SeatBooking> {
                     seat,
                     style: textStyle,
                     textAlign: TextAlign.center,
+                    maxLines: isCoupleRow ? 2 : 1, // Enable wrapping for couple seats
+                    overflow: TextOverflow.visible,
                   ),
                 ),
               ),
@@ -324,20 +326,20 @@ class _SeatBookingState extends State<SeatBooking> {
       padding: const EdgeInsets.fromLTRB(8.0, 0, 16.0, 0),
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 12,
+          crossAxisCount: 9,
           mainAxisSpacing: 15,
           crossAxisSpacing: 2,
           childAspectRatio: 0.5,
         ),
         delegate: SliverChildBuilderDelegate(
               (context, index) {
-            int rowIndex = index ~/ 12;
-            int colIndex = index % 12 +1;
+            int rowIndex = index ~/ 9;
+            int colIndex = index % 9 +1;
 
             String seat = '${singleSeatRows[rowIndex]}$colIndex';
             return _buildSeatWidget(seat);
           },
-          childCount: singleSeatRows.length * 12,
+          childCount: singleSeatRows.length * 9,
         ),
       ),
     );
