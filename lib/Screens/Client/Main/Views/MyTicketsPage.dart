@@ -48,7 +48,24 @@ class _MyTicketsPageState extends State<MyTicketsPage> {
 
   String formatDate(String dateTime) {
     final parsedDate = DateTime.parse(dateTime);
-    return DateFormat('dd MMM, yyyy - HH:mm').format(parsedDate);
+    return DateFormat('dd/MM/yyyy - HH:mm').format(parsedDate);
+  }
+
+  String getShowTime(Map<String, dynamic> ticket) {
+    DateTime startTime = DateTime.parse(ticket['startTime']);
+    DateTime createAt = DateTime.parse(ticket['createAt']);
+    DateTime startDate = DateTime(createAt.year, createAt.month, createAt.day,
+        startTime.hour, startTime.minute);
+
+    // So sánh giờ và phút của startTime với createAt
+    if (startTime.isBefore(createAt)) {
+      // Nếu giờ và phút của startTime nhỏ hơn createAt thì thay đổi ngày
+      startDate = DateTime(createAt.year, createAt.month, createAt.day + 1,
+          startTime.hour, startTime.minute);
+    }
+
+    // Trả về lịch chiếu đã được format
+    return 'Suất chiếu: ${formatDate(startDate.toIso8601String())}';
   }
 
   @override
@@ -149,7 +166,7 @@ class _MyTicketsPageState extends State<MyTicketsPage> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      formatDate(ticket['startTime']),
+                      getShowTime(ticket),
                       style: const TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                     const SizedBox(height: 2),

@@ -131,7 +131,7 @@ class _BlogDetailState extends State<BlogDetail> {
                       borderSide: BorderSide.none,
                     ),
                     contentPadding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -231,7 +231,6 @@ class _BlogDetailState extends State<BlogDetail> {
                     );
                   },
                 ),
-
               ],
             ),
           );

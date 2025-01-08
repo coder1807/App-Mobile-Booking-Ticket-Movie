@@ -28,7 +28,6 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
   late User user;
   bool isFavorite = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -59,7 +58,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
 
   Future<void> _fetchRatings() async {
     final ratings =
-    await fetchRatingByMovies(widget.movie.id); // Gọi hàm API với ID phim.
+        await fetchRatingByMovies(widget.movie.id); // Gọi hàm API với ID phim.
     if (ratings.isNotEmpty) {
       // Tính điểm trung bình.
       double average =
@@ -104,17 +103,19 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
       );
 
       final response = isFavorite
-          ? await http.delete(uri, headers: {'Content-Type': 'application/json'})
+          ? await http
+              .delete(uri, headers: {'Content-Type': 'application/json'})
           : await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json'},
-      );
+              uri,
+              headers: {'Content-Type': 'application/json'},
+            );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Check if response body is not empty
         if (response.body.isNotEmpty) {
           try {
-            final Map<String, dynamic> responseData = json.decode(response.body);
+            final Map<String, dynamic> responseData =
+                json.decode(response.body);
             if (responseData != null) {
               final updatedUser = User.fromJson(responseData);
               Provider.of<UserProvider>(context, listen: false)
@@ -139,7 +140,8 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
           ),
         );
       } else {
-        print('API Error: Status Code ${response.statusCode}, ${response.body}');
+        print(
+            'API Error: Status Code ${response.statusCode}, ${response.body}');
         throw Exception('Failed to update favorites: ${response.statusCode}');
       }
     } catch (e) {
@@ -249,7 +251,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                                       horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
                                     border:
-                                    Border.all(color: Colors.red, width: 1),
+                                        Border.all(color: Colors.red, width: 1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
@@ -281,28 +283,37 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: isFavorite ? Colors.red : AppTheme.colors.white, // Border color changes based on favorite state
+                        color: isFavorite
+                            ? Colors.red
+                            : AppTheme.colors
+                                .white, // Border color changes based on favorite state
                         width: 1.5, // Border width
                       ),
                       borderRadius: BorderRadius.circular(8), // Rounded corners
                     ),
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 6), // Remove any extra padding
-                        backgroundColor: Colors.transparent, // Transparent background
-                        alignment: Alignment.centerLeft, // Align icon and text to the left
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 6), // Remove any extra padding
+                        backgroundColor:
+                            Colors.transparent, // Transparent background
+                        alignment: Alignment
+                            .centerLeft, // Align icon and text to the left
                       ),
                       onPressed: toggleFavorite,
                       child: Row(
                         children: [
                           Icon(
                             isFavorite ? Icons.favorite : Icons.favorite_border,
-                            color: isFavorite ? Colors.red : AppTheme.colors.white,
+                            color:
+                                isFavorite ? Colors.red : AppTheme.colors.white,
                             size: 28,
                           ),
                           SizedBox(width: 8), // Space between icon and text
                           Text(
-                            isFavorite ? 'Đã thêm vào Yêu Thích' : 'Thêm vào Yêu Thích',
+                            isFavorite
+                                ? 'Đã thêm vào Yêu Thích'
+                                : 'Thêm vào Yêu Thích',
                             style: TextStyle(
                               fontSize: 16,
                               color: AppTheme.colors.white, // Adjust text color
@@ -313,7 +324,6 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
                   Text(
                     'Trailer Phim',
@@ -380,7 +390,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                     child: Row(
                       children: List.generate(
                         6,
-                            (index) {
+                        (index) {
                           return Container(
                             margin: const EdgeInsets.only(right: 10),
                             child: CircleAvatar(
@@ -409,7 +419,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: List.generate(
                         6,
-                            (index) {
+                        (index) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 5),
                             child: ClipRRect(
@@ -467,7 +477,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(
                               5,
-                                  (index) => Icon(
+                              (index) => Icon(
                                 Icons.star,
                                 size: 25,
                                 color: index < _averageRating.round()
@@ -495,7 +505,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                               final rating = _ratings[index];
                               return Padding(
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 8.0),
+                                    const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
@@ -508,7 +518,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
                                                 rating['fullName'],
@@ -523,12 +533,12 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
                                               Row(
                                                 children: List.generate(
                                                   5,
-                                                      (starIndex) => Icon(
+                                                  (starIndex) => Icon(
                                                     Icons.star,
                                                     size: 20,
                                                     color: starIndex <
-                                                        rating[
-                                                        'ratingNumber']
+                                                            rating[
+                                                                'ratingNumber']
                                                         ? Colors.amber
                                                         : Colors.grey,
                                                   ),
@@ -613,7 +623,7 @@ class _DetailMoviePageState extends State<DetailMoviePage> {
         return AlertDialog(
           backgroundColor: AppTheme.colors.mainBackground,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           title: Text(
             'Rate this Movie',
             style: TextStyle(

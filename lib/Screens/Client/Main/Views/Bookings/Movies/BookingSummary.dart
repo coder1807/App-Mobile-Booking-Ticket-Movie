@@ -88,6 +88,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
   void _fetchCinemaName() async {
     final response =
         await fetchCinemaBySchedule(widget.scheduleItem.scheduleId);
+    print(response);
     cinema = response[0]['name'];
   }
 
@@ -463,18 +464,23 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                               'Content-Type': 'application/json',
                             },
                             body: json.encode({
-                              "userID": widget.bookingItem.userID, // Lấy userID từ widget
-                              "scheduleID": widget.scheduleItem.scheduleId, // Lấy scheduleID từ widget
-                              "seatSymbols": widget.bookingItem.seatSymbols, // Danh sách ghế
+                              "userID": widget
+                                  .bookingItem.userID, // Lấy userID từ widget
+                              "scheduleID": widget.scheduleItem
+                                  .scheduleId, // Lấy scheduleID từ widget
+                              "seatSymbols": widget
+                                  .bookingItem.seatSymbols, // Danh sách ghế
                               "foodID": widget.bookingItem.foodID, // ID combo
                               "methodPayment": "MOMO", // Phương thức thanh toán
-                              "totalPrice": widget.bookingItem.totalPrice.toInt(), // Tổng tiền
+                              "totalPrice": widget.bookingItem.totalPrice
+                                  .toInt(), // Tổng tiền
                             }),
                           );
 
                           if (bookingResponse.statusCode == 200) {
                             // Nếu lưu dữ liệu thành công, tiếp tục tạo thanh toán MoMo
-                            final response = await http.get(Uri.parse(paymentUrl));
+                            final response =
+                                await http.get(Uri.parse(paymentUrl));
                             print(response.statusCode);
 
                             if (response.statusCode == 200) {
@@ -485,7 +491,8 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                                 // Mở ứng dụng MoMo bằng payUrl
                                 final Uri payUri = Uri.parse(payUrl);
                                 if (await canLaunchUrl(payUri)) {
-                                  await launchUrl(payUri, mode: LaunchMode.externalApplication);
+                                  await launchUrl(payUri,
+                                      mode: LaunchMode.externalApplication);
                                 } else {
                                   throw 'Không thể mở ứng dụng MoMo';
                                 }
@@ -505,8 +512,6 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                           );
                         }
                       },
-
-
                       child: Text(
                         'Thanh Toán',
                         style: TextStyle(
