@@ -5,7 +5,7 @@ import 'package:movie_app/Screens/Client/Main/Model/BookingItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/MovieItem.dart';
 import 'package:movie_app/Screens/Client/Main/Model/ScheduleItem.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Foods/BookingSummary.dart';
-import 'dart:convert'; // Để parse JSON từ response
+import 'dart:convert';
 
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/BookingSummary.dart';
@@ -393,7 +393,7 @@ class _SeatBookingState extends State<SeatBooking> {
   double calculateTotalPrice() {
     double total = 0;
     for (String seat in selectedSeats) {
-      if (coupleSeats.contains(seat)) {
+      if (seat[0] == 'G') {
         total += coupleSeatPrice;
       } else {
         total += singleSeatPrice;
