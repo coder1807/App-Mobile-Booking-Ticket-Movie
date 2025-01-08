@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$_user_fullname!',
+                  '$_user_fullname',
                   style: TextStyle(
                       color: AppTheme.colors.white,
                       fontSize: 20,
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                       fontFamily: 'Poppins'),
                 ),
                 Text(
-                  'Good morning!',
+                  'Xin chào!',
                   style:
                       TextStyle(fontSize: 14, color: AppTheme.colors.greyColor),
                 ),

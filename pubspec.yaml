@@ -51,6 +51,9 @@ dependencies:
   flutter_facebook_auth: ^7.1.1
   google_maps_flutter: ^2.10.0
   google_maps_url_extractor: ^1.0.1
+  flutter_local_notifications: ^18.0.1
+  flutter_timezone: ^4.0.0
+  rxdart: ^0.28.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

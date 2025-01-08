@@ -116,6 +116,44 @@ class _BlogDetailState extends State<BlogDetail> {
                     color: AppTheme.colors.white,
                   ),
                 ),
+                // Phần nhập comment của người dùng
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _commentController,
+                  style: TextStyle(color: AppTheme.colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Enter your comment...',
+                    hintStyle: TextStyle(color: Colors.white54),
+                    filled: true,
+                    fillColor: Colors.grey[800],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding:
+                    EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: _submitComment,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue, // Màu nền của nút
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    ' Comment ',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      color: AppTheme.colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Text(
                   'Comments:',
@@ -193,44 +231,7 @@ class _BlogDetailState extends State<BlogDetail> {
                     );
                   },
                 ),
-                // Phần nhập comment của người dùng
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _commentController,
-                  style: TextStyle(color: AppTheme.colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'Enter your comment...',
-                    hintStyle: TextStyle(color: Colors.white54),
-                    filled: true,
-                    fillColor: Colors.grey[800],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _submitComment,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Màu nền của nút
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    ' Comment ',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
-                      color: AppTheme.colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+
               ],
             ),
           );

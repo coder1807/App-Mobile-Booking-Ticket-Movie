@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +12,12 @@ import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/MyTicketsPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Profile.dart';
+import 'package:movie_app/Screens/Client/Main/local_notification.dart';
 import 'package:movie_app/Screens/Components/BasePage.dart';
 import 'package:movie_app/Themes/app_theme.dart';
 import 'package:movie_app/firebase_options.dart';
 import 'package:movie_app/manager/UserProvider.dart';
+import 'package:movie_app/service/BlogService.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -38,6 +42,15 @@ void main() async {
 
   bool skipLogin = await isLogined();
   print("skipLogin: ${skipLogin ? "Đã bỏ qua đăng nhập." : "Chưa đăng nhập."}");
+
+  // notification
+  //WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotification.inti();
+  // Kiểm tra blog mới định kỳ mỗi 3 giây
+  Stream.periodic(Duration(seconds: 3)).listen((_) async {
+    BlogService blogService = BlogService();
+    await blogService.checkForNewBlog();
+  });
 
   runApp(
     MultiProvider(
@@ -111,11 +124,11 @@ class _MainPageState extends State<MainPage> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Home',
+              label: 'Trang chủ',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.theaters),
-              label: 'Cinemas',
+              label: 'Rạp',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.confirmation_number),
@@ -123,11 +136,11 @@ class _MainPageState extends State<MainPage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.newspaper),
-              label: 'News',
+              label: 'Tin tức',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              label: 'Profile',
+              label: 'Hồ sơ',
             ),
           ],
         ),
