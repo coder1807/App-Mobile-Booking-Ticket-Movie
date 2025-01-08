@@ -138,44 +138,18 @@ class _SeatBookingState extends State<SeatBooking> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Center(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 30,
-                    ), // Space for pushing first column to the right
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildLegend(Icons.square_rounded,
-                              AppTheme.colors.white, "Có sẵn"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          _buildLegend(Icons.rectangle_rounded,
-                              AppTheme.colors.orangeColor, "Ghế đôi"),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildLegend(Icons.square_rounded,
-                              AppTheme.colors.pink, "Ghế đã chọn"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          _buildLegend(Icons.square_rounded, Colors.grey[800]!,
-                              "Ghế đã đặt"),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildLegend(
+                      Icons.square_rounded, AppTheme.colors.white, "Có sẵn"),
+                  _buildLegend(Icons.square_rounded, AppTheme.colors.pink,
+                      "Ghế đã chọn"),
+                  _buildLegend(Icons.rectangle_rounded,
+                      AppTheme.colors.orangeColor, "Ghế đôi"),
+                  _buildLegend(
+                      Icons.square_rounded, Colors.grey[800]!, "Ghế đã đặt"),
+                ],
               ),
             ),
             Expanded(

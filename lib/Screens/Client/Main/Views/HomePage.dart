@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                       fontFamily: 'Poppins'),
                 ),
                 Text(
-                  _getGreeting(),
+                  'Xin chào!',
                   style:
                       TextStyle(fontSize: 14, color: AppTheme.colors.greyColor),
                 ),
