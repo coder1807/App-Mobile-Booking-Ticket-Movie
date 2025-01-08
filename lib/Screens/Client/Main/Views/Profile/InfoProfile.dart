@@ -84,6 +84,20 @@ class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppTheme.colors.mainBackground,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppTheme.colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Thông tin cá nhân', style: TextStyle(color: AppTheme.colors.white)),
+        centerTitle: true,
+      ),
+
       backgroundColor: AppTheme.colors.mainBackground,
       body: _page(),
     );
@@ -97,7 +111,7 @@ class _InfoPageState extends State<InfoPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Column(
               children: [
-                _headerPage(),
+                /*_headerPage(),*/
                 const SizedBox(height: 30),
                 _mainPage(),
                 const SizedBox(height: 20),
@@ -122,11 +136,10 @@ class _InfoPageState extends State<InfoPage> {
         ),
         const Spacer(),
         Text(
-          'Personal Profile',
+          'Thông tin cá nhân',
           style: TextStyle(
             color: AppTheme.colors.white,
             fontSize: 22,
-            fontWeight: FontWeight.bold,
             fontFamily: 'Poppins',
           ),
         ),
@@ -144,13 +157,13 @@ class _InfoPageState extends State<InfoPage> {
           runSpacing: 10,
           children: [
             _buildInputField(
-                'Name', nameController, nameFocusNode, screenWidth * 1),
+                'Tên', nameController, nameFocusNode, screenWidth * 1),
             _buildInputField(
-                'Phone', phoneController, phoneFocusNode, screenWidth * 0.48),
-            _buildInputField('Birthday', birthdayController, birthdayFocusNode,
+                'Số Điện Thoại', phoneController, phoneFocusNode, screenWidth * 0.48),
+            _buildInputField('Ngày Sinh', birthdayController, birthdayFocusNode,
                 screenWidth * 0.48,
                 onTap: () => _pickDate(context), readOnly: true),
-            _buildInputField('Address', addressController, addressFocusNode,
+            _buildInputField('Địa Chỉ', addressController, addressFocusNode,
                 screenWidth * 1),
           ],
         );
@@ -172,7 +185,7 @@ class _InfoPageState extends State<InfoPage> {
                 });
               },
               child: Text(
-                'Update Password',
+                'Cập Nhật Mật Khẩu',
                 style: TextStyle(
                   color: AppTheme.colors.white,
                   fontSize: 18,
@@ -190,13 +203,13 @@ class _InfoPageState extends State<InfoPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildPasswordField('Current Password', currentPasswordController,
+              _buildPasswordField('Mật Khẩu Hiện Tại', currentPasswordController,
                   MediaQuery.of(context).size.width * 0.9, 'currentPassword'),
               const SizedBox(height: 10),
-              _buildPasswordField('New Password', newPasswordController,
+              _buildPasswordField('Mật Khẩu Mới', newPasswordController,
                   MediaQuery.of(context).size.width * 0.9, 'newPassword'),
               const SizedBox(height: 10),
-              _buildPasswordField('Confirm Password', confirmPasswordController,
+              _buildPasswordField('Xác Nhận Mật Khẩu', confirmPasswordController,
                   MediaQuery.of(context).size.width * 0.9, 'confirmPassword'),
               const SizedBox(height: 20),
               Padding(
@@ -216,9 +229,10 @@ class _InfoPageState extends State<InfoPage> {
                             horizontal: 24, vertical: 12),
                       ),
                       child: Text(
-                        "Update",
+                        "Cập Nhật",
                         style: TextStyle(
                           fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w700,
                           color: AppTheme.colors.white,
                         ),
                       ),
@@ -244,7 +258,7 @@ class _InfoPageState extends State<InfoPage> {
                         horizontal: 24, vertical: 12),
                   ),
                   child: Text(
-                    "Update",
+                    "Cập Nhật",
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       color: AppTheme.colors.white,

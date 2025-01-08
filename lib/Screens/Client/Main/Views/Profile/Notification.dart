@@ -47,6 +47,20 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppTheme.colors.mainBackground,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppTheme.colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Thông Báo', style: TextStyle(color: AppTheme.colors.white)),
+        centerTitle: true,
+      ),
+
       backgroundColor: AppTheme.colors.mainBackground,
       body: _page(),
     );
@@ -60,8 +74,8 @@ class _NotificationPageState extends State<NotificationPage> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
             child: Column(
               children: [
-                _headerPage(),
-                const SizedBox(height: 30),
+                // _headerPage(),
+                // const SizedBox(height: 30),
                 _mainPage(),
               ],
             ),
@@ -83,11 +97,11 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         const Spacer(),
         Text(
-          'Notification',
+          'Thông báo',
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: AppTheme.colors.white,
             fontSize: 22,
-            fontWeight: FontWeight.bold,
             fontFamily: 'Poppins',
           ),
         ),

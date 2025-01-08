@@ -138,18 +138,44 @@ class _SeatBookingState extends State<SeatBooking> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildLegend(
-                      Icons.square_rounded, AppTheme.colors.white, "Có sẵn"),
-                  _buildLegend(Icons.square_rounded, AppTheme.colors.pink,
-                      "Ghế đã chọn"),
-                  _buildLegend(Icons.rectangle_rounded,
-                      AppTheme.colors.orangeColor, "Ghế đôi"),
-                  _buildLegend(
-                      Icons.square_rounded, Colors.grey[800]!, "Ghế đã đặt"),
-                ],
+              child: Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 30,
+                    ), // Space for pushing first column to the right
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildLegend(Icons.square_rounded,
+                              AppTheme.colors.white, "Có sẵn"),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          _buildLegend(Icons.rectangle_rounded,
+                              AppTheme.colors.orangeColor, "Ghế đôi"),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildLegend(Icons.square_rounded,
+                              AppTheme.colors.pink, "Ghế đã chọn"),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          _buildLegend(Icons.square_rounded, Colors.grey[800]!,
+                              "Ghế đã đặt"),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -225,7 +251,7 @@ class _SeatBookingState extends State<SeatBooking> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text("Next",
+                    child: Text("Thanh Toán",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             color: AppTheme.colors.white)),
@@ -242,13 +268,17 @@ class _SeatBookingState extends State<SeatBooking> {
   Widget _buildSeatWidget(String seat, {bool isCouple = false}) {
     Color seatColor;
     bool isCoupleRow = coupleSeatRows.contains(seat[0]);
+    String firstSeat = '';
+    String secondSeat = '';
 
     if (isCoupleRow) {
       int seatNumber = int.parse(seat.substring(1));
       bool isFirstInCouplePair = seatNumber % 2 == 1;
 
       if (isFirstInCouplePair) {
-        seat = '${seat[0]}${seatNumber}${seat[0]}${seatNumber + 1}';
+        firstSeat = '${seat[0]}${seatNumber}';
+        secondSeat = '${seat[0]}${seatNumber + 1}';
+        seat = '$firstSeat$secondSeat';
       } else {
         return SizedBox.shrink();
       }
@@ -289,7 +319,7 @@ class _SeatBookingState extends State<SeatBooking> {
         children: [
           Icon(
             isCoupleRow ? Icons.rectangle_rounded : Icons.square_rounded,
-            size: isCoupleRow ? 65 : 45, // increased icon size
+            size: isCoupleRow ? 70 : 45,
             color: seatColor,
           ),
           Padding(
@@ -297,19 +327,33 @@ class _SeatBookingState extends State<SeatBooking> {
                 ? const EdgeInsets.fromLTRB(6, 0, 0, 0)
                 : const EdgeInsets.fromLTRB(3, 0, 0, 0),
             child: SizedBox(
-              width: isCoupleRow ? 60 : 45,
+              width: isCoupleRow ? 70 : 45,
+              height: isCoupleRow ? 70 : 45, // Increased height for two lines
               child: Center(
-                child: Text(
-                  seat,
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                  maxLines:
-                      isCoupleRow ? 2 : 1, // Enable wrapping for couple seats
-                  overflow: TextOverflow.visible,
-                ),
+                child: isCoupleRow
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            firstSeat,
+                            style: textStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            secondSeat,
+                            style: textStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )
+                    : Text(
+                        seat,
+                        style: textStyle,
+                        textAlign: TextAlign.center,
+                      ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -339,8 +383,8 @@ class _SeatBookingState extends State<SeatBooking> {
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 9,
-          mainAxisSpacing: 15,
-          crossAxisSpacing: 2,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: .5,
           childAspectRatio: 0.5,
         ),
         delegate: SliverChildBuilderDelegate(
@@ -392,8 +436,6 @@ class _SeatBookingState extends State<SeatBooking> {
     return total;
   }
 }
-
-
 
 /*  @override
   Widget build(BuildContext context) {

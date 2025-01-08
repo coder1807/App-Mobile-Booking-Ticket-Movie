@@ -18,7 +18,7 @@ class _ListBlog extends State<BlogPage> {
       appBar: AppBar(
         backgroundColor: AppTheme.colors.mainBackground,
         title: Text(
-          'News',
+          'Tin tức',
           style: TextStyle(
             fontFamily: 'Poppins',
             color: AppTheme.colors.white,
