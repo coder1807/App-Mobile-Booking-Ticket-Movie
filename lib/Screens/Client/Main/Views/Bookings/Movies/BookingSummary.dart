@@ -456,27 +456,47 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                             '${dotenv.env['MY_URL']}/payment/create_momo?amount=${widget.bookingItem.totalPrice.toInt()}&scheduleId=${widget.scheduleItem.scheduleId}&comboId=${widget.bookingItem.foodID}&isMobile=true';
 
                         try {
-                          // Gửi yêu cầu GET để lấy payUrl
-                          final response = await http.get(Uri.parse(paymentUrl));
-                          print(response.statusCode);
+                          // Gửi dữ liệu lên API /booking trước
+                          final bookingResponse = await http.post(
+                            Uri.parse('${dotenv.env['MY_URL']}/booking'),
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: json.encode({
+                              "userID": widget.bookingItem.userID, // Lấy userID từ widget
+                              "scheduleID": widget.scheduleItem.scheduleId, // Lấy scheduleID từ widget
+                              "seatSymbols": widget.bookingItem.seatSymbols, // Danh sách ghế
+                              "foodID": widget.bookingItem.foodID, // ID combo
+                              "methodPayment": "MOMO", // Phương thức thanh toán
+                              "totalPrice": widget.bookingItem.totalPrice.toInt(), // Tổng tiền
+                            }),
+                          );
 
-                          if (response.statusCode == 200) {
-                            final jsonResponse = json.decode(response.body);
-                            final String? payUrl = jsonResponse['payUrl'];
+                          if (bookingResponse.statusCode == 200) {
+                            // Nếu lưu dữ liệu thành công, tiếp tục tạo thanh toán MoMo
+                            final response = await http.get(Uri.parse(paymentUrl));
+                            print(response.statusCode);
 
-                            if (payUrl != null) {
-                              // Mở ứng dụng MoMo bằng payUrl
-                              final Uri payUri = Uri.parse(payUrl);
-                              if (await canLaunchUrl(payUri)) {
-                                await launchUrl(payUri, mode: LaunchMode.externalApplication);
+                            if (response.statusCode == 200) {
+                              final jsonResponse = json.decode(response.body);
+                              final String? payUrl = jsonResponse['payUrl'];
+
+                              if (payUrl != null) {
+                                // Mở ứng dụng MoMo bằng payUrl
+                                final Uri payUri = Uri.parse(payUrl);
+                                if (await canLaunchUrl(payUri)) {
+                                  await launchUrl(payUri, mode: LaunchMode.externalApplication);
+                                } else {
+                                  throw 'Không thể mở ứng dụng MoMo';
+                                }
                               } else {
-                                throw 'Không thể mở ứng dụng MoMo';
+                                throw 'Không tìm thấy payUrl trong response';
                               }
                             } else {
-                              throw 'Không tìm thấy payUrl trong response';
+                              throw 'Lỗi khi tạo thanh toán MoMo';
                             }
                           } else {
-                            throw 'Lỗi khi tạo thanh toán MoMo';
+                            throw 'Lỗi khi gửi dữ liệu đặt vé lên API';
                           }
                         } catch (e) {
                           print('Lỗi: $e');
@@ -485,6 +505,7 @@ class _BookingSummaryMovieState extends State<BookingSummaryMovie> {
                           );
                         }
                       },
+
 
                       child: Text(
                         'Thanh Toán',

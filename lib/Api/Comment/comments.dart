@@ -34,7 +34,7 @@ Future<List<Map<String, dynamic>>> fetchCommentsByBlogID(int blogID) async {
 }
 
 Future<bool> submitComment(Map<String, dynamic> ratingDTO) async {
-  final String apiUrl = '${dotenv.env['MY_URL']}/comment';
+  final String apiUrl = '${dotenv.env['MY_URL']}/comments';
   try {
     final response = await http.post(
       Uri.parse(apiUrl),

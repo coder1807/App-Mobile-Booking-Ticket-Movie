@@ -18,7 +18,22 @@ class BookingDetailsPage extends StatefulWidget {
 }
 
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
-  late MovieItem movieDetails ;
+  late MovieItem movieDetails = MovieItem(
+    id: 0,
+    trailer: '',
+    description: '',
+    actor: '',
+    openingday: '',
+    subtitle: '',
+    quanlity: '',
+    countryName: '',
+    name: '',
+    duration: 0,
+    director: '',
+    limit_age: '',
+    poster: '',
+    categories: [],
+  );
 
   @override
   void initState() {

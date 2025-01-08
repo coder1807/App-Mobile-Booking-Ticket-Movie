@@ -18,7 +18,11 @@ class SeatBooking extends StatefulWidget {
   final int roomId;
   final MovieItem movie;
 
-  const SeatBooking({super.key, required this.schedule, required this.roomId, required this.movie});
+  const SeatBooking(
+      {super.key,
+        required this.schedule,
+        required this.roomId,
+        required this.movie});
 
   @override
   _SeatBookingState createState() => _SeatBookingState();
@@ -237,22 +241,13 @@ class _SeatBookingState extends State<SeatBooking> {
   Widget _buildSeatWidget(String seat, {bool isCouple = false}) {
     Color seatColor;
     bool isCoupleRow = coupleSeatRows.contains(seat[0]);
-    String firstSeat = '';
-    String secondSeat = '';
 
     if (isCoupleRow) {
       int seatNumber = int.parse(seat.substring(1));
       bool isFirstInCouplePair = seatNumber % 2 == 1;
 
       if (isFirstInCouplePair) {
-        firstSeat = '${seat[0]}${seatNumber}';
-        secondSeat = '${seat[0]}${seatNumber + 1}';
-        seat = '$firstSeat$secondSeat';
-      } else {
-        return SizedBox.shrink();
-      }
     }
-
     if (bookedSeats.contains(seat)) {
       seatColor = Colors.grey[800]!;
     } else if (selectedSeats.contains(seat)) {
@@ -271,22 +266,12 @@ class _SeatBookingState extends State<SeatBooking> {
       onTap: bookedSeats.contains(seat)
           ? null
           : () {
-              setState(() {
-                if (selectedSeats.contains(seat)) {
-                  selectedSeats.remove(seat);
-                  seatTypeMap.remove(seat);
-                } else {
-                  selectedSeats.add(seat);
-                  seatTypeMap[seat] = isCoupleRow ? 'couple' : 'single';
-                }
-              });
-            },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Icon(
-            isCoupleRow ? Icons.rectangle_rounded : Icons.square_rounded,
-            size: isCoupleRow ? 70 : 45,
+        setState(() {
+          if (selectedSeats.contains(seat)) {
+            selectedSeats.remove(seat);
+            seatTypeMap.remove(seat);
+          } else {
+            selectedSeats.add(seat);
             color: seatColor,
           ),
           Padding(
@@ -321,6 +306,26 @@ class _SeatBookingState extends State<SeatBooking> {
               ),
             ),
           ),
+
+            size: isCoupleRow ? 65 : 45, // increased icon size
+            color: seatColor,
+          ),
+          Padding(
+            padding:isCoupleRow ? const EdgeInsets.fromLTRB(6, 0,0, 0) :const EdgeInsets.fromLTRB(3, 0,0, 0),
+            child: SizedBox(
+              width: isCoupleRow ? 60: 45,
+              child: Center(
+                child: Text(
+                  seat,
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                  maxLines: isCoupleRow ? 2 : 1, // Enable wrapping for couple seats
+                  overflow: TextOverflow.visible,
+                ),
+              ),
+            ),
+          )
+
         ],
       ),
     );
@@ -360,31 +365,17 @@ class _SeatBookingState extends State<SeatBooking> {
             int colIndex = index % 9 + 1;
 
             String seat = '${singleSeatRows[rowIndex]}$colIndex';
-            return _buildSeatWidget(seat);
-          },
-          childCount: singleSeatRows.length * 9,
-        ),
-      ),
-    );
-  }
-
   Widget _buildCoupleSeatsSection() {
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(8.0, 0, 16.0, 0),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
-          (context, index) {
+              (context, index) {
             int rowIndex = index ~/ coupleSeatsPerRow;
-            String seat = coupleSeatRows[rowIndex] + (index % coupleSeatsPerRow * 2 + 1).toString();
-            return _buildSeatWidget(seat, isCouple: true);
+            String seat = coupleSeatRows[rowIndex] +
+                (index % coupleSeatsPerRow * 2 + 1).toString();
           },
           childCount: coupleSeatRows.length * coupleSeatsPerRow,
-        ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: coupleSeatsPerRow,
-          mainAxisSpacing: 2,
-          crossAxisSpacing: 8,
-          childAspectRatio: 0.6,
         ),
       ),
     );
@@ -392,8 +383,8 @@ class _SeatBookingState extends State<SeatBooking> {
 
   double calculateTotalPrice() {
     double total = 0;
-    for (String seat in selectedSeats) {
-      if (seat[0] == 'G') {
+      if (coupleSeats.contains(seat)) {
+
         total += coupleSeatPrice;
       } else {
         total += singleSeatPrice;
@@ -415,11 +406,6 @@ class _SeatBookingState extends State<SeatBooking> {
           onPressed: () {
             Navigator.pop(context);
           },
-        ),
-        title: Text("ĐẶT GHẾ", style: TextStyle(color: AppTheme.colors.white)),
-        centerTitle: true,
-      ),
-      body: Container(
         color: AppTheme.colors.mainBackground,
         child: Column(
           children: [
