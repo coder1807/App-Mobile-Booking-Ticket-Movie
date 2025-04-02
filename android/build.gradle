@@ -2,7 +2,10 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
+        jcenter()
     }
+    
 }
 
 rootProject.buildDir = "../build"
@@ -16,4 +19,20 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+buildscript {
+    ext
+    {
+        gradle_version = '8.11.1'
+        kotlin_version = '2.0.20'
+    } // Hoặc phiên bản bạn đang sử dụng
+      repositories {
+        google()  // Kho lưu trữ Google
+        mavenCentral()  // Kho lưu trữ Maven Central
+    }
+    dependencies {
+       classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20"
+    }
+}
+
+
 

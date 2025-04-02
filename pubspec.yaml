@@ -39,6 +39,8 @@ dependencies:
   http: ^1.2.2
   provider: ^6.1.2
   flutter_dotenv: ^5.2.1
+  momo_vn: ^2.0.2
+  fluttertoast: ^8.2.10
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,6 +77,7 @@ flutter:
     - assets/icons/birthday.png
     - assets/images/Movies/
     # Payment
+    - assets/images/Payment/
     # Casts
     - assets/images/Casts/
     # User

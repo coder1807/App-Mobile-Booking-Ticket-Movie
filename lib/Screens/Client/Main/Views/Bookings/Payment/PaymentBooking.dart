@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/MomoPayment.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentError.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentSuccess.dart';
 import 'package:movie_app/Themes/app_theme.dart';
@@ -12,34 +13,20 @@ class PaymentBooking extends StatefulWidget {
 }
 
 class _PaymentBookingState extends State<PaymentBooking> {
-  int _seconds = 300;
-  late Timer _timer;
   int? _selectedPaymentIndex;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_seconds > 0) {
-          _seconds--;
-        } else {
-          timer.cancel();
-          Navigator.pop(context);
-        }
-      });
-    });
   }
 
-  String _formatTime() {
-    final min = (_seconds ~/ 60).toString().padLeft(2, '0');
-    final sec = (_seconds % 60).toString().padLeft(2, '0');
-    return "$min:$sec";
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 
@@ -121,14 +108,6 @@ class _PaymentBookingState extends State<PaymentBooking> {
                   fontFamily: 'Poppins',
                   color: AppTheme.colors.white),
             ),
-            Text(
-              _formatTime(),
-              style: TextStyle(
-                  color: AppTheme.colors.buttonColor,
-                  fontFamily: 'Poppins',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600),
-            )
           ],
         ),
         centerTitle: true,
@@ -152,7 +131,7 @@ class _PaymentBookingState extends State<PaymentBooking> {
             child: Column(
               children: [
                 _buildPaymentMethod(
-                    'assets/images/Payment/Paypal.jpg', 'Paypal', 0),
+                    'assets/images/Payment/Momo.jpg', 'Momo', 0),
                 _buildPaymentMethod(
                     'assets/images/Payment/googlePay.jpg', 'Google Pay', 1),
                 _buildPaymentMethod(
@@ -165,7 +144,16 @@ class _PaymentBookingState extends State<PaymentBooking> {
                     cardNumber: '1368497534973'),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    if (_selectedPaymentIndex == 0) {
+                      String amount = "1000";
+                      String? token = await MoMoPayment.requestPayment(amount);
+                      if (token != null) {
+                        print("Token received: $token");
+                      } else {
+                        print("Failed to get token");
+                      }
+                    }
                     if (_selectedPaymentIndex == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

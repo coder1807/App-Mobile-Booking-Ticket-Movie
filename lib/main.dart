@@ -4,6 +4,7 @@ import 'package:movie_app/Screens/Client/Authentication/Views/SignInPage.dart';
 import 'package:movie_app/Screens/Client/Authentication/Views/SignUpPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Foods/BookingSummary.dart';
 import 'package:movie_app/Screens/Client/Main/Views/Bookings/Movies/ListPlaying.dart';
+import 'package:movie_app/Screens/Client/Main/Views/Bookings/Payment/PaymentBooking.dart';
 import 'package:movie_app/Screens/Client/Main/Views/CinemaPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/FoodPage.dart';
 import 'package:movie_app/Screens/Client/Main/Views/HomePage.dart';
@@ -15,11 +16,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    throw Exception('Error loading .env file: $e');
-  }
+  await dotenv.load();
   runApp(
     MultiProvider(
       providers: [
@@ -37,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInPage(),
+      home: PaymentBooking(),
     );
   }
 }

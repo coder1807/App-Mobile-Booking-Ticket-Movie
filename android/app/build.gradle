@@ -1,44 +1,59 @@
-plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id "dev.flutter.flutter-gradle-plugin"
-}
-
-android {
-    namespace = "com.example.movie_app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+    plugins {
+        id "com.android.application"
+        id "kotlin-android"
+        // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+        id "dev.flutter.flutter-gradle-plugin"
+        
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
-    }
+    android {
+        namespace = "com.example.movie_app"
+        compileSdk = flutter.compileSdkVersion
+        ndkVersion = flutter.ndkVersion
 
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.movie_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-    }
+        compileOptions {
+            sourceCompatibility =JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_1_8
+        }
+
+        defaultConfig {
+            // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+            applicationId = "com.example.movie_app"
+            // You can update the following values to match your application needs.
+            // For more information, see: https://flutter.dev/to/review-gradle-config.
+            minSdk = flutter.minSdkVersion
+            targetSdk = flutter.targetSdkVersion
+            versionCode = flutter.versionCode
+            versionName = flutter.versionName
+        }
+
+        buildTypes {
+            release {
+                // TODO: Add your own signing config for the release build.
+                // Signing with the debug keys for now, so `flutter run --release` works.
+                signingConfig = signingConfigs.debug
+            }
         }
     }
-}
 
-flutter {
-    source = "../.."
-}
+    flutter {
+        source = "../.."
+    }
+    dependencies {
+         implementation 'com.github.momo-wallet:mobile-sdk:1.0.7'
+         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+          compile fileTree(include: ['*.jar'], dir: 'libs')
+        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+    compile project(':momo_partner_sdk')
+//    compile 'com.github.momodevelopment:androidSdkV2.2-Beta:v2.2'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    }
